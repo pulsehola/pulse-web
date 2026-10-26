@@ -1,0 +1,59 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+  }
+  body {
+    @apply bg-white text-tinta font-sans antialiased;
+    font-size: 16px;
+    line-height: 1.6;
+  }
+  h1, h2, h3 {
+    text-wrap: balance;
+  }
+  ::selection {
+    @apply bg-naranja text-tinta;
+  }
+  :focus-visible {
+    outline: 2px solid #111111;
+    outline-offset: 3px;
+  }
+  .on-dark :focus-visible {
+    outline-color: #ffffff;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+  }
+  @media (pointer: fine) {
+    .has-cursor, .has-cursor a, .has-cursor button, .has-cursor label { cursor: none; }
+  }
+}
+
+@layer components {
+  .container-page {
+    @apply mx-auto w-full max-w-page px-6 md:px-10;
+  }
+  .eyebrow {
+    @apply font-mono text-label font-medium uppercase text-naranja-texto;
+  }
+  /* Grilla de puntos técnica (patrón, no degradado decorativo) */
+  .dot-grid {
+    background-image: radial-gradient(rgba(255, 255, 255, 0.09) 1px, transparent 1px);
+    background-size: 32px 32px;
+  }
+  .dot-grid-dark {
+    background-image: radial-gradient(rgba(17, 17, 17, 0.08) 1px, transparent 1px);
+    background-size: 32px 32px;
+  }
+  .text-outline {
+    -webkit-text-fill-color: transparent;
+    -webkit-text-stroke: 1.5px currentColor;
+  }
+  .field {
+    @apply w-full rounded border-regla border-tinta bg-white px-4 py-3 text-base text-tinta placeholder:text-gris-500 transition-colors focus:outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-tinta;
+  }
+}
