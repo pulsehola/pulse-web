@@ -25,21 +25,21 @@ const CONTACTO = {
 
 const CASOS = [
   {
-    id: "pilates", word: "tus clases", tab: "Estudio de pilates",
+    id: "pilates", word: "tus clases", tab: "Estudio de pilates", corto: "Estudio",
     titulo: "Reservas, plazas y bonos, sin contestar un mensaje.",
     texto: "Tus alumnas ven las plazas libres y reservan desde el móvil. El bono se descuenta solo y el recordatorio sale por WhatsApp el día antes.",
     puntos: ["Plazas libres en tiempo real", "Bonos que se descuentan solos", "Lista de espera automática", "Recordatorio el día antes"],
     para: "Pilates, yoga, entrenamiento, talleres",
   },
   {
-    id: "stock", word: "tu stock", tab: "Almacén y comercio",
+    id: "stock", word: "tu stock", tab: "Almacén y comercio", corto: "Almacén",
     titulo: "Entradas, salidas y avisos antes de quedarte sin nada.",
     texto: "Cada movimiento queda registrado y ves qué queda en cada momento. Cuando algo baja del mínimo, te avisa a vos y a quien tenga que pedirlo.",
     puntos: ["Entradas y salidas en un toque", "Alertas de stock bajo", "Historial de cada movimiento", "Exporta a Excel cuando quieras"],
     para: "Logística, comercios, distribución, e-commerce",
   },
   {
-    id: "agenda", word: "tus citas", tab: "Profesional independiente",
+    id: "agenda", word: "tus citas", tab: "Profesional independiente", corto: "Profesional",
     titulo: "Tu agenda llena, y los avisos salen solos.",
     texto: "Tus clientes reservan desde un enlace, la cita aparece en tu calendario y el recordatorio les llega por WhatsApp. Vos solo atendés.",
     puntos: ["Reservas desde un enlace", "Recordatorios por WhatsApp", "Citas en tu Google Calendar", "Huecos libres a la vista"],
@@ -747,12 +747,13 @@ function spot(e) {
 function RevealTitle({ children, className = "", id }) {
   const simple = useSimple();
   const words = String(children).split(" ");
+  if (simple) return <h2 id={id} className={className}>{children}</h2>;
   return (
     <h2 id={id} className={className}>
       {words.map((w, i) => (
         <React.Fragment key={i}>
-          <span className="inline-block overflow-hidden pb-[0.08em] align-bottom">
-            <motion.span className="inline-block" initial={{ y: simple ? 0 : "45%", opacity: simple ? 1 : 0.2 }} whileInView={{ y: "0%", opacity: 1 }} viewport={{ once: true, margin: "-60px" }}
+          <span className="-mt-[0.15em] inline-block overflow-hidden pb-[0.1em] pt-[0.15em] align-bottom">
+            <motion.span className="inline-block" initial={{ y: "40%", opacity: 0.2 }} whileInView={{ y: "0%", opacity: 1 }} viewport={{ once: true, margin: "-60px" }}
               transition={{ duration: 0.8, ease, delay: i * 0.04 }}>{w}</motion.span>
           </span>
           {i < words.length - 1 && " "}
@@ -923,9 +924,9 @@ function Hero() {
         <div role="tablist" aria-label="Elegí un ejemplo" className="relative z-10 mb-8 flex max-w-full gap-1 overflow-x-auto rounded-full bg-papel p-1 no-scrollbar">
           {CASOS.map((c, i) => (
             <button key={c.id} type="button" role="tab" aria-selected={i === idx} onClick={() => pick(i)}
-              className={`relative shrink-0 rounded-full px-4 py-2 text-[13px] font-semibold transition-colors ${i === idx ? "text-tinta" : "text-gris-500 hover:text-tinta"}`}>
+              className={`relative shrink-0 rounded-full px-3.5 py-2 text-[13px] font-semibold transition-colors sm:px-4 ${i === idx ? "text-tinta" : "text-gris-500 hover:text-tinta"}`}>
               {i === idx && <motion.span layoutId="hero-seg" className="absolute inset-0 rounded-full bg-white shadow-[0_1px_3px_rgba(17,17,17,0.12),0_0_0_1px_rgba(17,17,17,0.04)]" transition={{ type: "spring", stiffness: 420, damping: 36 }} />}
-              <span className="relative">{c.tab}</span>
+              <span className="relative"><span className="sm:hidden">{c.corto}</span><span className="hidden sm:inline">{c.tab}</span></span>
             </button>
           ))}
         </div>
@@ -1031,9 +1032,9 @@ function Casos() {
         <div role="tablist" aria-label="Casos de uso" onKeyDown={onKey} className="flex max-w-full gap-1 self-start overflow-x-auto rounded-full bg-papel p-1 no-scrollbar">
           {CASOS.map((x, i) => (
             <button key={x.id} ref={(el) => (tabsRef.current[i] = el)} role="tab" id={`tab-${x.id}`} aria-selected={i === active} aria-controls={`panel-${x.id}`} tabIndex={i === active ? 0 : -1} onClick={() => setActive(i)}
-              className={`relative shrink-0 rounded-full px-4 py-2.5 text-[14px] font-semibold transition-colors ${i === active ? "text-white" : "text-gris-500 hover:text-tinta"}`}>
+              className={`relative shrink-0 rounded-full px-3.5 py-2.5 text-[14px] font-semibold transition-colors sm:px-4 ${i === active ? "text-white" : "text-gris-500 hover:text-tinta"}`}>
               {i === active && <motion.span layoutId="casos-seg" className="absolute inset-0 rounded-full bg-tinta" transition={{ type: "spring", stiffness: 420, damping: 36 }} />}
-              <span className="relative">{x.tab}</span>
+              <span className="relative"><span className="sm:hidden">{x.corto}</span><span className="hidden sm:inline">{x.tab}</span></span>
             </button>
           ))}
         </div>
@@ -1484,7 +1485,28 @@ function Ventajas() {
             <h3 className="text-[24px] font-bold tracking-[-0.025em]">Comparado, sin trampas</h3>
             <span className="text-[14px] text-gris-400">Si una herramienta que ya existe te sirve, te lo decimos.</span>
           </div>
-          <div className="sombra overflow-x-auto rounded-[24px] bg-white">
+          <ul className="flex flex-col gap-3 md:hidden">
+            {COMPARATIVA.rows.map(([label, ...vals]) => (
+              <li key={label} className="sombra flex flex-col gap-4 rounded-[22px] bg-white p-4">
+                <span className="text-[16px] font-bold leading-snug tracking-[-0.01em]">{label}</span>
+                <div className="grid grid-cols-3 gap-2">
+                  {vals.map((v, i) => (
+                    <div key={i} className={`flex flex-col items-center gap-2 rounded-[14px] px-1.5 py-3 text-center ${i === 2 ? "bg-tinta text-white" : "bg-papel"}`}>
+                      <span className={`text-[11px] font-semibold leading-tight ${i === 2 ? "text-white/70" : "text-gris-500"}`}>{["Papel y Excel", "App genérica", "A medida"][i]}</span>
+                      {i === 2 && v === "✓" ? (
+                        <span className="inline-flex h-6 w-6 items-center justify-center rounded-full bg-acento" aria-label="Sí"><svg viewBox="0 0 12 12" className="w-3"><path d="M2.5 6.3 5 8.6 9.5 3.4" fill="none" stroke="#111111" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" /></svg></span>
+                      ) : i === 2 ? (
+                        <span className="inline-flex h-6 w-6 items-center justify-center text-[15px] text-white/40" aria-label="No">—</span>
+                      ) : (
+                        <Marca v={v} />
+                      )}
+                    </div>
+                  ))}
+                </div>
+              </li>
+            ))}
+          </ul>
+          <div className="sombra hidden overflow-x-auto rounded-[24px] bg-white md:block">
             <table className="w-full min-w-[640px] border-collapse text-left">
               <thead>
                 <tr className="border-b border-linea">
@@ -1600,17 +1622,13 @@ function CTA() {
               <Button href={CONTACTO.agenda} variant="accent" className="w-full sm:w-auto">Agendá una llamada</Button>
               <Button href={CONTACTO.whatsapp} variant="onDark" className="w-full sm:w-auto">Escribinos por WhatsApp</Button>
             </div>
-            <div className="flex flex-wrap items-center justify-center gap-2.5 text-[15px] text-white/60">
-              <span>O por email:</span>
-              <span id="cta-email" className="select-all font-semibold text-white">{CONTACTO.email}</span>
-              <button type="button" onClick={copy} className="rounded-full bg-white/10 px-3 py-1 text-[12px] font-semibold text-white ring-1 ring-white/20 backdrop-blur transition-colors hover:bg-white/20">{copied ? "Copiado" : "Copiar"}</button>
-            </div>
           </div>
         </motion.div>
       </div>
-      <footer className="container-page flex flex-col gap-4 border-t border-linea pb-28 pt-8 text-[13px] text-gris-400 sm:flex-row sm:items-center sm:justify-between sm:pb-8">
+      <footer className="container-page flex flex-col items-center gap-4 border-t border-linea pb-28 pt-10 text-center text-[13px] text-gris-400 md:flex-row md:justify-between md:pb-8 md:pt-8 md:text-left">
         <Logo className="h-4 w-auto" />
         <span>Apps web a medida</span>
+        <a href={`mailto:${CONTACTO.email}`} className="select-all font-medium text-tinta transition-colors hover:text-acento-texto">{CONTACTO.email}</a>
         <span>© 2026 PULSE</span>
       </footer>
     </section>
