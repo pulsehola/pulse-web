@@ -769,16 +769,16 @@ function Cinta() {
   const simple = useSimple();
   const { scrollYProgress } = useScroll();
   const x = useTransform(scrollYProgress, [0, 1], [0, simple ? 0 : -500]);
-  const items = ["Reservas", "Bonos", "Stock", "Citas", "Pedidos", "Clientes", "Turnos", "Presupuestos", "Recordatorios", "Paneles"];
+  const items = ["Dashboards", "Citas", "Datos", "Análisis", "Presupuestos", "Soporte", "Reservas", "Agendas", "Stock"];
   return (
-    <div className="relative overflow-hidden border-y border-linea py-6" aria-hidden="true">
+    <div className="relative overflow-hidden border-y border-tinta py-6" aria-hidden="true">
       <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-24 bg-gradient-to-r from-white to-transparent" />
       <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-24 bg-gradient-to-l from-white to-transparent" />
       <motion.div style={{ x }}>
         <div className="marquee">
           {[...items, ...items, ...items, ...items].map((t, i) => (
-            <span key={i} className="flex items-center gap-7 pr-7 text-[clamp(1.4rem,2.6vw,2.1rem)] font-bold tracking-[-0.035em] text-gris-300">
-              {t}<Iso className="w-7" width={3.5} />
+            <span key={i} className="flex items-center gap-7 pr-7 text-[clamp(1.4rem,2.6vw,2.1rem)] font-bold tracking-[-0.035em] text-tinta">
+              {t}<Iso className="w-7" width={3.5} stroke="#111111" />
             </span>
           ))}
         </div>
@@ -798,7 +798,7 @@ function Word({ children, progress, range }) {
 function Frase() {
   const ref = useRef(null);
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start 0.85", "end 0.45"] });
-  const text = "No vendemos una plantilla con tu logo. Construimos la herramienta exacta que tu negocio necesita, y la cambiamos cuando tu negocio cambia.";
+  const text = "Diseñamos la herramienta exacta que tu negocio necesita hoy. Y la hacemos crecer al ritmo que cambia tu día a día.";
   const words = text.split(" ");
   return (
     <section ref={ref} aria-label="Nuestra forma de trabajar" className="relative overflow-hidden bg-white">
@@ -907,7 +907,7 @@ function Hero() {
         </h1>
 
         <p className="max-w-[52ch] text-entrada text-gris-500 md:text-[19px]">
-          Reservas, stock, citas, clientes o todo junto. Si hoy lo llevás con WhatsApp, Excel o papel, lo convertimos en una app propia que se conecta con lo que ya usás.
+          Reservas, stock, citas, clientes o todo junto. Diseñamos la app a tu medida y la conectamos con las herramientas que ya usás.
         </p>
 
         <div className="flex w-full flex-col items-center justify-center gap-3 sm:w-auto sm:flex-row">
