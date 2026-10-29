@@ -1559,7 +1559,7 @@ function ComparativaEscritorio() {
               </motion.tr>
             ))}
             <tr className="border-t border-linea">
-              <td colSpan={3} className="p-6 text-[14px] text-gris-400">Al principio, una app a medida pide más inversión que un software mensual. Por eso empezamos con una versión pequeña y la hacemos crecer.</td>
+              <td colSpan={3} aria-hidden="true" />
               <td className="border-t border-white/10 bg-tinta p-6"><Button href="#contacto" variant="accent" className="w-full">Quiero mi app</Button></td>
             </tr>
           </tbody>
@@ -1598,7 +1598,6 @@ function Ventajas() {
             <p className="max-w-[60ch] text-[16px] leading-relaxed text-gris-500">Tu app es una app web progresiva: se abre con un enlace, se instala en el móvil como cualquier otra y funciona en todos los dispositivos.</p>
           </div>
           <ComparativaMovil />
-          <p className="text-[14px] text-gris-400 md:hidden">Al principio, una app a medida pide más inversión que un software mensual. Por eso empezamos con una versión pequeña y la hacemos crecer.</p>
           <ComparativaEscritorio />
         </div>
       </div>
