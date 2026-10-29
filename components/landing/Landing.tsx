@@ -316,10 +316,9 @@ function Hint({ children }) {
    PANTALLAS · CASO 1: estudio de pilates
    --------------------------------------------------------------------- */
 const CLASES = [
-  { id: 1, h: "9:00", n: "Reformer", prof: "Núria", libres: 3, total: 8 },
-  { id: 2, h: "11:30", n: "Mat suave", prof: "Clara", libres: 5, total: 10 },
-  { id: 3, h: "18:00", n: "Reformer intermedio", prof: "Núria", libres: 0, total: 8 },
-  { id: 4, h: "19:30", n: "Stretching", prof: "Pau", libres: 6, total: 10 },
+  { id: 1, h: "9:00", dur: "50 min", n: "Reformer", prof: "Núria", libres: 3, total: 8 },
+  { id: 2, h: "11:30", dur: "45 min", n: "Mat suave", prof: "Clara", libres: 5, total: 10 },
+  { id: 3, h: "18:00", dur: "50 min", n: "Reformer intermedio", prof: "Núria", libres: 0, total: 8 },
 ];
 function PilatesScreen() {
   const [res, setRes] = useState([1]);
@@ -340,16 +339,16 @@ function PilatesScreen() {
     <div className="flex h-full flex-col bg-[#FAFAF8] font-sys text-tinta">
       <StatusBar />
       <AppHeader eyebrow="Estudio Arrel · jueves 30" title="Clases de hoy" right={<span className="flex h-8 w-8 items-center justify-center rounded-full bg-acento-suave font-sans text-[11px] font-bold text-acento-texto">LP</span>} />
-      <div className="mx-4 mt-3 flex items-center justify-between rounded-[14px] bg-white px-3.5 py-2.5 shadow-[0_0_0_1px_rgba(17,17,17,0.05)]">
-        <div className="flex flex-col">
-          <span className="text-[10.5px] text-gris-400">Tu bono · 10 clases</span>
-          <span className="text-[13px] font-semibold">Te quedan <motion.span key={bono} initial={{ y: -6, opacity: 0 }} animate={{ y: 0, opacity: 1 }} className="inline-block tnum">{bono}</motion.span></span>
+      <div className="mx-4 mt-4 flex flex-col gap-2 rounded-[16px] bg-tinta px-4 py-3 text-white">
+        <div className="flex items-baseline justify-between">
+          <span className="text-[11px] text-white/60">Tu bono de 10 clases</span>
+          <span className="text-[12px] font-semibold">Te quedan <motion.span key={bono} initial={{ y: -6, opacity: 0 }} animate={{ y: 0, opacity: 1 }} className="inline-block tnum text-acento">{bono}</motion.span></span>
         </div>
         <div className="flex gap-[3px]" aria-hidden="true">
-          {Array.from({ length: 10 }).map((_, i) => <span key={i} className={`h-4 w-[5px] rounded-full ${i < 10 - bono ? "bg-gris-200" : "bg-gradient-to-b from-grad-a to-grad-b"}`} />)}
+          {Array.from({ length: 10 }).map((_, i) => <span key={i} className={`h-[5px] flex-1 rounded-full ${i < 10 - bono ? "bg-white/15" : "bg-acento"}`} />)}
         </div>
       </div>
-      <div className="mt-3 flex flex-col gap-2 px-4">
+      <div className="mt-4 flex flex-col gap-2.5 px-4">
         {CLASES.map((c) => {
           const on = res.includes(c.id);
           const wait = espera.includes(c.id);
@@ -357,15 +356,15 @@ function PilatesScreen() {
           const libres = on ? c.libres - 1 : c.libres;
           return (
             <motion.button key={c.id} type="button" whileTap={{ scale: 0.98 }} onClick={() => toggle(c)} aria-pressed={on}
-              className={`flex items-center gap-3 rounded-[14px] px-3 py-2.5 text-left transition-colors ${on ? "bg-tinta text-white" : "bg-white shadow-[0_0_0_1px_rgba(17,17,17,0.05)]"}`}>
-              <span className="w-9 text-[12px] font-semibold tnum">{c.h}</span>
-              <span className="flex min-w-0 flex-1 flex-col">
-                <span className="truncate text-[12.5px] font-semibold leading-tight">{c.n}</span>
-                <span className={`text-[10.5px] ${on ? "text-white/60" : "text-gris-400"}`}>con {c.prof} · {full ? "completa" : `${libres} de ${c.total} libres`}</span>
+              className={`flex flex-col gap-1.5 rounded-[16px] px-3.5 py-3 text-left transition-colors ${on ? "bg-white ring-[1.5px] ring-acento" : "bg-white shadow-[0_0_0_1px_rgba(17,17,17,0.06)]"}`}>
+              <span className="flex items-center justify-between gap-2">
+                <span className="text-[11px] font-medium tnum text-gris-500">{c.h} · {c.dur}</span>
+                <span className={`rounded-full px-2.5 py-[3px] text-[10px] font-semibold ${on ? "bg-acento text-tinta" : wait ? "bg-papel text-gris-700" : full ? "bg-papel text-gris-400" : "bg-tinta text-white"}`}>
+                  {on ? "Reservada" : wait ? "En espera" : full ? "Avisarme" : "Reservar"}
+                </span>
               </span>
-              <span className={`rounded-full px-2 py-1 text-[9.5px] font-semibold ${on ? "bg-gradient-to-r from-grad-a to-grad-b text-tinta" : wait ? "bg-papel text-gris-700" : full ? "text-gris-400" : "bg-papel"}`}>
-                {on ? "Reservada" : wait ? "En espera" : full ? "Avisarme" : "Reservar"}
-              </span>
+              <span className="truncate text-[14px] font-semibold leading-tight">{c.n}</span>
+              <span className="text-[11px] text-gris-500">con {c.prof} · {full ? "completa" : `${libres} de ${c.total} plazas libres`}</span>
             </motion.button>
           );
         })}
@@ -1457,6 +1456,49 @@ function Marca({ v }) {
   return <span className="inline-flex h-6 w-6 items-center justify-center text-[15px] text-gris-300" aria-label="No">—</span>;
 }
 
+// Comparativa en móvil: se elige con qué alternativa comparar y se ven dos columnas
+function ComparativaMovil() {
+  const [alt, setAlt] = useState(1);
+  const nombres = ["Papel y Excel", "App genérica"];
+  return (
+    <div className="sombra overflow-hidden rounded-[24px] bg-white md:hidden">
+      <div className="flex flex-col gap-2.5 border-b border-linea p-4">
+        <span className="text-[13px] font-medium text-gris-500">Comparar una app a medida con:</span>
+        <div role="tablist" aria-label="Alternativa a comparar" className="grid grid-cols-2 gap-1 rounded-full bg-papel p-1">
+          {nombres.map((n, i) => (
+            <button key={n} type="button" role="tab" aria-selected={alt === i} onClick={() => setAlt(i)}
+              className={`relative rounded-full py-2 text-[13px] font-semibold transition-colors ${alt === i ? "text-tinta" : "text-gris-500"}`}>
+              {alt === i && <motion.span layoutId="comp-movil" className="absolute inset-0 rounded-full bg-white shadow-[0_1px_3px_rgba(17,17,17,0.12)]" transition={{ type: "spring", stiffness: 420, damping: 36 }} />}
+              <span className="relative">{n}</span>
+            </button>
+          ))}
+        </div>
+      </div>
+      <div className="grid grid-cols-[1fr_76px_76px] items-end gap-2 border-b border-linea px-4 pb-3 pt-4 text-center text-[11.5px] font-semibold leading-tight">
+        <span className="sr-only">Característica</span><span aria-hidden="true" />
+        <span className="text-gris-500">{nombres[alt]}</span>
+        <span className="rounded-full bg-tinta px-1 py-1.5 text-white">A medida</span>
+      </div>
+      <ul>
+        {COMPARATIVA.rows.map(([label, ...vals]) => (
+          <li key={label} className="grid grid-cols-[1fr_76px_76px] items-center gap-2 border-b border-linea px-4 py-3.5 last:border-0">
+            <span className="text-[14.5px] font-semibold leading-snug">{label}</span>
+            <span className="flex justify-center">
+              <motion.span key={`${alt}-${label}`} initial={{ scale: 0.6, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} transition={{ duration: 0.25, ease }}><Marca v={vals[alt]} /></motion.span>
+            </span>
+            <span className="flex justify-center"><Marca v={vals[2]} /></span>
+          </li>
+        ))}
+      </ul>
+      <div className="flex flex-wrap items-center gap-x-4 gap-y-2 border-t border-linea bg-papel/60 px-4 py-3 text-[12px] text-gris-500">
+        <span className="flex items-center gap-1.5"><Marca v="✓" /> Sí</span>
+        <span className="flex items-center gap-1.5"><Marca v="~" /></span>
+        <span className="flex items-center gap-1.5"><Marca v="—" /> No</span>
+      </div>
+    </div>
+  );
+}
+
 function Ventajas() {
   const simple = useSimple();
   return (
@@ -1485,27 +1527,7 @@ function Ventajas() {
             <h3 className="text-[24px] font-bold tracking-[-0.025em]">Comparado, sin trampas</h3>
             <span className="text-[14px] text-gris-400">Si una herramienta que ya existe te sirve, te lo decimos.</span>
           </div>
-          <ul className="flex flex-col gap-3 md:hidden">
-            {COMPARATIVA.rows.map(([label, ...vals]) => (
-              <li key={label} className="sombra flex flex-col gap-4 rounded-[22px] bg-white p-4">
-                <span className="text-[16px] font-bold leading-snug tracking-[-0.01em]">{label}</span>
-                <div className="grid grid-cols-3 gap-2">
-                  {vals.map((v, i) => (
-                    <div key={i} className={`flex flex-col items-center gap-2 rounded-[14px] px-1.5 py-3 text-center ${i === 2 ? "bg-tinta text-white" : "bg-papel"}`}>
-                      <span className={`text-[11px] font-semibold leading-tight ${i === 2 ? "text-white/70" : "text-gris-500"}`}>{["Papel y Excel", "App genérica", "A medida"][i]}</span>
-                      {i === 2 && v === "✓" ? (
-                        <span className="inline-flex h-6 w-6 items-center justify-center rounded-full bg-acento" aria-label="Sí"><svg viewBox="0 0 12 12" className="w-3"><path d="M2.5 6.3 5 8.6 9.5 3.4" fill="none" stroke="#111111" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" /></svg></span>
-                      ) : i === 2 ? (
-                        <span className="inline-flex h-6 w-6 items-center justify-center text-[15px] text-white/40" aria-label="No">—</span>
-                      ) : (
-                        <Marca v={v} />
-                      )}
-                    </div>
-                  ))}
-                </div>
-              </li>
-            ))}
-          </ul>
+          <ComparativaMovil />
           <div className="sombra hidden overflow-x-auto rounded-[24px] bg-white md:block">
             <table className="w-full min-w-[640px] border-collapse text-left">
               <thead>
