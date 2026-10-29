@@ -1522,11 +1522,6 @@ function ComparativaMovil() {
           </ul>
         </div>
       ))}
-      <div className="flex flex-wrap items-center gap-x-4 gap-y-2 border-t border-linea bg-papel/60 px-4 py-3 text-[12px] text-gris-500">
-        <span className="flex items-center gap-1.5"><Marca v="✓" /> Sí</span>
-        <span className="flex items-center gap-1.5"><Marca v="~" /></span>
-        <span className="flex items-center gap-1.5"><Marca v="—" /> No</span>
-      </div>
     </div>
   );
 }
