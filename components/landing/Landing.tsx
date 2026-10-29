@@ -22,6 +22,10 @@ const CONTACTO = {
   whatsapp: "#contacto",          // TODO: https://wa.me/34XXXXXXXXX?text=...
   email: "pulse.hola@gmail.com",
 };
+// Todos los botones de contacto abren un email nuevo en Gmail, con asunto y texto de partida.
+// Para que abra la app de correo de cada persona, usar: `mailto:${CONTACTO.email}?subject=...&body=...`
+CONTACTO.gmail = `https://mail.google.com/mail/?view=cm&fs=1&to=${CONTACTO.email}&su=${encodeURIComponent("Quiero una app para mi negocio")}&body=${encodeURIComponent("Hola PULSE,\n\nMi negocio es: \nLo que me gustaría organizar: \n\nGracias.")}`;
+const EXTERNO = { target: "_blank", rel: "noopener noreferrer" };
 
 const CASOS = [
   {
@@ -187,7 +191,7 @@ function Button({ href = "#contacto", variant = "dark", children, className = ""
   };
   const leave = () => { x.set(0); y.set(0); };
   return (
-    <motion.a href={href} style={{ x: sx, y: sy }} onPointerMove={move} onPointerLeave={leave}
+    <motion.a href={href} {...(href.startsWith("http") ? EXTERNO : {})} style={{ x: sx, y: sy }} onPointerMove={move} onPointerLeave={leave}
       className={`group inline-flex min-h-[50px] items-center justify-center gap-2.5 rounded-full px-6 text-[15px] font-semibold leading-none transition-[background-color,box-shadow,filter] duration-300 active:scale-[0.98] ${BTN[variant]} ${className}`}>
       {children}
       <span aria-hidden="true" className="relative flex h-4 w-4 items-center overflow-hidden">
@@ -835,7 +839,7 @@ function Nav() {
           <a href="#ventajas" className="transition-colors hover:text-tinta">Ventajas</a>
           <a href="#preguntas" className="transition-colors hover:text-tinta">Preguntas</a>
         </nav>
-        <a href="#contacto" className="rounded-full bg-tinta px-4 py-2 text-[13px] font-semibold text-white transition-colors hover:bg-[#2a2a2a]">Hablemos</a>
+        <a href={CONTACTO.gmail} {...EXTERNO} className="rounded-full bg-tinta px-4 py-2 text-[13px] font-semibold text-white transition-colors hover:bg-[#2a2a2a]">Hablemos</a>
       </div>
     </header>
   );
@@ -915,7 +919,7 @@ function Hero() {
         </p>
 
         <div className="flex w-full flex-col items-center justify-center gap-3 sm:w-auto sm:flex-row">
-          <Button href="#contacto" variant="dark" className="w-full sm:w-auto">Contanos qué necesitás</Button>
+          <Button href={CONTACTO.gmail} variant="dark" className="w-full sm:w-auto">Contanos qué necesitás</Button>
           <Button href="#casos" variant="light" className="w-full sm:w-auto">Ver ejemplos</Button>
         </div>
       </div>
@@ -1560,7 +1564,7 @@ function ComparativaEscritorio() {
             ))}
             <tr className="border-t border-linea">
               <td colSpan={3} aria-hidden="true" />
-              <td className="border-t border-white/10 bg-tinta p-6"><Button href="#contacto" variant="accent" className="w-full">Quiero mi app</Button></td>
+              <td className="border-t border-white/10 bg-tinta p-6"><Button href={CONTACTO.gmail} variant="accent" className="w-full">Quiero mi app</Button></td>
             </tr>
           </tbody>
         </table>
@@ -1636,8 +1640,8 @@ function Preguntas() {
       <div className="container-page grid gap-12 py-24 md:py-36 lg:grid-cols-[0.8fr_1.2fr] lg:gap-20">
         <div className="flex flex-col gap-8 lg:sticky lg:top-28 lg:self-start">
           <SectionTitle id="faq-title" eyebrow="Preguntas frecuentes" title="Lo que todos preguntan antes de empezar." />
-          <p className="max-w-[36ch] text-[15px] text-gris-500">¿Otra duda? Escribinos y te contestamos en menos de 24 horas hábiles.</p>
-          <div><Button href="#contacto" variant="light">Preguntanos</Button></div>
+          <p className="max-w-[36ch] text-[15px] text-gris-500">¿Otra duda? Escribinos un email y te contestamos en menos de 24 horas hábiles.</p>
+          <div><Button href={CONTACTO.gmail} variant="light">Preguntanos</Button></div>
         </div>
         <div className="border-t border-linea">
           {FAQS.map((f, i) => <FaqItem key={f.q} f={f} i={i} open={open === i} onToggle={() => setOpen(open === i ? -1 : i)} />)}
@@ -1688,9 +1692,9 @@ function CTA() {
             <motion.h2 style={{ y: titleY }} id="cta-title" className="text-[clamp(2.6rem,7vw,6rem)] font-bold leading-[0.98] tracking-[-0.05em]">
               ¿Qué te gustaría <span className="bg-gradient-to-r from-[#FF4F00] to-[#FFB27A] bg-clip-text text-transparent">organizar?</span>
             </motion.h2>
-            <p className="max-w-[48ch] text-entrada text-white/70">Contanos en una llamada qué te quita tiempo. Te decimos si una app lo resuelve, cuánto costaría y cuándo podrías usarla.</p>
+            <p className="max-w-[48ch] text-entrada text-white/70">Escribinos y contanos qué te quita tiempo. Te decimos si una app lo resuelve, cuánto costaría y cuándo podrías usarla.</p>
             <div className="flex w-full flex-col justify-center gap-3 sm:w-auto sm:flex-row">
-              <Button href={CONTACTO.agenda} variant="accent" className="w-full sm:w-auto">Agendá una llamada</Button>
+              <Button href={CONTACTO.gmail} variant="accent" className="w-full sm:w-auto">Escribinos un email</Button>
               <Button href={CONTACTO.whatsapp} variant="onDark" className="w-full sm:w-auto">Escribinos por WhatsApp</Button>
             </div>
           </div>
@@ -1699,7 +1703,7 @@ function CTA() {
       <footer className="container-page flex flex-col items-center gap-4 border-t border-linea pb-28 pt-10 text-center text-[13px] text-gris-400 md:flex-row md:justify-between md:pb-8 md:pt-8 md:text-left">
         <Logo className="h-4 w-auto" />
         <span>Apps web a medida</span>
-        <a href={`mailto:${CONTACTO.email}`} className="select-all font-medium text-tinta transition-colors hover:text-acento-texto">{CONTACTO.email}</a>
+        <a href={CONTACTO.gmail} {...EXTERNO} className="select-all font-medium text-tinta transition-colors hover:text-acento-texto">{CONTACTO.email}</a>
         <span>© 2026 PULSE</span>
       </footer>
     </section>
