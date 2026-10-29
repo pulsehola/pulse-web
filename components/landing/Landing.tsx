@@ -69,39 +69,21 @@ const BENEFICIOS = [
   { t: "El equipo crece, la cuota no", d: "Sumar a una persona más no te sube la factura, como pasa con las apps que cobran por usuario." },
 ];
 
-// Comparativa: qué gana un negocio con su propia app web de PULSE (app web progresiva).
-// ✓ = sí · ~ = a medias · — = no. Columnas: papel/Excel, app genérica, app de tiendas, PULSE.
+// Comparativa: PULSE frente a software por suscripción y app nativa de tiendas.
+// TODO: confirmar "mantenimiento fijo" y "sin comisiones de PULSE" con el modelo de precios real.
 const COMPARATIVA = {
-  cols: ["Papel, WhatsApp y Excel", "App genérica", "App de tiendas", "PULSE"],
-  corto: ["Papel y Excel", "App genérica", "App de tiendas"],
-  grupos: [
-    {
-      t: "Para tus clientes",
-      rows: [
-        ["Se instala con un enlace, sin pasar por App Store ni Google Play", "—", "~", "—", "✓"],
-        ["Funciona en iPhone, Android y ordenador", "—", "✓", "~", "✓"],
-        ["Reservan, piden y pagan solos, a cualquier hora", "—", "✓", "✓", "✓"],
-        ["Reciben avisos y recordatorios en el móvil", "—", "✓", "✓", "✓"],
-      ],
-    },
-    {
-      t: "Para tu negocio",
-      rows: [
-        ["Hecha a la medida de cómo trabajás", "—", "~", "✓", "✓"],
-        ["Reservas, clientes, stock y números en un solo sitio", "—", "~", "✓", "✓"],
-        ["Lleva tu marca, no la de otra empresa", "—", "—", "✓", "✓"],
-        ["Se conecta con WhatsApp, Excel y Google Calendar", "—", "~", "~", "✓"],
-      ],
-    },
-    {
-      t: "Para crecer",
-      rows: [
-        ["Las mejoras llegan al momento, sin esperar revisión de tiendas", "—", "~", "—", "✓"],
-        ["Un solo desarrollo para todas las pantallas", "—", "✓", "—", "✓"],
-        ["La cuota no sube al sumar personas al equipo", "✓", "—", "✓", "✓"],
-        ["Los datos de tu negocio son tuyos", "✓", "~", "✓", "✓"],
-      ],
-    },
+  alt: [
+    { t: "Software de pago mensual", sub: "Plataformas por suscripción", corto: "Software mensual" },
+    { t: "App nativa tradicional", sub: "App Store y Google Play", corto: "App nativa" },
+  ],
+  rows: [
+    { t: "A medida de tu negocio", a: "Rígido: te tenés que adaptar a sus funciones estándar.", b: "A medida, pero con un coste muy alto.", p: "Hecha a la medida de cómo trabajás de verdad." },
+    { t: "Costes", a: "Cuota mensual y, en muchos casos, comisión por cada pago o reserva.", b: "Desarrollo de miles de euros, normalmente doble: uno para iPhone y otro para Android.", p: "Un solo desarrollo y un mantenimiento fijo. Sin comisiones de PULSE sobre tus ventas." },
+    { t: "Cómo entra tu cliente", a: "Tiene que descargar otra app más, a menudo con la marca de la plataforma.", b: "La tiene que buscar en la tienda, descargarla y mantenerla actualizada.", p: "Con un toque desde un enlace, directo a la pantalla de inicio." },
+    { t: "Memoria y batería", a: "Una app más instalada, ocupando espacio en el móvil.", b: "Ocupa espacio y puede ir lenta en móviles modestos.", p: "Muy ligera: pesa menos que una foto y apenas gasta batería." },
+    { t: "Propiedad de los datos", a: "Tus datos viven en su plataforma. Si te vas, sacarlos puede ser difícil.", b: "Dependés de las normas de Apple y Google para publicar y actualizar.", p: "Tus datos son tuyos y te los podés llevar cuando quieras." },
+    { t: "Integraciones", a: "Solo las que la plataforma decida ofrecer.", b: "Posibles, pero complejas y caras de programar.", p: "Conectada con lo que ya usás: WhatsApp, Excel, Google Calendar y más." },
+    { t: "Tu marca y diseño", a: "Suele llevar la imagen de la plataforma.", b: "Tu marca, pero sujeta a la aprobación de las tiendas.", p: "Tu marca, tus colores y tu nombre, solo para vos." },
   ],
 };
 
@@ -1478,50 +1460,111 @@ function Marca({ v }) {
   return <span className="inline-flex h-6 w-6 items-center justify-center text-[15px] text-gris-300" aria-label="No">—</span>;
 }
 
-// Marca destacada para la columna de PULSE
-function MarcaPulse({ v }) {
-  if (v === "✓") return <span className="inline-flex h-7 w-7 items-center justify-center rounded-full bg-gradient-to-br from-grad-a to-grad-b shadow-[0_6px_14px_-6px_rgba(255,79,0,0.7)]" aria-label="Sí"><svg viewBox="0 0 12 12" className="w-3.5"><path d="M2.5 6.3 5 8.6 9.5 3.4" fill="none" stroke="#111111" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round" /></svg></span>;
-  return <Marca v={v} />;
+// Iconos de la comparativa
+function Cruz() {
+  return (
+    <span className="mt-[2px] inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-gris-100" aria-label="En contra">
+      <svg viewBox="0 0 12 12" className="w-2.5"><path d="M3.5 3.5l5 5M8.5 3.5l-5 5" fill="none" stroke="#8A8A86" strokeWidth="1.7" strokeLinecap="round" /></svg>
+    </span>
+  );
+}
+function CheckPulse() {
+  return (
+    <span className="mt-[2px] inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-grad-a to-grad-b shadow-[0_4px_12px_-4px_rgba(255,79,0,0.8)]" aria-label="A favor">
+      <svg viewBox="0 0 12 12" className="w-3"><path d="M2.5 6.3 5 8.6 9.5 3.4" fill="none" stroke="#111111" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round" /></svg>
+    </span>
+  );
 }
 
-// Comparativa en móvil: se elige con qué alternativa comparar y se ven dos columnas
+// Comparativa en móvil: se elige la alternativa y cada fila queda como tarjeta
 function ComparativaMovil() {
   const [alt, setAlt] = useState(0);
+  const op = COMPARATIVA.alt[alt];
   return (
-    <div className="sombra overflow-hidden rounded-[24px] bg-white md:hidden">
-      <div className="flex flex-col gap-2.5 border-b border-linea p-4">
+    <div className="flex flex-col gap-3 md:hidden">
+      <div className="sombra flex flex-col gap-2.5 rounded-[22px] bg-white p-4">
         <span className="text-[13px] font-medium text-gris-500">Comparar PULSE con:</span>
-        <div role="tablist" aria-label="Alternativa a comparar" className="grid grid-cols-3 gap-1 rounded-[16px] bg-papel p-1">
-          {COMPARATIVA.corto.map((n, i) => (
-            <button key={n} type="button" role="tab" aria-selected={alt === i} onClick={() => setAlt(i)}
-              className={`relative rounded-[12px] px-1 py-2 text-[12px] font-semibold leading-tight transition-colors ${alt === i ? "text-tinta" : "text-gris-500"}`}>
-              {alt === i && <motion.span layoutId="comp-movil" className="absolute inset-0 rounded-[12px] bg-white shadow-[0_1px_3px_rgba(17,17,17,0.12)]" transition={{ type: "spring", stiffness: 420, damping: 36 }} />}
-              <span className="relative">{n}</span>
+        <div role="tablist" aria-label="Alternativa a comparar" className="grid grid-cols-2 gap-1 rounded-full bg-papel p-1">
+          {COMPARATIVA.alt.map((o, i) => (
+            <button key={o.t} type="button" role="tab" aria-selected={alt === i} onClick={() => setAlt(i)}
+              className={`relative rounded-full py-2 text-[13px] font-semibold transition-colors ${alt === i ? "text-tinta" : "text-gris-500"}`}>
+              {alt === i && <motion.span layoutId="comp-movil" className="absolute inset-0 rounded-full bg-white shadow-[0_1px_3px_rgba(17,17,17,0.12)]" transition={{ type: "spring", stiffness: 420, damping: 36 }} />}
+              <span className="relative">{o.corto}</span>
             </button>
           ))}
         </div>
       </div>
-      <div className="grid grid-cols-[1fr_72px_72px] items-end gap-2 border-b border-linea px-4 pb-3 pt-4 text-center text-[11.5px] font-semibold leading-tight">
-        <span className="sr-only">Característica</span><span aria-hidden="true" />
-        <span className="text-gris-500">{COMPARATIVA.corto[alt]}</span>
-        <span className="flex items-center justify-center rounded-full bg-tinta px-2 py-2"><Logo tone="dark" className="h-[10px] w-auto" /></span>
-      </div>
-      {COMPARATIVA.grupos.map((g) => (
-        <div key={g.t}>
-          <div className="bg-papel/70 px-4 py-2 text-[11.5px] font-semibold uppercase tracking-[0.06em] text-gris-500">{g.t}</div>
-          <ul>
-            {g.rows.map(([label, ...vals]) => (
-              <li key={label} className="grid grid-cols-[1fr_72px_72px] items-center gap-2 border-b border-linea px-4 py-3.5 last:border-0">
-                <span className="text-[14px] font-semibold leading-snug">{label}</span>
-                <span className="flex justify-center">
-                  <motion.span key={`${alt}-${label}`} initial={{ scale: 0.6, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} transition={{ duration: 0.25, ease }}><Marca v={vals[alt]} /></motion.span>
+      <ul className="flex flex-col gap-3">
+        {COMPARATIVA.rows.map((r) => (
+          <li key={r.t} className="sombra flex flex-col gap-3 rounded-[22px] bg-white p-4">
+            <h4 className="text-[17px] font-bold tracking-[-0.015em]">{r.t}</h4>
+            <motion.div key={`${alt}-${r.t}`} initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.25, ease }} className="flex gap-2.5 rounded-[14px] bg-papel p-3">
+              <Cruz />
+              <span className="flex flex-col gap-0.5">
+                <span className="text-[12px] font-semibold text-gris-400">{op.corto}</span>
+                <span className="text-[14px] leading-snug text-gris-500">{alt === 0 ? r.a : r.b}</span>
+              </span>
+            </motion.div>
+            <div className="flex gap-2.5 rounded-[14px] bg-tinta p-3 shadow-[0_14px_30px_-18px_rgba(255,79,0,0.6)]">
+              <CheckPulse />
+              <span className="flex flex-col gap-1.5">
+                <Logo tone="dark" className="h-[11px] w-auto self-start" />
+                <span className="text-[14px] font-medium leading-snug text-white">{r.p}</span>
+              </span>
+            </div>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+
+function ComparativaEscritorio() {
+  return (
+    <div className="relative hidden md:block">
+      <Blob className="-right-24 -top-16 h-[420px] w-[420px]" color="rgba(255,79,0,0.18)" />
+      <div className="sombra relative overflow-hidden rounded-[28px] bg-white">
+        <table className="w-full table-fixed border-collapse text-left">
+          <colgroup><col className="w-[20%]" /><col className="w-[26%]" /><col className="w-[26%]" /><col className="w-[28%]" /></colgroup>
+          <thead>
+            <tr>
+              <th scope="col" className="p-6 align-bottom text-[13px] font-semibold text-gris-400">Qué necesitás</th>
+              {COMPARATIVA.alt.map((o) => (
+                <th key={o.t} scope="col" className="p-6 align-bottom">
+                  <span className="flex flex-col gap-1">
+                    <span className="text-[16px] font-bold leading-tight tracking-[-0.01em] text-tinta">{o.t}</span>
+                    <span className="text-[13px] font-medium text-gris-400">{o.sub}</span>
+                  </span>
+                </th>
+              ))}
+              <th scope="col" className="relative bg-tinta p-6 align-bottom text-white">
+                <span aria-hidden="true" className="absolute inset-x-0 top-0 h-[3px] bg-gradient-to-r from-grad-a to-grad-b" />
+                <span className="flex flex-col gap-2">
+                  <Logo tone="dark" className="h-[18px] w-auto self-start" />
+                  <span className="text-[13px] font-medium text-white/60">App a medida</span>
                 </span>
-                <span className="flex justify-center"><MarcaPulse v={vals[3]} /></span>
-              </li>
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            {COMPARATIVA.rows.map((r) => (
+              <motion.tr key={r.t} whileHover={{ backgroundColor: "rgba(244,244,242,0.55)" }} className="border-t border-linea">
+                <th scope="row" className="p-6 align-top text-[15px] font-bold leading-snug">{r.t}</th>
+                {[r.a, r.b].map((txt, i) => (
+                  <td key={i} className="p-6 align-top"><span className="flex gap-3 text-[14.5px] leading-relaxed text-gris-500"><Cruz />{txt}</span></td>
+                ))}
+                <td className="border-t border-white/10 bg-tinta p-6 align-top">
+                  <span className="flex gap-3 text-[14.5px] font-medium leading-relaxed text-white"><CheckPulse />{r.p}</span>
+                </td>
+              </motion.tr>
             ))}
-          </ul>
-        </div>
-      ))}
+            <tr className="border-t border-linea">
+              <td colSpan={3} className="p-6 text-[14px] text-gris-400">Al principio, una app a medida pide más inversión que un software mensual. Por eso empezamos con una versión pequeña y la hacemos crecer.</td>
+              <td className="border-t border-white/10 bg-tinta p-6"><Button href="#contacto" variant="accent" className="w-full">Quiero mi app</Button></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 }
@@ -1549,48 +1592,14 @@ function Ventajas() {
           ))}
         </div>
 
-        <div className="flex flex-col gap-6">
+        <div className="flex flex-col gap-8">
           <div className="flex flex-col gap-3">
-            <h3 className="text-[clamp(1.5rem,2.6vw,2rem)] font-bold leading-tight tracking-[-0.03em]">Lo que te da una app de PULSE</h3>
-            <p className="max-w-[60ch] text-[16px] leading-relaxed text-gris-500">Tu app es una app web progresiva: se abre con un enlace, se instala en el móvil como cualquier otra y funciona en todos los dispositivos. Así queda frente a las alternativas.</p>
+            <h3 className="text-[clamp(1.5rem,2.6vw,2rem)] font-bold leading-tight tracking-[-0.03em]">PULSE frente a las alternativas</h3>
+            <p className="max-w-[60ch] text-[16px] leading-relaxed text-gris-500">Tu app es una app web progresiva: se abre con un enlace, se instala en el móvil como cualquier otra y funciona en todos los dispositivos.</p>
           </div>
           <ComparativaMovil />
-          <div className="sombra hidden overflow-hidden rounded-[28px] bg-white md:block">
-            <table className="w-full border-collapse text-left">
-              <thead>
-                <tr className="border-b border-linea">
-                  <th scope="col" className="w-[38%] p-5"><span className="sr-only">Característica</span></th>
-                  {COMPARATIVA.cols.map((col, i) => (
-                    <th key={col} scope="col" className={`p-5 text-center text-[13.5px] font-semibold leading-tight ${i === 3 ? "bg-tinta text-white" : "text-gris-500"}`}>
-                      {i === 3 ? <span className="flex justify-center"><Logo tone="dark" className="h-[16px] w-auto" /></span> : col}
-                    </th>
-                  ))}
-                </tr>
-              </thead>
-              {COMPARATIVA.grupos.map((g) => (
-                <tbody key={g.t}>
-                  <tr>
-                    <th colSpan={4} scope="colgroup" className="bg-papel/70 px-5 py-2.5 text-[12px] font-semibold uppercase tracking-[0.06em] text-gris-500">{g.t}</th>
-                    <td className="bg-[#FFF1EA]" />
-                  </tr>
-                  {g.rows.map(([label, ...vals], r) => (
-                    <motion.tr key={label} whileHover={{ backgroundColor: "rgba(244,244,242,0.6)" }} className="border-b border-linea last:border-0">
-                      <th scope="row" className="px-5 py-4 text-[15px] font-semibold leading-snug">{label}</th>
-                      {vals.map((v, i) => (
-                        <td key={i} className={`px-5 py-4 text-center ${i === 3 ? "bg-[#FFF7F2]" : ""}`}>
-                          <span className="inline-flex justify-center">{i === 3 ? <MarcaPulse v={v} /> : <Marca v={v} />}</span>
-                        </td>
-                      ))}
-                    </motion.tr>
-                  ))}
-                </tbody>
-              ))}
-            </table>
-          </div>
-          <div className="grid gap-3 text-[14px] leading-relaxed text-gris-500 md:grid-cols-2 md:gap-8">
-            <p>Una app de tiendas puede hacer casi lo mismo, pero necesita un desarrollo para iPhone y otro para Android, pasar la revisión de cada tienda en cada cambio y que tus clientes la descarguen.</p>
-            <p>Una app a medida pide más inversión al principio que una herramienta genérica. Por eso empezamos con una versión pequeña, con lo imprescindible. Y si una herramienta que ya existe te sirve, te lo decimos.</p>
-          </div>
+          <p className="text-[14px] text-gris-400 md:hidden">Al principio, una app a medida pide más inversión que un software mensual. Por eso empezamos con una versión pequeña y la hacemos crecer.</p>
+          <ComparativaEscritorio />
         </div>
       </div>
     </section>
