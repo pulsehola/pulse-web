@@ -69,17 +69,39 @@ const BENEFICIOS = [
   { t: "El equipo crece, la cuota no", d: "Sumar a una persona más no te sube la factura, como pasa con las apps que cobran por usuario." },
 ];
 
+// Comparativa: qué gana un negocio con su propia app web de PULSE (app web progresiva).
+// ✓ = sí · ~ = a medias · — = no. Columnas: papel/Excel, app genérica, app de tiendas, PULSE.
 const COMPARATIVA = {
-  cols: ["Papel, WhatsApp y Excel", "App genérica", "App a medida"],
-  rows: [
-    ["Empezás hoy mismo", "✓", "✓", "—"],
-    ["Inversión inicial baja", "✓", "✓", "—"],
-    ["Se adapta a tu forma de trabajar", "—", "~", "✓"],
-    ["Todo junto, en un solo sitio", "—", "~", "✓"],
-    ["Tus clientes reservan o piden solos", "—", "✓", "✓"],
-    ["Lleva tu marca", "—", "—", "✓"],
-    ["La cuota no sube con el equipo", "✓", "—", "✓"],
-    ["Cambia cuando cambia tu negocio", "~", "—", "✓"],
+  cols: ["Papel, WhatsApp y Excel", "App genérica", "App de tiendas", "PULSE"],
+  corto: ["Papel y Excel", "App genérica", "App de tiendas"],
+  grupos: [
+    {
+      t: "Para tus clientes",
+      rows: [
+        ["Se instala con un enlace, sin pasar por App Store ni Google Play", "—", "~", "—", "✓"],
+        ["Funciona en iPhone, Android y ordenador", "—", "✓", "~", "✓"],
+        ["Reservan, piden y pagan solos, a cualquier hora", "—", "✓", "✓", "✓"],
+        ["Reciben avisos y recordatorios en el móvil", "—", "✓", "✓", "✓"],
+      ],
+    },
+    {
+      t: "Para tu negocio",
+      rows: [
+        ["Hecha a la medida de cómo trabajás", "—", "~", "✓", "✓"],
+        ["Reservas, clientes, stock y números en un solo sitio", "—", "~", "✓", "✓"],
+        ["Lleva tu marca, no la de otra empresa", "—", "—", "✓", "✓"],
+        ["Se conecta con WhatsApp, Excel y Google Calendar", "—", "~", "~", "✓"],
+      ],
+    },
+    {
+      t: "Para crecer",
+      rows: [
+        ["Las mejoras llegan al momento, sin esperar revisión de tiendas", "—", "~", "—", "✓"],
+        ["Un solo desarrollo para todas las pantallas", "—", "✓", "—", "✓"],
+        ["La cuota no sube al sumar personas al equipo", "✓", "—", "✓", "✓"],
+        ["Los datos de tu negocio son tuyos", "✓", "~", "✓", "✓"],
+      ],
+    },
   ],
 };
 
@@ -136,11 +158,11 @@ const ACENTO = { base: "#FF4F00", texto: "#C2410C", suave: "#FFF1EA", claro: "#F
 const ISO_POINTS = "0,12 12,12 16,3 21,21 26,8 29,12 44,12";
 const WORDMARK_PATH = "M1.54 0V-15.84H8.23Q8.46 -15.84 8.85 -15.82Q9.24 -15.81 9.55 -15.75Q10.97 -15.53 11.87 -14.82Q12.78 -14.1 13.21 -13.02Q13.64 -11.93 13.64 -10.6Q13.64 -9.27 13.21 -8.19Q12.77 -7.11 11.86 -6.39Q10.96 -5.68 9.55 -5.46Q9.24 -5.41 8.84 -5.39Q8.45 -5.37 8.23 -5.37H4.53V0ZM4.53 -8.16H8.1Q8.33 -8.16 8.6 -8.18Q8.88 -8.21 9.11 -8.27Q9.71 -8.44 10.04 -8.83Q10.37 -9.22 10.5 -9.7Q10.63 -10.17 10.63 -10.6Q10.63 -11.03 10.5 -11.51Q10.37 -11.99 10.04 -12.38Q9.71 -12.77 9.11 -12.94Q8.88 -13 8.6 -13.02Q8.33 -13.05 8.1 -13.05H4.53Z M26.25 0.33Q24.33 0.33 22.88 -0.45Q21.43 -1.22 20.61 -2.63Q19.8 -4.04 19.8 -5.94V-15.82L22.84 -15.84V-5.96Q22.84 -5.18 23.1 -4.54Q23.36 -3.9 23.83 -3.44Q24.3 -2.98 24.92 -2.73Q25.54 -2.49 26.25 -2.49Q26.97 -2.49 27.59 -2.74Q28.21 -2.99 28.68 -3.45Q29.14 -3.92 29.4 -4.55Q29.66 -5.19 29.66 -5.96V-15.84H32.69V-5.94Q32.69 -4.04 31.88 -2.63Q31.06 -1.22 29.61 -0.45Q28.16 0.33 26.25 0.33Z M39.95 0V-15.84H42.94V-2.79H49.76V0Z M61.58 0.33Q59.82 0.33 58.4 -0.29Q56.99 -0.91 56.08 -2.07Q55.18 -3.23 54.93 -4.84L58.06 -5.3Q58.39 -3.94 59.42 -3.2Q60.46 -2.46 61.78 -2.46Q62.51 -2.46 63.21 -2.69Q63.9 -2.93 64.34 -3.38Q64.79 -3.83 64.79 -4.49Q64.79 -4.73 64.72 -4.96Q64.65 -5.18 64.48 -5.38Q64.32 -5.58 64.01 -5.75Q63.71 -5.93 63.25 -6.07L59.14 -7.28Q58.67 -7.41 58.06 -7.66Q57.45 -7.9 56.88 -8.35Q56.31 -8.8 55.93 -9.54Q55.55 -10.29 55.55 -11.42Q55.55 -13.01 56.35 -14.07Q57.16 -15.12 58.5 -15.64Q59.84 -16.16 61.47 -16.15Q63.11 -16.13 64.39 -15.59Q65.68 -15.05 66.55 -14.02Q67.42 -12.99 67.8 -11.51L64.57 -10.96Q64.39 -11.73 63.92 -12.25Q63.45 -12.78 62.79 -13.06Q62.14 -13.33 61.42 -13.35Q60.72 -13.38 60.1 -13.16Q59.48 -12.95 59.09 -12.54Q58.7 -12.13 58.7 -11.57Q58.7 -11.05 59.01 -10.73Q59.33 -10.41 59.82 -10.21Q60.3 -10.01 60.81 -9.88L63.56 -9.13Q64.17 -8.96 64.92 -8.7Q65.67 -8.43 66.36 -7.95Q67.04 -7.47 67.49 -6.69Q67.94 -5.91 67.94 -4.71Q67.94 -3.43 67.4 -2.48Q66.87 -1.53 65.97 -0.91Q65.06 -0.29 63.93 0.02Q62.79 0.33 61.58 0.33Z M74.32 0V-15.84H84.66V-13.05H77.31V-9.66H83.34V-6.86H77.31V-2.79H84.66V0Z";
 
-function Logo({ className = "h-6 w-auto" }) {
+function Logo({ className = "h-6 w-auto", tone = "light" }) {
   return (
     <svg viewBox="0 0 143 24" className={className} role="img" aria-label="PULSE">
       <polyline transform="translate(1.25 0)" points={ISO_POINTS} fill="none" stroke={LOGO_NARANJA} strokeWidth="2.5" strokeLinejoin="round" strokeLinecap="round" />
-      <path transform="translate(57.25 19.92)" fill="#111111" d={WORDMARK_PATH} />
+      <path transform="translate(57.25 19.92)" fill={tone === "dark" ? "#FFFFFF" : "#111111"} d={WORDMARK_PATH} />
     </svg>
   );
 }
@@ -903,7 +925,7 @@ function Hero() {
                 initial={{ scaleX: reduce ? 1 : 0 }} animate={{ scaleX: 1 }} transition={{ duration: 0.7, ease, delay: 0.25 }} />
             </span>
           </span>
-          <span aria-hidden="true" className="block text-gris-300">con una app a tu medida.</span>
+          <span aria-hidden="true" className="block">con una app a tu medida.</span>
         </h1>
 
         <p className="max-w-[52ch] text-entrada text-gris-500 md:text-[19px]">
@@ -1456,40 +1478,50 @@ function Marca({ v }) {
   return <span className="inline-flex h-6 w-6 items-center justify-center text-[15px] text-gris-300" aria-label="No">—</span>;
 }
 
+// Marca destacada para la columna de PULSE
+function MarcaPulse({ v }) {
+  if (v === "✓") return <span className="inline-flex h-7 w-7 items-center justify-center rounded-full bg-gradient-to-br from-grad-a to-grad-b shadow-[0_6px_14px_-6px_rgba(255,79,0,0.7)]" aria-label="Sí"><svg viewBox="0 0 12 12" className="w-3.5"><path d="M2.5 6.3 5 8.6 9.5 3.4" fill="none" stroke="#111111" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round" /></svg></span>;
+  return <Marca v={v} />;
+}
+
 // Comparativa en móvil: se elige con qué alternativa comparar y se ven dos columnas
 function ComparativaMovil() {
-  const [alt, setAlt] = useState(1);
-  const nombres = ["Papel y Excel", "App genérica"];
+  const [alt, setAlt] = useState(0);
   return (
     <div className="sombra overflow-hidden rounded-[24px] bg-white md:hidden">
       <div className="flex flex-col gap-2.5 border-b border-linea p-4">
-        <span className="text-[13px] font-medium text-gris-500">Comparar una app a medida con:</span>
-        <div role="tablist" aria-label="Alternativa a comparar" className="grid grid-cols-2 gap-1 rounded-full bg-papel p-1">
-          {nombres.map((n, i) => (
+        <span className="text-[13px] font-medium text-gris-500">Comparar PULSE con:</span>
+        <div role="tablist" aria-label="Alternativa a comparar" className="grid grid-cols-3 gap-1 rounded-[16px] bg-papel p-1">
+          {COMPARATIVA.corto.map((n, i) => (
             <button key={n} type="button" role="tab" aria-selected={alt === i} onClick={() => setAlt(i)}
-              className={`relative rounded-full py-2 text-[13px] font-semibold transition-colors ${alt === i ? "text-tinta" : "text-gris-500"}`}>
-              {alt === i && <motion.span layoutId="comp-movil" className="absolute inset-0 rounded-full bg-white shadow-[0_1px_3px_rgba(17,17,17,0.12)]" transition={{ type: "spring", stiffness: 420, damping: 36 }} />}
+              className={`relative rounded-[12px] px-1 py-2 text-[12px] font-semibold leading-tight transition-colors ${alt === i ? "text-tinta" : "text-gris-500"}`}>
+              {alt === i && <motion.span layoutId="comp-movil" className="absolute inset-0 rounded-[12px] bg-white shadow-[0_1px_3px_rgba(17,17,17,0.12)]" transition={{ type: "spring", stiffness: 420, damping: 36 }} />}
               <span className="relative">{n}</span>
             </button>
           ))}
         </div>
       </div>
-      <div className="grid grid-cols-[1fr_76px_76px] items-end gap-2 border-b border-linea px-4 pb-3 pt-4 text-center text-[11.5px] font-semibold leading-tight">
+      <div className="grid grid-cols-[1fr_72px_72px] items-end gap-2 border-b border-linea px-4 pb-3 pt-4 text-center text-[11.5px] font-semibold leading-tight">
         <span className="sr-only">Característica</span><span aria-hidden="true" />
-        <span className="text-gris-500">{nombres[alt]}</span>
-        <span className="rounded-full bg-tinta px-1 py-1.5 text-white">A medida</span>
+        <span className="text-gris-500">{COMPARATIVA.corto[alt]}</span>
+        <span className="flex items-center justify-center rounded-full bg-tinta px-2 py-2"><Logo tone="dark" className="h-[10px] w-auto" /></span>
       </div>
-      <ul>
-        {COMPARATIVA.rows.map(([label, ...vals]) => (
-          <li key={label} className="grid grid-cols-[1fr_76px_76px] items-center gap-2 border-b border-linea px-4 py-3.5 last:border-0">
-            <span className="text-[14.5px] font-semibold leading-snug">{label}</span>
-            <span className="flex justify-center">
-              <motion.span key={`${alt}-${label}`} initial={{ scale: 0.6, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} transition={{ duration: 0.25, ease }}><Marca v={vals[alt]} /></motion.span>
-            </span>
-            <span className="flex justify-center"><Marca v={vals[2]} /></span>
-          </li>
-        ))}
-      </ul>
+      {COMPARATIVA.grupos.map((g) => (
+        <div key={g.t}>
+          <div className="bg-papel/70 px-4 py-2 text-[11.5px] font-semibold uppercase tracking-[0.06em] text-gris-500">{g.t}</div>
+          <ul>
+            {g.rows.map(([label, ...vals]) => (
+              <li key={label} className="grid grid-cols-[1fr_72px_72px] items-center gap-2 border-b border-linea px-4 py-3.5 last:border-0">
+                <span className="text-[14px] font-semibold leading-snug">{label}</span>
+                <span className="flex justify-center">
+                  <motion.span key={`${alt}-${label}`} initial={{ scale: 0.6, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} transition={{ duration: 0.25, ease }}><Marca v={vals[alt]} /></motion.span>
+                </span>
+                <span className="flex justify-center"><MarcaPulse v={vals[3]} /></span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      ))}
       <div className="flex flex-wrap items-center gap-x-4 gap-y-2 border-t border-linea bg-papel/60 px-4 py-3 text-[12px] text-gris-500">
         <span className="flex items-center gap-1.5"><Marca v="✓" /> Sí</span>
         <span className="flex items-center gap-1.5"><Marca v="~" /></span>
@@ -1522,33 +1554,47 @@ function Ventajas() {
           ))}
         </div>
 
-        <div className="flex flex-col gap-5">
-          <div className="flex flex-col justify-between gap-2 sm:flex-row sm:items-end">
-            <h3 className="text-[24px] font-bold tracking-[-0.025em]">Comparado, sin trampas</h3>
-            <span className="text-[14px] text-gris-400">Si una herramienta que ya existe te sirve, te lo decimos.</span>
+        <div className="flex flex-col gap-6">
+          <div className="flex flex-col gap-3">
+            <h3 className="text-[clamp(1.5rem,2.6vw,2rem)] font-bold leading-tight tracking-[-0.03em]">Lo que te da una app de PULSE</h3>
+            <p className="max-w-[60ch] text-[16px] leading-relaxed text-gris-500">Tu app es una app web progresiva: se abre con un enlace, se instala en el móvil como cualquier otra y funciona en todos los dispositivos. Así queda frente a las alternativas.</p>
           </div>
           <ComparativaMovil />
-          <div className="sombra hidden overflow-x-auto rounded-[24px] bg-white md:block">
-            <table className="w-full min-w-[640px] border-collapse text-left">
+          <div className="sombra hidden overflow-hidden rounded-[28px] bg-white md:block">
+            <table className="w-full border-collapse text-left">
               <thead>
                 <tr className="border-b border-linea">
-                  <th scope="col" className="w-[40%] p-5"><span className="sr-only">Característica</span></th>
+                  <th scope="col" className="w-[38%] p-5"><span className="sr-only">Característica</span></th>
                   {COMPARATIVA.cols.map((col, i) => (
-                    <th key={col} scope="col" className={`p-5 text-[14px] font-semibold ${i === 2 ? "bg-tinta text-white" : "text-gris-500"}`}>
-                      {i === 2 ? <span className="flex items-center gap-2"><Iso className="w-5" width={4} stroke={ACENTO.claro} />{col}</span> : col}
+                    <th key={col} scope="col" className={`p-5 text-center text-[13.5px] font-semibold leading-tight ${i === 3 ? "bg-tinta text-white" : "text-gris-500"}`}>
+                      {i === 3 ? <span className="flex justify-center"><Logo tone="dark" className="h-[16px] w-auto" /></span> : col}
                     </th>
                   ))}
                 </tr>
               </thead>
-              <tbody>
-                {COMPARATIVA.rows.map(([label, ...vals]) => (
-                  <tr key={label} className="border-b border-linea last:border-0">
-                    <th scope="row" className="p-5 text-[15px] font-semibold">{label}</th>
-                    {vals.map((v, i) => <td key={i} className={`p-5 ${i === 2 ? "bg-papel/70" : ""}`}><Marca v={v} /></td>)}
+              {COMPARATIVA.grupos.map((g) => (
+                <tbody key={g.t}>
+                  <tr>
+                    <th colSpan={4} scope="colgroup" className="bg-papel/70 px-5 py-2.5 text-[12px] font-semibold uppercase tracking-[0.06em] text-gris-500">{g.t}</th>
+                    <td className="bg-[#FFF1EA]" />
                   </tr>
-                ))}
-              </tbody>
+                  {g.rows.map(([label, ...vals], r) => (
+                    <motion.tr key={label} whileHover={{ backgroundColor: "rgba(244,244,242,0.6)" }} className="border-b border-linea last:border-0">
+                      <th scope="row" className="px-5 py-4 text-[15px] font-semibold leading-snug">{label}</th>
+                      {vals.map((v, i) => (
+                        <td key={i} className={`px-5 py-4 text-center ${i === 3 ? "bg-[#FFF7F2]" : ""}`}>
+                          <span className="inline-flex justify-center">{i === 3 ? <MarcaPulse v={v} /> : <Marca v={v} />}</span>
+                        </td>
+                      ))}
+                    </motion.tr>
+                  ))}
+                </tbody>
+              ))}
             </table>
+          </div>
+          <div className="grid gap-3 text-[14px] leading-relaxed text-gris-500 md:grid-cols-2 md:gap-8">
+            <p>Una app de tiendas puede hacer casi lo mismo, pero necesita un desarrollo para iPhone y otro para Android, pasar la revisión de cada tienda en cada cambio y que tus clientes la descarguen.</p>
+            <p>Una app a medida pide más inversión al principio que una herramienta genérica. Por eso empezamos con una versión pequeña, con lo imprescindible. Y si una herramienta que ya existe te sirve, te lo decimos.</p>
           </div>
         </div>
       </div>
