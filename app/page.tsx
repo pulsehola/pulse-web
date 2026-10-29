@@ -1,33 +1,21 @@
-import { Header } from "@/components/Header";
-import { Hero } from "@/components/Hero";
-import { Marquee } from "@/components/Marquee";
-import { Services } from "@/components/Services";
-import { About } from "@/components/About";
-import { Projects } from "@/components/Projects";
-import { Contact } from "@/components/Contact";
-import { Footer } from "@/components/Footer";
-import { Cursor } from "@/components/fx/Cursor";
-import { ScrollProgress } from "@/components/fx/ScrollProgress";
+import type { Metadata } from "next";
+import Landing from "@/components/landing/Landing";
+
+// Portada: landing de apps web a medida.
+// La home anterior (Hero, Services, About, Projects, Contact) sigue en /components por si se quiere recuperar.
+export const metadata: Metadata = {
+  title: "PULSE — Apps web a medida para tu negocio",
+  description:
+    "Convertimos tu forma de trabajar en una app propia: reservas, stock, citas y clientes, conectada con WhatsApp, Instagram, Excel y Google Calendar.",
+  openGraph: {
+    title: "PULSE — Apps web a medida para tu negocio",
+    description:
+      "Reservas, stock, citas y clientes en una app hecha a tu medida. Sin descargas y sin saber de código.",
+    type: "website",
+    locale: "es_ES",
+  },
+};
 
 export default function Home() {
-  return (
-    <>
-      <span id="top" />
-      <a href="#contenido" className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[70] focus:rounded focus:bg-white focus:px-4 focus:py-3 focus:font-semibold">
-        Saltar al contenido
-      </a>
-      <ScrollProgress />
-      <Cursor />
-      <Header />
-      <main id="contenido">
-        <Hero />
-        <Marquee />
-        <Services />
-        <About />
-        <Projects />
-        <Contact />
-      </main>
-      <Footer />
-    </>
-  );
+  return <Landing />;
 }

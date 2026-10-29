@@ -56,4 +56,34 @@
   .field {
     @apply w-full rounded border-regla border-tinta bg-white px-4 py-3 text-base text-tinta placeholder:text-gris-500 transition-colors focus:outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-tinta;
   }
+
+  /* --- Landing "Apps a medida" --- */
+  .tnum { font-variant-numeric: tabular-nums; }
+  .wa-wall {
+    background-color: #EFEAE2;
+    background-image: radial-gradient(rgba(17, 27, 33, 0.05) 1px, transparent 1.2px);
+    background-size: 14px 14px;
+  }
+  .glass {
+    background: rgba(255, 255, 255, 0.82);
+    -webkit-backdrop-filter: saturate(180%) blur(20px);
+    backdrop-filter: saturate(180%) blur(20px);
+  }
+  .vidrio {
+    background: rgba(255, 255, 255, 0.6);
+    -webkit-backdrop-filter: saturate(170%) blur(18px);
+    backdrop-filter: saturate(170%) blur(18px);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.9), 0 0 0 1px rgba(17, 17, 17, 0.05), 0 24px 60px -28px rgba(17, 17, 17, 0.25);
+  }
+  .sombra {
+    box-shadow: 0 1px 1px rgba(17, 17, 17, 0.03), 0 3px 6px rgba(17, 17, 17, 0.03), 0 18px 40px -18px rgba(17, 17, 17, 0.18), 0 0 0 1px rgba(17, 17, 17, 0.05);
+  }
+  .foco {
+    background-image: radial-gradient(420px circle at var(--x, 50%) var(--y, -40%), rgba(255, 79, 0, 0.1), transparent 45%);
+  }
+  .marquee { display: flex; width: max-content; animation: marquee 42s linear infinite; }
+  @keyframes marquee { to { transform: translateX(-50%); } }
+  @media (prefers-reduced-motion: reduce) { .marquee { animation: none; } }
+  .no-scrollbar { scrollbar-width: none; }
+  .no-scrollbar::-webkit-scrollbar { display: none; }
 }
