@@ -13,7 +13,7 @@
 import React, { useState, useEffect, useRef, useId } from "react";
 import { motion, AnimatePresence, useScroll, useTransform, useSpring, useReducedMotion, useMotionValueEvent, useMotionValue } from "framer-motion";
 import { Logo } from "../Logo";
-import { Isotipo } from "../Isotipo";
+import { WORDMARK_PATH } from "../wordmark";
 const ease = [0.22, 1, 0.36, 1];
 
 /* ---------------------------------------------------------------------
@@ -65,20 +65,20 @@ const PASOS = [
 
 // Soluciones: lo que puede resolver una app de PULSE.
 const SOLUCIONES = [
-  { t: "Reservas", d: "Tus clientes reservan solos, a cualquier hora, y ven las plazas libres al momento." },
-  { t: "Citas", d: "Confirmaciones y recordatorios automáticos para que nadie se olvide de venir." },
-  { t: "Agendas", d: "El día de cada persona del equipo en una pantalla, sin choques ni dobles reservas." },
-  { t: "Stock", d: "Entradas, salidas y un aviso antes de que algo se agote." },
-  { t: "Presupuestos", d: "Prepara y envía presupuestos en minutos, con tu marca." },
-  { t: "Datos", d: "Clientes, pedidos e historial ordenados en un solo sitio, siempre a mano." },
-  { t: "Dashboards", d: "Los números de tu negocio de un vistazo: reservas, ventas y ocupación." },
-  { t: "Análisis", d: "Qué se vende más, qué horarios se llenan y dónde puedes mejorar." },
-  { t: "Soporte", d: "Seguimos a tu lado después de la entrega, para resolver dudas y hacer ajustes." },
+  { k: "reservas", t: "Reservas", d: "Tus clientes reservan solos, a cualquier hora, y ven las plazas libres al momento." },
+  { k: "citas", t: "Citas", d: "Confirmaciones y recordatorios automáticos para que nadie se olvide de venir." },
+  { k: "agendas", t: "Agendas", d: "El día de cada persona del equipo en una pantalla, sin choques ni dobles reservas." },
+  { k: "stock", t: "Stock", d: "Entradas, salidas y un aviso antes de que algo se agote." },
+  { k: "presupuestos", t: "Presupuestos", d: "Prepara y envía presupuestos en minutos, con tu marca." },
+  { k: "datos", t: "Datos", d: "Clientes, pedidos e historial ordenados en un solo sitio, siempre a mano." },
+  { k: "dashboards", t: "Dashboards", d: "Los números de tu negocio de un vistazo: reservas, ventas y ocupación." },
+  { k: "analisis", t: "Análisis", d: "Qué se vende más, qué horarios se llenan y dónde puedes mejorar." },
+  { k: "soporte", t: "Soporte", d: "Seguimos a tu lado después de la entrega, para resolver dudas y hacer ajustes." },
 ];
 
 // Lo que hace cada integración, dicho tal cual. TODO: confirmar alcance técnico antes de publicar.
 const INTEGRACIONES = [
-  { id: "wa", n: "WhatsApp", d: "Recordatorios automáticos y un asistente que contesta por ti.", lado: "izq" },
+  { id: "wa", n: "WhatsApp", d: "Recordatorios y confirmaciones automáticas para tus clientes.", lado: "izq" },
   { id: "ig", n: "Instagram", d: "Un enlace para reservar o pedir desde tu bio y tus historias.", lado: "izq" },
   { id: "sheets", n: "Excel y Google Sheets", d: "Importas lo que ya tienes y exportas cuando quieras.", lado: "der" },
   { id: "cal", n: "Google Calendar", d: "Cada cita aparece en tu calendario de siempre.", lado: "der" },
@@ -88,7 +88,7 @@ const BENEFICIOS = [
   { t: "Funciona como trabajas tú", d: "No te adaptas a pantallas pensadas para otro negocio. La app sigue tus pasos, en tu orden." },
   { t: "Todo en un solo sitio", d: "Reservas, clientes, stock y números juntos, en vez de cinco herramientas que no se hablan." },
   { t: "Tu marca y tus datos", d: "La app lleva tu nombre y tus colores. La información de tu negocio es tuya." },
-  { t: "Sin cuotas por usuario", d: "Sumar a una persona más a tu equipo no te cuesta nada extra, como pasa con las apps que cobran por usuario." },
+  { t: "Sin cuotas por usuario", d: "Sumar a una persona más a tu equipo no te cuesta nada extra. Con las apps que cobran por usuario, sí." },
 ];
 
 // Comparativa: PULSE frente a software por suscripción y app nativa de tiendas.
@@ -163,11 +163,26 @@ function useToast(ms = 1800) {
 const LOGO_NARANJA = "#FF4F00";
 const ACENTO = { base: "#FF4F00", texto: "#C2410C", suave: "#FFF1EA", claro: "#FF4F00", a: "#FF4F00", b: "#FF8A3D" };
 
-// Isotipo "Trazo" (manual de marca v1.1): la P en una sola línea + punto naranja.
-// Logo oficial desde components/Logo.tsx; acá solo una envoltura para los usos decorativos.
-function Iso({ className = "h-5 w-auto", stroke = ACENTO.base, onDark = false, heavy = false }) {
-  const mono = stroke === "#111111";
-  return <Isotipo className={className} heavy={heavy} line={onDark ? "#FFFFFF" : "#111111"} dot={mono ? "#111111" : LOGO_NARANJA} />;
+// El isotipo solo aparece en el pie y en la tabla comparativa (a través de <Logo />).
+// En la cabecera y en las páginas de proyecto se usa solo el wordmark.
+function Wordmark({ className = "h-4 w-auto", tone = "light" }) {
+  return (
+    <svg viewBox="1.2 -16.5 83.8 17.1" className={className} role="img" aria-label="PULSE">
+      <path fill={tone === "dark" ? "#FFFFFF" : "#111111"} d={WORDMARK_PATH} />
+    </svg>
+  );
+}
+
+// Reloj compartido para las mini animaciones (se detiene con "reducir movimiento")
+function useTick(ms = 1800) {
+  const reduce = useReducedMotion();
+  const [t, setT] = useState(0);
+  useEffect(() => {
+    if (reduce) return;
+    const id = setInterval(() => setT((x) => x + 1), ms);
+    return () => clearInterval(id);
+  }, [ms, reduce]);
+  return t;
 }
 
 const BTN = {
@@ -204,7 +219,7 @@ function Button({ href = "#contacto", variant = "dark", children, className = ""
 function Eyebrow({ children, dark }) {
   return (
     <span className={`inline-flex items-center gap-2.5 font-mono text-label font-medium uppercase ${dark ? "text-white/60" : "text-gris-500"}`}>
-      <Iso className="h-4 w-auto" onDark={dark} />{children}
+      <span aria-hidden="true" className={`h-1.5 w-1.5 rounded-full ${dark ? "bg-[#FF8A3D]" : "bg-acento"}`} />{children}
     </span>
   );
 }
@@ -227,6 +242,7 @@ function Glyph({ kind, className = "h-5 w-5" }) {
   if (kind === "ig") return <svg viewBox="0 0 24 24" className={className} aria-hidden="true"><path {...p} d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-.8.8" /><path {...p} d="M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l.8-.8" /></svg>;
   if (kind === "sheets") return <svg viewBox="0 0 24 24" className={className} aria-hidden="true"><rect {...p} x="4" y="4" width="16" height="16" rx="2.5" /><path {...p} d="M4 9.5h16M4 14.5h16M10 4v16" /></svg>;
   if (kind === "cal") return <svg viewBox="0 0 24 24" className={className} aria-hidden="true"><rect {...p} x="4" y="5.5" width="16" height="14.5" rx="2.5" /><path {...p} d="M4 10h16M8.5 3.5v4M15.5 3.5v4" /><path {...p} d="M8.5 14h2M13.5 14h2M8.5 17h2" /></svg>;
+  if (kind === "note") return <svg viewBox="0 0 24 24" className={className} aria-hidden="true"><rect {...p} x="5" y="3.5" width="14" height="17" rx="2.5" /><path {...p} d="M8.5 8h7M8.5 11.5h7M8.5 15h4" /></svg>;
   if (kind === "box") return <svg viewBox="0 0 24 24" className={className} aria-hidden="true"><path {...p} d="M4 8 12 4l8 4v8l-8 4-8-4Z" /><path {...p} d="M4 8l8 4 8-4M12 12v8" /></svg>;
   return null;
 }
@@ -280,7 +296,7 @@ function Notif({ icon = "pulse", app, title, body, time = "ahora", className = "
     <div className={`glass ${/\bw-\[/.test(className) ? "" : "w-[292px]"} rounded-[20px] p-3.5 text-left shadow-[inset_0_1px_0_rgba(255,255,255,0.9),0_2px_6px_rgba(17,17,17,0.04),0_24px_60px_-20px_rgba(17,17,17,0.32),0_0_0_1px_rgba(17,17,17,0.05)] ${className}`}>
       <div className="flex items-center gap-2">
         {icon === "wa" && <span className="flex h-[22px] w-[22px] items-center justify-center rounded-[6px] bg-wa-verde text-white"><Glyph kind="wa" className="h-3.5 w-3.5" /></span>}
-        {icon === "pulse" && <span className="flex h-[22px] w-[22px] items-center justify-center rounded-[6px] bg-tinta"><Iso className="h-3.5 w-auto" heavy onDark /></span>}
+        {icon === "pulse" && <span className="flex h-[22px] w-[22px] items-center justify-center rounded-[6px] bg-tinta font-sans text-[11px] font-bold text-white">{app?.[0]}</span>}
         {icon === "box" && <span className="flex h-[22px] w-[22px] items-center justify-center rounded-[6px] bg-aviso text-white"><Glyph kind="box" className="h-3.5 w-3.5" /></span>}
         {icon === "cal" && <span className="flex h-[22px] w-[22px] items-center justify-center rounded-[6px] bg-white text-tinta ring-1 ring-linea"><Glyph kind="cal" className="h-3.5 w-3.5" /></span>}
         <span className="font-sys text-[11.5px] font-medium uppercase tracking-[0.02em] text-gris-500">{app}</span>
@@ -569,7 +585,7 @@ function WAChat({ name, sub = "Cuenta de empresa", msgs, delayStep = 0.6 }) {
         <StatusBar />
         <div className="flex items-center gap-2 px-3 pb-2 pt-1.5">
           <span className="text-[17px] leading-none text-wa-boton" aria-hidden="true">‹</span>
-          <span className="flex h-8 w-8 items-center justify-center rounded-full bg-tinta"><Iso className="h-4 w-auto" heavy onDark /></span>
+          <span className="flex h-8 w-8 items-center justify-center rounded-full bg-tinta font-sans text-[13px] font-bold text-white">{name?.[0]}</span>
           <span className="flex min-w-0 flex-1 flex-col">
             <span className="flex items-center gap-1 truncate text-[12.5px] font-semibold text-wa-texto">
               {name}
@@ -745,41 +761,251 @@ function RevealTitle({ children, className = "", id, as: Tag = "h2" }) {
 }
 
 /* ---------------------------------------------------------------------
-   SECCIÓN: Soluciones (frase que se escribe con el scroll + listado)
+   SECCIÓN: Soluciones
+   Frase que se escribe con el scroll + selector de soluciones con vista previa animada.
    --------------------------------------------------------------------- */
 function Word({ children, progress, range }) {
   const reduce = useReducedMotion();
   const color = useTransform(progress, range, reduce ? ["#111111", "#111111"] : ["#CFCFCB", "#111111"]);
   return <motion.span style={{ color }}>{children} </motion.span>;
 }
+
+const TARJETA = "rounded-[14px] bg-white shadow-[0_0_0_1px_rgba(17,17,17,0.06),0_10px_24px_-14px_rgba(17,17,17,0.25)]";
+const OK = <svg viewBox="0 0 12 12" className="w-2.5"><path d="M2.5 6.3 5 8.6 9.5 3.4" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" /></svg>;
+
+// Vista previa animada de cada solución (sin datos reales: es ilustrativa)
+function SolVisual({ k }) {
+  const t = useTick(1300);
+  if (k === "reservas") {
+    const horas = ["9:00", "9:30", "10:00", "10:30", "11:00", "11:30", "12:00", "12:30", "16:00", "16:30", "17:00", "17:30"];
+    const on = [2, 6, 10, 7][t % 4];
+    return (
+      <div className="grid w-full max-w-[360px] grid-cols-4 gap-2">
+        {horas.map((h, i) => {
+          const ocup = [1, 4, 9].includes(i);
+          return (
+            <motion.span key={h} animate={{ scale: i === on ? 1.08 : 1 }} transition={{ duration: 0.35, ease }}
+              className={`flex h-12 items-center justify-center rounded-[12px] text-[12.5px] font-semibold tnum transition-colors duration-300 ${i === on ? "bg-gradient-to-br from-grad-a to-grad-b text-tinta shadow-[0_10px_22px_-8px_rgba(255,79,0,0.7)]" : ocup ? "bg-gris-100 text-gris-300 line-through" : TARJETA}`}>
+              {h}
+            </motion.span>
+          );
+        })}
+      </div>
+    );
+  }
+  if (k === "citas") {
+    const n = t % 4;
+    return (
+      <div className="flex w-full max-w-[340px] flex-col gap-2.5">
+        {[["Ana Roca", "10:15"], ["Marc Puig", "12:30"], ["Laia Soler", "16:00"]].map(([nom, h], i) => {
+          const ok = i < n;
+          return (
+            <div key={nom} className={`flex items-center gap-3 px-4 py-3 ${TARJETA}`}>
+              <span className="text-[13px] font-semibold tnum text-gris-500">{h}</span>
+              <span className="flex-1 text-[14px] font-semibold">{nom}</span>
+              <motion.span key={String(ok)} initial={{ scale: 0.7, opacity: 0 }} animate={{ scale: 1, opacity: 1 }}
+                className={`flex items-center gap-1 rounded-full px-2.5 py-1 text-[11px] font-semibold ${ok ? "bg-tinta text-white" : "bg-papel text-gris-500"}`}>
+                {ok ? <>{OK} Confirmada</> : "Pendiente"}
+              </motion.span>
+            </div>
+          );
+        })}
+      </div>
+    );
+  }
+  if (k === "agendas") {
+    const filas = [["Marta", [[8, 30], [52, 22]]], ["Pau", [[20, 26], [64, 24]]], ["Clara", [[4, 18], [36, 30], [76, 16]]]];
+    return (
+      <div className={`relative w-full max-w-[380px] p-4 ${TARJETA}`}>
+        <div className="mb-2 flex justify-between pl-14 text-[10.5px] font-medium text-gris-400 tnum"><span>9:00</span><span>13:00</span><span>17:00</span></div>
+        {filas.map(([n, bloques], r) => (
+          <div key={n} className="flex items-center gap-3 py-1.5">
+            <span className="w-11 text-[12.5px] font-semibold">{n}</span>
+            <div className="relative h-7 flex-1 rounded-[8px] bg-papel">
+              {bloques.map(([l, w], i) => <span key={i} className={`absolute inset-y-1 rounded-[6px] ${r === 1 && i === 0 ? "bg-gradient-to-r from-grad-a to-grad-b" : "bg-tinta"}`} style={{ left: `${l}%`, width: `${w}%` }} />)}
+            </div>
+          </div>
+        ))}
+        <motion.span aria-hidden="true" className="absolute bottom-3 top-9 w-[2px] rounded-full bg-acento" animate={{ left: `${30 + (t % 8) * 7.5}%` }} transition={{ duration: 1.2, ease: "linear" }} />
+      </div>
+    );
+  }
+  if (k === "stock") {
+    const sets = [[78, 52, 16, 64], [70, 48, 30, 58], [62, 44, 12, 70]];
+    const v = sets[t % 3];
+    return (
+      <div className={`flex w-full max-w-[360px] flex-col gap-3 p-4 ${TARJETA}`}>
+        {["Cajas", "Etiquetas", "Film", "Palets"].map((n, i) => {
+          const low = v[i] < 25;
+          return (
+            <div key={n} className="flex items-center gap-3">
+              <span className="w-[72px] text-[12.5px] font-semibold">{n}</span>
+              <span className="h-2.5 flex-1 overflow-hidden rounded-full bg-gris-100">
+                <motion.span className={`block h-full rounded-full ${low ? "bg-aviso" : "bg-tinta"}`} animate={{ width: `${v[i]}%` }} transition={{ duration: 0.6, ease }} />
+              </span>
+              <span className={`w-[52px] text-right text-[10.5px] font-semibold ${low ? "text-aviso-texto" : "text-gris-400"}`}>{low ? "Pedir" : "OK"}</span>
+            </div>
+          );
+        })}
+      </div>
+    );
+  }
+  if (k === "presupuestos") {
+    const items = ["Reservas online", "Bonos y lista de espera", "Recordatorios", "Tu marca y dominio"];
+    const n = t % (items.length + 2);
+    return (
+      <div className={`flex w-full max-w-[320px] flex-col gap-2.5 p-5 ${TARJETA}`}>
+        <div className="flex items-center justify-between">
+          <span className="text-[14px] font-bold">Presupuesto · v1</span>
+          <AnimatePresence>{n > items.length && <motion.span initial={{ opacity: 0, scale: 0.8 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0 }} className="rounded-full bg-tinta px-2.5 py-1 text-[10.5px] font-semibold text-white">Enviado</motion.span>}</AnimatePresence>
+        </div>
+        {items.map((x, i) => (
+          <motion.span key={x} animate={{ opacity: i < n ? 1 : 0.25, x: i < n ? 0 : 6 }} transition={{ duration: 0.35, ease }} className="flex items-center gap-2 text-[13px]">
+            <span className="flex h-4 w-4 items-center justify-center rounded-full bg-tinta text-acento">{OK}</span>{x}
+          </motion.span>
+        ))}
+      </div>
+    );
+  }
+  if (k === "datos") {
+    const on = t % 4;
+    return (
+      <div className={`flex w-full max-w-[340px] flex-col gap-1 p-3 ${TARJETA}`}>
+        <span className="mb-1 rounded-[10px] border border-linea px-3 py-2 text-[12px] text-gris-400">Buscar cliente…</span>
+        {[["Ana Puig", "Cliente desde 2024"], ["Hotel Mirador", "Pedido mensual"], ["Jordi Torres", "Última compra: ayer"], ["Clara Ferrer", "3 reservas este mes"]].map(([n, d], i) => (
+          <motion.div key={n} animate={{ x: i === on ? 6 : 0, backgroundColor: i === on ? "#111111" : "#FFFFFF" }} transition={{ duration: 0.35, ease }} className="flex items-center gap-2.5 rounded-[10px] px-2.5 py-2">
+            <span className={`flex h-7 w-7 items-center justify-center rounded-full text-[10px] font-bold ${i === on ? "bg-acento text-tinta" : "bg-papel"}`}>{n.split(" ").map((w) => w[0]).join("")}</span>
+            <span className="flex flex-col"><span className={`text-[12.5px] font-semibold ${i === on ? "text-white" : ""}`}>{n}</span><span className={`text-[10.5px] ${i === on ? "text-white/60" : "text-gris-400"}`}>{d}</span></span>
+          </motion.div>
+        ))}
+      </div>
+    );
+  }
+  if (k === "dashboards") {
+    const a = t % 2 === 0;
+    const kpis = a ? [["Reservas", "142"], ["Ocupación", "86%"], ["Clientes", "38"]] : [["Reservas", "158"], ["Ocupación", "91%"], ["Clientes", "41"]];
+    const bars = a ? [52, 70, 64, 88, 80, 46, 22] : [60, 74, 70, 92, 84, 50, 28];
+    const max = Math.max(...bars);
+    return (
+      <div className="flex w-full max-w-[380px] flex-col gap-2.5">
+        <div className="grid grid-cols-3 gap-2">
+          {kpis.map(([l, v]) => (
+            <div key={l} className={`flex flex-col px-3 py-2.5 ${TARJETA}`}>
+              <span className="text-[10.5px] text-gris-400">{l}</span>
+              <motion.span key={v} initial={{ y: 6, opacity: 0 }} animate={{ y: 0, opacity: 1 }} className="text-[20px] font-bold tracking-[-0.03em] tnum">{v}</motion.span>
+            </div>
+          ))}
+        </div>
+        <div className={`flex h-[120px] items-end gap-2 p-3 ${TARJETA}`}>
+          {bars.map((b, i) => <motion.span key={i} className={`flex-1 rounded-[6px] ${b === max ? "bg-gradient-to-t from-grad-a to-grad-b" : "bg-tinta"}`} animate={{ height: `${(b / max) * 100}%` }} transition={{ duration: 0.6, ease, delay: i * 0.03 }} />)}
+        </div>
+      </div>
+    );
+  }
+  if (k === "analisis") {
+    const pts = [[0, 70], [16, 58], [33, 62], [50, 30], [66, 44], [83, 38], [100, 52]];
+    const d = pts.map(([x, y], i) => `${i ? "L" : "M"}${x * 3.2 + 10} ${y * 1.4 + 10}`).join(" ");
+    return (
+      <div className={`relative w-full max-w-[380px] p-4 ${TARJETA}`}>
+        <span className="text-[12px] font-semibold text-gris-500">Reservas por día</span>
+        <svg viewBox="0 0 340 130" className="mt-2 w-full" aria-hidden="true">
+          {[30, 65, 100].map((y) => <line key={y} x1="10" x2="330" y1={y} y2={y} stroke="#EFEFEC" />)}
+          <motion.path key={t % 3} d={d} fill="none" stroke="#111111" strokeWidth="2.5" strokeLinejoin="round" strokeLinecap="round" initial={{ pathLength: 0 }} animate={{ pathLength: 1 }} transition={{ duration: 1.1, ease }} />
+          <motion.circle key={`c${t % 3}`} cx={50 * 3.2 + 10} cy={30 * 1.4 + 10} r="6" fill="#FF4F00" initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ delay: 0.9 }} />
+        </svg>
+        <motion.span key={`l${t % 3}`} initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 1 }} className="absolute right-6 top-4 rounded-full bg-tinta px-2.5 py-1 text-[10.5px] font-semibold text-white">El jueves, el día más lleno</motion.span>
+      </div>
+    );
+  }
+  // soporte
+  const n = t % 4;
+  return (
+    <div className="flex w-full max-w-[320px] flex-col gap-2">
+      <motion.span initial={false} animate={{ opacity: n >= 1 ? 1 : 0, y: n >= 1 ? 0 : 8 }} className="self-end rounded-[16px] rounded-br-[4px] bg-tinta px-3.5 py-2.5 text-[13px] text-white">¿Podemos sumar un campo para el teléfono?</motion.span>
+      <motion.span initial={false} animate={{ opacity: n >= 2 ? 1 : 0, y: n >= 2 ? 0 : 8 }} className={`self-start px-3.5 py-2.5 text-[13px] ${TARJETA} rounded-bl-[4px]`}>Claro, lo vemos ahora.</motion.span>
+      <motion.span initial={false} animate={{ opacity: n >= 3 ? 1 : 0, y: n >= 3 ? 0 : 8 }} className={`flex items-center gap-2 self-start px-3.5 py-2.5 text-[13px] font-semibold ${TARJETA} rounded-bl-[4px]`}>
+        <span className="flex h-4 w-4 items-center justify-center rounded-full bg-acento text-tinta">{OK}</span>Hecho, ya está en tu app.
+      </motion.span>
+    </div>
+  );
+}
+
 function Soluciones() {
-  const simple = useSimple();
+  const reduce = useReducedMotion();
   const ref = useRef(null);
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start 0.85", "end 0.45"] });
   const text = "Diseñamos la herramienta exacta que tu negocio necesita hoy. Y la hacemos crecer al ritmo que cambia tu día a día.";
   const words = text.split(" ");
+  const [act, setAct] = useState(0);
+  const [auto, setAuto] = useState(true);
+  useEffect(() => {
+    if (!auto || reduce) return;
+    const id = setInterval(() => setAct((a) => (a + 1) % SOLUCIONES.length), 3600);
+    return () => clearInterval(id);
+  }, [auto, reduce]);
+  const pick = (i) => { setAct(i); setAuto(false); };
+  const sol = SOLUCIONES[act];
+
   return (
-    <section id="soluciones" aria-labelledby="soluciones-title" className="relative overflow-hidden bg-white">
+    <section id="soluciones" aria-labelledby="soluciones-title" className="relative scroll-mt-16 overflow-hidden bg-white">
       <Blob className="-right-40 top-0 h-[420px] w-[420px]" color="rgba(255,79,0,0.12)" />
-      <div className="container-page relative flex flex-col gap-16 py-24 md:gap-24 md:py-36">
+      <div className="container-page relative flex flex-col gap-14 py-24 md:gap-20 md:py-36">
         <div ref={ref} className="flex flex-col gap-6">
           <Eyebrow>Soluciones</Eyebrow>
           <h2 id="soluciones-title" className="max-w-[22ch] text-[clamp(2rem,5vw,4.2rem)] font-bold leading-[1.06] tracking-[-0.04em]">
             {words.map((w, i) => <Word key={i} progress={scrollYProgress} range={[i / words.length, (i + 1) / words.length]}>{w}</Word>)}
           </h2>
         </div>
-        <ul className="grid gap-x-10 sm:grid-cols-2 lg:grid-cols-3">
-          {SOLUCIONES.map((x, i) => (
-            <motion.li key={x.t} initial={{ y: simple ? 0 : 28 }} whileInView={{ y: 0 }} viewport={{ once: true, margin: "-60px" }} transition={{ duration: 0.7, ease, delay: (i % 3) * 0.08 }}
-              className="group flex flex-col gap-2 border-t-[1.5px] border-tinta pb-10 pt-6">
-              <span className="flex items-center justify-between gap-4">
-                <h3 className="text-[clamp(1.4rem,2.2vw,1.75rem)] font-bold tracking-[-0.03em]">{x.t}</h3>
-                <Iso className="h-6 w-auto -translate-x-2 opacity-0 transition duration-300 group-hover:translate-x-0 group-hover:opacity-100" width={3.5} />
-              </span>
-              <p className="max-w-[36ch] text-[15.5px] leading-relaxed text-gris-500">{x.d}</p>
-            </motion.li>
-          ))}
-        </ul>
+
+        <div className="grid gap-6 lg:grid-cols-[0.8fr_1.2fr] lg:items-start lg:gap-16">
+          {/* Escritorio: lista vertical */}
+          <div role="tablist" aria-label="Soluciones" aria-orientation="vertical" className="hidden flex-col lg:flex">
+            {SOLUCIONES.map((x, i) => (
+              <button key={x.k} type="button" role="tab" id={`sol-tab-${i}`} aria-selected={i === act} aria-controls="sol-panel" onClick={() => pick(i)} onMouseEnter={() => pick(i)}
+                className="group relative flex items-center justify-between gap-4 border-t border-linea py-[14px] text-left last:border-b">
+                {i === act && (
+                  <motion.span layoutId="sol-barra" className="absolute -top-px left-0 h-[2px] w-full origin-left bg-gradient-to-r from-grad-a to-grad-b" transition={{ type: "spring", stiffness: 380, damping: 36 }}>
+                    {auto && !reduce && <motion.span key={act} className="absolute inset-0 origin-left bg-tinta/15" initial={{ scaleX: 0 }} animate={{ scaleX: 1 }} transition={{ duration: 3.6, ease: "linear" }} />}
+                  </motion.span>
+                )}
+                <span className={`text-[clamp(1.5rem,2.3vw,2rem)] font-bold leading-none tracking-[-0.035em] transition-colors duration-300 ${i === act ? "text-tinta" : "text-gris-300 group-hover:text-gris-500"}`}>{x.t}</span>
+                <motion.span aria-hidden="true" animate={{ x: i === act ? 0 : -8, opacity: i === act ? 1 : 0 }} className="text-[20px] text-acento-texto">→</motion.span>
+              </button>
+            ))}
+          </div>
+
+          {/* Móvil: chips con scroll horizontal */}
+          <div role="tablist" aria-label="Soluciones" className="no-scrollbar -mx-5 flex gap-2 overflow-x-auto px-5 lg:hidden">
+            {SOLUCIONES.map((x, i) => (
+              <button key={x.k} type="button" role="tab" aria-selected={i === act} aria-controls="sol-panel" onClick={() => pick(i)}
+                className={`shrink-0 rounded-full px-4 py-2 text-[14px] font-semibold transition-colors ${i === act ? "bg-tinta text-white" : "bg-papel text-gris-500"}`}>
+                {x.t}
+              </button>
+            ))}
+          </div>
+
+          {/* Vista previa */}
+          <div id="sol-panel" role="tabpanel" aria-label={sol.t} className="lg:sticky lg:top-24">
+            <div className="relative overflow-hidden rounded-[32px] bg-gradient-to-br from-papel via-[#F7F3F0] to-[#FFEADF] p-5 md:p-10">
+              <Blob className="-bottom-24 -right-16 h-[360px] w-[360px]" color="rgba(255,79,0,0.2)" />
+              <div className="relative flex h-[270px] items-center justify-center md:h-[320px]">
+                <AnimatePresence mode="wait">
+                  <motion.div key={sol.k} className="flex w-full justify-center" initial={{ opacity: 0, y: 18, scale: 0.97 }} animate={{ opacity: 1, y: 0, scale: 1 }} exit={{ opacity: 0, y: -14, scale: 0.98 }} transition={{ duration: 0.4, ease }}>
+                    <SolVisual k={sol.k} />
+                  </motion.div>
+                </AnimatePresence>
+              </div>
+              <div className="relative mt-6 min-h-[88px] border-t border-tinta/10 pt-5">
+                <AnimatePresence mode="wait">
+                  <motion.div key={sol.k} initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -6 }} transition={{ duration: 0.3, ease }} className="flex flex-col gap-1.5">
+                    <h3 className="text-[clamp(1.4rem,2.2vw,1.75rem)] font-bold tracking-[-0.03em]">{sol.t}</h3>
+                    <p className="max-w-[48ch] text-[16px] leading-relaxed text-gris-500">{sol.d}</p>
+                  </motion.div>
+                </AnimatePresence>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </section>
   );
@@ -795,10 +1021,11 @@ function Nav() {
   return (
     <header className={`sticky z-50 transition-[box-shadow,background-color] duration-300 ${solid ? "glass shadow-[0_1px_0_rgba(17,17,17,0.06)]" : "bg-white"}`} style={{ top: "env(safe-area-inset-top, 0px)" }}>
       <div className="container-page flex h-16 items-center justify-between gap-6">
-        <a href="#top" aria-label="PULSE, inicio"><Logo className="h-[18px] w-auto md:h-5" /></a>
+        <a href="#top" aria-label="PULSE, inicio"><Wordmark className="h-[15px] w-auto md:h-[17px]" /></a>
         <nav className="hidden items-center gap-8 text-[14px] font-medium text-gris-500 lg:flex">
           <a href="#soluciones" className="transition-colors hover:text-tinta">Soluciones</a>
           <a href="#ejemplos" className="transition-colors hover:text-tinta">Ejemplos</a>
+          <a href="#clientes" className="transition-colors hover:text-tinta">Clientes</a>
           <a href="#trabajamos" className="transition-colors hover:text-tinta">Cómo trabajamos</a>
           <a href="#preguntas" className="transition-colors hover:text-tinta">Preguntas</a>
         </nav>
@@ -1047,6 +1274,581 @@ function Casos() {
 }
 
 /* ---------------------------------------------------------------------
+   CLIENTES: datos, pantallas simuladas de cada app y páginas de proyecto
+   --------------------------------------------------------------------- */
+// Enlaces de las fichas. En el artefacto de Claude se reemplazan por rutas con #.
+const enlaceCliente = (slug) => `/clientes/${slug}`;
+const ABRE_CLIENTE = EXTERNO;
+const irA = (ancla) => `/#${ancla}`;
+
+// --- un clu de bordado (paleta de su manual: crema, lino, piedra, ladrillo, miel) ---
+const BOR = { crema: "#FBF8F3", lino: "#DFD7CC", linoSoft: "#EDE8E0", piedra: "#566567", piedraSoft: "#77898B", ladrillo: "#D9704A", miel: "#F2C166", verde: "#7FA87A" };
+function BordadoScreen({ s }) {
+  const barra = (
+    <div className="absolute inset-x-3 bottom-3 flex items-center justify-around rounded-full bg-white px-3 py-2 shadow-[0_6px_18px_-8px_rgba(20,18,16,0.3)]">
+      {["Inicio", "Kits"].map((x) => <span key={x} className="text-[9px] font-semibold" style={{ color: BOR.piedraSoft }}>{x}</span>)}
+      <span className="-mt-6 flex h-10 w-10 items-center justify-center rounded-full text-[18px] font-bold text-white shadow-lg" style={{ background: BOR.ladrillo }}>+</span>
+      {["News", "Perfil"].map((x) => <span key={x} className="text-[9px] font-semibold" style={{ color: BOR.piedraSoft }}>{x}</span>)}
+    </div>
+  );
+  const cab = (t, sub) => (
+    <div className="flex items-center justify-between px-4 pt-5">
+      <div className="flex flex-col"><span className="text-[10px]" style={{ color: BOR.piedraSoft }}>{sub}</span><span className="text-[17px] font-bold" style={{ color: BOR.piedra }}>{t}</span></div>
+      <img src="/clientes/un-clu-de-bordado.png" alt="" className="h-7 w-auto" />
+    </div>
+  );
+  let body;
+  if (s === "calendario") {
+    const clases = [3, 5, 10, 12, 17, 19, 24, 26];
+    body = (
+      <>
+        {cab("Noviembre", "Reserva tu clase")}
+        <div className="mx-3 mt-3 rounded-[16px] bg-white p-2.5 shadow-[0_1px_2px_rgba(20,18,16,0.06)]">
+          <div className="grid grid-cols-7 text-center text-[8.5px] font-semibold" style={{ color: BOR.piedraSoft }}>{["L", "M", "X", "J", "V", "S", "D"].map((d) => <span key={d}>{d}</span>)}</div>
+          <div className="mt-1 grid grid-cols-7 gap-y-1 text-center text-[10px]" style={{ color: BOR.piedra }}>
+            {Array.from({ length: 6 }).map((_, i) => <span key={`v${i}`} />)}
+            {Array.from({ length: 30 }).map((_, i) => {
+              const d = i + 1; const sel = d === 19; const mia = d === 12;
+              return (
+                <span key={d} className="flex flex-col items-center gap-[2px] rounded-[8px] py-[3px] font-semibold" style={sel ? { background: BOR.miel } : undefined}>
+                  {d}
+                  <span className="h-[4px] w-[4px] rounded-full" style={{ background: clases.includes(d) ? (mia ? "#B9C0C1" : BOR.ladrillo) : "transparent" }} />
+                </span>
+              );
+            })}
+          </div>
+        </div>
+        <div className="mx-3 mt-2.5 flex items-center gap-2 rounded-[14px] bg-white px-3 py-2.5 text-[10.5px] shadow-[0_1px_2px_rgba(20,18,16,0.06)]" style={{ color: BOR.piedra }}>
+          <span className="h-2 w-2 rounded-full" style={{ background: BOR.ladrillo }} /> Hay lugar
+          <span className="ml-2 h-2 w-2 rounded-full bg-[#B9C0C1]" /> Ya reservaste
+        </div>
+      </>
+    );
+  } else if (s === "clase") {
+    body = (
+      <>
+        {cab("Jueves 19", "Noviembre")}
+        <div className="mx-3 mt-4 flex flex-col gap-2.5 rounded-[18px] bg-white p-4 shadow-[0_1px_2px_rgba(20,18,16,0.06),0_8px_24px_rgba(20,18,16,0.08)]">
+          <span className="text-[10px] font-semibold uppercase tracking-[0.06em]" style={{ color: BOR.ladrillo }}>18:30 – 20:30</span>
+          <span className="text-[16px] font-bold leading-tight" style={{ color: BOR.piedra }}>Punto de cruz</span>
+          <div className="flex items-center gap-1.5">
+            {Array.from({ length: 6 }).map((_, i) => <span key={i} className="h-4 w-4 rounded-full" style={{ background: i < 4 ? BOR.ladrillo : BOR.linoSoft }} />)}
+            <span className="ml-1 text-[10.5px]" style={{ color: BOR.piedraSoft }}>4 de 6 lugares</span>
+          </div>
+          <span className="mt-1 rounded-[12px] py-2.5 text-center text-[12px] font-bold text-white" style={{ background: BOR.ladrillo }}>Reservar mi lugar</span>
+          <span className="text-center text-[9.5px]" style={{ color: BOR.piedraSoft }}>Puedes cancelar sin cargo hasta 24 h antes.</span>
+        </div>
+      </>
+    );
+  } else if (s === "reservada") {
+    body = (
+      <div className="flex h-full flex-col items-center justify-center gap-3 px-6 pb-16 text-center">
+        <motion.span initial={{ scale: 0.4 }} animate={{ scale: 1 }} transition={{ type: "spring", stiffness: 260, damping: 14 }} className="flex h-16 w-16 items-center justify-center rounded-full" style={{ background: BOR.miel }}>
+          <svg viewBox="0 0 12 12" className="w-7"><path d="M2.5 6.3 5 8.6 9.5 3.4" fill="none" stroke="#566567" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" /></svg>
+        </motion.span>
+        <span className="text-[18px] font-bold" style={{ color: BOR.piedra }}>¡Lugar reservado!</span>
+        <span className="text-[11.5px]" style={{ color: BOR.piedraSoft }}>Jueves 19 · 18:30 · Punto de cruz</span>
+        <span className="mt-2 rounded-[12px] border px-4 py-2 text-[11px] font-semibold" style={{ borderColor: BOR.lino, color: BOR.piedra }}>Añadir a mi calendario</span>
+      </div>
+    );
+  } else if (s === "kits") {
+    body = (
+      <>
+        {cab("Kits", "Pide el tuyo")}
+        <div className="mt-3 flex flex-col gap-2 px-3">
+          {[["Kit de iniciación", "Bastidor, hilos y tela"], ["Kit flores", "Patrón y 8 colores"], ["Kit bastidor grande", "Para proyectos XL"]].map(([n, d], i) => (
+            <div key={n} className="flex items-center gap-3 rounded-[14px] bg-white p-2.5 shadow-[0_1px_2px_rgba(20,18,16,0.06)]">
+              <span className="h-10 w-10 shrink-0 rounded-[10px]" style={{ background: [BOR.miel, "#E8B4A0", "#B8CFC4"][i] }} />
+              <span className="flex min-w-0 flex-1 flex-col"><span className="truncate text-[11.5px] font-bold" style={{ color: BOR.piedra }}>{n}</span><span className="truncate text-[9.5px]" style={{ color: BOR.piedraSoft }}>{d}</span></span>
+              <span className="rounded-full px-2.5 py-1 text-[9.5px] font-bold text-white" style={{ background: BOR.ladrillo }}>Pedir</span>
+            </div>
+          ))}
+        </div>
+      </>
+    );
+  } else if (s === "noticias") {
+    body = (
+      <>
+        {cab("Noticias", "Novedades del club")}
+        <div className="mt-3 flex flex-col gap-2 px-3">
+          {[["Nuevo taller de diciembre", "Abrimos inscripciones para bordado navideño.", "Hoy"], ["Kits nuevos", "Llegaron los hilos de algodón orgánico.", "Lun"]].map(([t, d, f]) => (
+            <div key={t} className="flex flex-col gap-1 rounded-[14px] bg-white p-3 shadow-[0_1px_2px_rgba(20,18,16,0.06)]">
+              <span className="flex items-center justify-between"><span className="text-[11.5px] font-bold" style={{ color: BOR.piedra }}>{t}</span><span className="text-[9px]" style={{ color: BOR.piedraSoft }}>{f}</span></span>
+              <span className="text-[10px] leading-snug" style={{ color: BOR.piedraSoft }}>{d}</span>
+            </div>
+          ))}
+        </div>
+      </>
+    );
+  } else if (s === "admin") {
+    body = (
+      <>
+        {cab("Asistencia", "Jueves 19 · 18:30")}
+        <div className="mx-3 mt-3 flex flex-col rounded-[14px] bg-white px-3 py-1 shadow-[0_1px_2px_rgba(20,18,16,0.06)]">
+          {[["Laura M.", BOR.verde, "Cobrada"], ["Núria P.", BOR.ladrillo, "Sin cobrar"], ["Marta G.", BOR.verde, "Cobrada"], ["Sílvia R.", BOR.miel, "Baja < 24 h"]].map(([n, c, e]) => (
+            <span key={n} className="flex items-center gap-2.5 border-b py-2 text-[11px] last:border-0" style={{ borderColor: BOR.linoSoft, color: BOR.piedra }}>
+              <span className="h-2.5 w-2.5 rounded-full" style={{ background: c }} /><span className="flex-1 font-semibold">{n}</span><span className="text-[9.5px]" style={{ color: BOR.piedraSoft }}>{e}</span>
+            </span>
+          ))}
+        </div>
+        <span className="mx-3 mt-2.5 block rounded-[12px] py-2 text-center text-[10.5px] font-bold" style={{ background: BOR.miel, color: BOR.piedra }}>Exportar planilla</span>
+      </>
+    );
+  } else {
+    body = (
+      <>
+        {cab("Perfil", "Hola, Laura")}
+        <div className="mx-3 mt-3 flex flex-col rounded-[14px] bg-white px-3 py-1 shadow-[0_1px_2px_rgba(20,18,16,0.06)]">
+          {[["Idioma", <span key="i" className="flex rounded-full p-0.5" style={{ background: BOR.linoSoft }}><span className="rounded-full bg-white px-2 py-0.5 text-[9px] font-bold">ES</span><span className="px-2 py-0.5 text-[9px]">CAT</span></span>], ["Avisos en el móvil", <span key="a" className="flex h-4 w-7 items-center justify-end rounded-full p-0.5" style={{ background: BOR.ladrillo }}><span className="h-3 w-3 rounded-full bg-white" /></span>], ["Tema oscuro", <span key="t" className="flex h-4 w-7 items-center rounded-full p-0.5" style={{ background: BOR.lino }}><span className="h-3 w-3 rounded-full bg-white" /></span>], ["Mis datos", <span key="d" className="text-[10px]">›</span>]].map(([l, c]) => (
+            <span key={l} className="flex items-center justify-between border-b py-2.5 text-[11px] font-semibold last:border-0" style={{ borderColor: BOR.linoSoft, color: BOR.piedra }}>{l}{c}</span>
+          ))}
+        </div>
+      </>
+    );
+  }
+  return <div className="relative flex h-full flex-col font-sys" style={{ background: BOR.crema }}><StatusBar />{body}{["calendario", "kits", "noticias", "perfil"].includes(s) && barra}</div>;
+}
+
+// --- DAILY (violeta #4B3AD6, tinta #111114) ---
+const DLY = { fondo: "#F5F5F7", tinta: "#111114", violeta: "#4B3AD6", gris: "#7A7A85" };
+function DailyScreen({ s }) {
+  const cab = (t) => (
+    <div className="flex items-center justify-between px-4 pt-5">
+      <span className="flex items-center gap-2"><img src="/clientes/daily.svg" alt="" className="h-7 w-7 rounded-[9px]" /><span className="text-[16px] font-bold" style={{ color: DLY.tinta }}>{t}</span></span>
+      <span className="relative flex h-7 w-7 items-center justify-center rounded-full bg-white text-[11px]">🔔<span className="absolute right-0.5 top-0.5 h-1.5 w-1.5 rounded-full" style={{ background: DLY.violeta }} /></span>
+    </div>
+  );
+  let body;
+  if (s === "pin") {
+    body = (
+      <div className="flex h-full flex-col items-center justify-center gap-5 px-6 pb-8" style={{ background: DLY.tinta }}>
+        <img src="/clientes/daily.svg" alt="" className="h-12 w-12 rounded-[14px] ring-1 ring-white/15" />
+        <span className="text-[13px] font-semibold text-white">Ingresa tu PIN</span>
+        <div className="flex gap-3">{[0, 1, 2, 3].map((i) => <motion.span key={i} initial={{ scale: 0.6, opacity: 0.3 }} animate={{ scale: 1, opacity: 1 }} transition={{ delay: 0.15 * i }} className="h-3 w-3 rounded-full" style={{ background: i < 3 ? DLY.violeta : "#3A3A42" }} />)}</div>
+        <div className="grid grid-cols-3 gap-2.5">{[1, 2, 3, 4, 5, 6, 7, 8, 9].map((n) => <span key={n} className="flex h-11 w-11 items-center justify-center rounded-full bg-white/10 text-[15px] font-semibold text-white ring-1 ring-white/10">{n}</span>)}</div>
+      </div>
+    );
+  } else if (s === "inicio") {
+    body = (
+      <>
+        {cab("Inicio")}
+        <div className="mx-3 mt-3 flex flex-col gap-2 rounded-[20px] p-4 text-white" style={{ background: DLY.tinta }}>
+          <span className="text-[10px] text-white/60">Saldo total</span>
+          <span className="text-[24px] font-bold tracking-[-0.03em] tnum">US$ 12.480</span>
+          <div className="flex gap-1.5">{["ARS", "USD", "EUR"].map((c) => <span key={c} className={`rounded-full px-2 py-0.5 text-[9px] font-bold ${c === "USD" ? "text-white" : "bg-white/10 text-white/60"}`} style={c === "USD" ? { background: DLY.violeta } : undefined}>{c}</span>)}</div>
+          <svg viewBox="0 0 200 60" className="mt-1 w-full" aria-hidden="true">
+            <defs><linearGradient id="dly-g" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stopColor="#4B3AD6" stopOpacity=".6" /><stop offset="1" stopColor="#4B3AD6" stopOpacity="0" /></linearGradient></defs>
+            <path d="M0 48 L30 42 L60 44 L90 30 L120 34 L150 20 L180 24 L200 12 L200 60 L0 60Z" fill="url(#dly-g)" />
+            <motion.path d="M0 48 L30 42 L60 44 L90 30 L120 34 L150 20 L180 24 L200 12" fill="none" stroke="#8B7BFF" strokeWidth="2" initial={{ pathLength: 0 }} animate={{ pathLength: 1 }} transition={{ duration: 1.2 }} />
+          </svg>
+        </div>
+        <div className="mx-3 mt-2.5 grid grid-cols-2 gap-2">
+          {[["Ingresos", "+ US$ 3.200", "#1F9D6B"], ["Gastos", "− US$ 1.840", "#D04545"]].map(([l, v, c]) => (
+            <div key={l} className="flex flex-col rounded-[16px] bg-white p-3"><span className="text-[9.5px]" style={{ color: DLY.gris }}>{l} del mes</span><span className="text-[12.5px] font-bold tnum" style={{ color: c }}>{v}</span></div>
+          ))}
+        </div>
+      </>
+    );
+  } else if (s === "bancos") {
+    body = (
+      <>
+        {cab("Mis cuentas")}
+        <div className="mt-3 flex flex-col gap-2 px-3">
+          {[["Banco", "Cuenta sueldo", "AR$ 845.200", "#4B3AD6"], ["Billetera virtual", "Uso diario", "AR$ 92.300", "#111114"], ["Tarjeta de crédito", "Cierra el 24", "− AR$ 210.400", "#C24A7A"], ["Inversiones", "Cartera", "US$ 6.150", "#1F9D6B"], ["Efectivo", "En casa", "€ 320", "#B98A2E"]].map(([n, d, v, c]) => (
+            <div key={n} className="flex items-center gap-2.5 rounded-[16px] bg-white px-3 py-2.5">
+              <span className="h-8 w-8 shrink-0 rounded-[10px]" style={{ background: c }} />
+              <span className="flex min-w-0 flex-1 flex-col"><span className="truncate text-[11.5px] font-bold" style={{ color: DLY.tinta }}>{n}</span><span className="truncate text-[9.5px]" style={{ color: DLY.gris }}>{d}</span></span>
+              <span className="text-[11px] font-bold tnum" style={{ color: DLY.tinta }}>{v}</span>
+            </div>
+          ))}
+        </div>
+      </>
+    );
+  } else if (s === "categorias") {
+    const seg = [["Vivienda", 38, "#4B3AD6"], ["Comida", 24, "#8B7BFF"], ["Transporte", 18, "#111114"], ["Ocio", 20, "#C9C3FF"]];
+    let acc = 0;
+    body = (
+      <>
+        {cab("Gastos")}
+        <div className="mx-3 mt-3 flex flex-col items-center gap-3 rounded-[20px] bg-white p-4">
+          <svg viewBox="0 0 42 42" className="h-28 w-28 -rotate-90" aria-hidden="true">
+            {seg.map(([n, p, c]) => { const el = <motion.circle key={n} cx="21" cy="21" r="15.9" fill="none" stroke={c} strokeWidth="6" strokeDasharray={`${p} ${100 - p}`} strokeDashoffset={-acc} initial={{ opacity: 0 }} animate={{ opacity: 1 }} />; acc += p; return el; })}
+          </svg>
+          <div className="grid w-full grid-cols-2 gap-1.5">{seg.map(([n, p, c]) => <span key={n} className="flex items-center gap-1.5 text-[10px]" style={{ color: DLY.tinta }}><span className="h-2 w-2 rounded-full" style={{ background: c }} />{n} <b className="ml-auto tnum">{p}%</b></span>)}</div>
+        </div>
+      </>
+    );
+  } else if (s === "pagos") {
+    body = (
+      <>
+        {cab("Pagos del mes")}
+        <div className="mt-3 flex flex-col gap-2 px-3">
+          {[["Alquiler", "Vence en 3 días", false], ["Internet", "Pagado", true], ["Gimnasio", "Vence el 15", false], ["Seguro", "Pagado", true]].map(([n, e, ok]) => (
+            <div key={n} className="flex items-center gap-2.5 rounded-[16px] bg-white px-3 py-2.5">
+              <span className={`flex h-5 w-5 items-center justify-center rounded-full ${ok ? "text-white" : "border"}`} style={ok ? { background: DLY.violeta } : { borderColor: "#D5D5DC" }}>{ok && OK}</span>
+              <span className="flex-1 text-[11.5px] font-bold" style={{ color: DLY.tinta }}>{n}</span>
+              <span className="rounded-full px-2 py-0.5 text-[9px] font-semibold" style={ok ? { background: "#EEEDFB", color: DLY.violeta } : { background: "#FFF1E6", color: "#B4570F" }}>{e}</span>
+            </div>
+          ))}
+        </div>
+      </>
+    );
+  } else {
+    body = (
+      <>
+        {cab("Reportes")}
+        <div className="mx-3 mt-3 flex flex-col gap-2.5 rounded-[20px] bg-white p-4">
+          <span className="text-[10px]" style={{ color: DLY.gris }}>Período</span>
+          <span className="rounded-[12px] px-3 py-2 text-[12px] font-bold" style={{ background: DLY.fondo, color: DLY.tinta }}>Octubre 2026</span>
+          <span className="mt-1 rounded-[12px] py-2.5 text-center text-[11.5px] font-bold text-white" style={{ background: DLY.violeta }}>Exportar PDF</span>
+          <span className="rounded-[12px] py-2.5 text-center text-[11.5px] font-bold" style={{ background: DLY.fondo, color: DLY.tinta }}>Exportar Excel</span>
+        </div>
+      </>
+    );
+  }
+  return <div className="relative flex h-full flex-col font-sys" style={{ background: DLY.fondo }}>{s === "pin" ? <div className="absolute inset-x-0 top-0 z-10"><StatusBar light /></div> : <StatusBar />}{body}</div>;
+}
+
+// --- Daiana Marlene, terapeuta. TODO: contenido y marca provisionales hasta tener los reales. ---
+const TER = { fondo: "#F4F1EC", salvia: "#6B8F71", salviaSoft: "#DDE7DE", texto: "#2F3A33", gris: "#7C857E" };
+function TerapiaScreen({ s }) {
+  const cab = (t, sub) => (
+    <div className="flex items-center justify-between px-4 pt-5">
+      <div className="flex flex-col"><span className="text-[10px]" style={{ color: TER.gris }}>{sub}</span><span className="text-[17px] font-bold" style={{ color: TER.texto }}>{t}</span></div>
+      <span className="flex h-8 w-8 items-center justify-center rounded-full text-[11px] font-bold text-white" style={{ background: TER.salvia }}>DM</span>
+    </div>
+  );
+  let body;
+  if (s === "inicio") {
+    body = (
+      <>
+        {cab("Hola, Clara", "Tu espacio")}
+        <div className="mx-3 mt-4 flex flex-col gap-2 rounded-[20px] p-4 text-white" style={{ background: TER.salvia }}>
+          <span className="text-[10px] text-white/75">Tu próxima sesión</span>
+          <span className="text-[17px] font-bold leading-tight">Martes 11 · 18:00</span>
+          <span className="w-fit rounded-full bg-white/20 px-2.5 py-0.5 text-[10px] font-semibold">Online</span>
+        </div>
+        <div className="mx-3 mt-2.5 grid grid-cols-2 gap-2">
+          {["Reservar sesión", "Mis sesiones"].map((x, i) => <span key={x} className="rounded-[14px] py-3 text-center text-[11px] font-bold" style={i === 0 ? { background: TER.texto, color: "#fff" } : { background: "#fff", color: TER.texto }}>{x}</span>)}
+        </div>
+      </>
+    );
+  } else if (s === "reservar") {
+    body = (
+      <>
+        {cab("Reservar", "Elige día y hora")}
+        <div className="mt-3 grid grid-cols-5 gap-1.5 px-3">{["L 10", "M 11", "X 12", "J 13", "V 14"].map((d, i) => <span key={d} className="rounded-[10px] py-1.5 text-center text-[10px] font-semibold" style={i === 1 ? { background: TER.texto, color: "#fff" } : { background: "#fff", color: TER.texto }}>{d}</span>)}</div>
+        <div className="mt-3 grid grid-cols-3 gap-1.5 px-3">
+          {["10:00", "11:00", "12:00", "16:00", "17:00", "18:00"].map((h, i) => <span key={h} className="rounded-[10px] py-2 text-center text-[11px] font-semibold tnum" style={i === 5 ? { background: TER.salvia, color: "#fff" } : i === 1 || i === 3 ? { background: TER.salviaSoft, color: TER.gris, textDecoration: "line-through" } : { background: "#fff", color: TER.texto }}>{h}</span>)}
+        </div>
+        <div className="mx-3 mt-3 flex rounded-full bg-white p-1 text-[10.5px] font-semibold"><span className="flex-1 rounded-full py-1.5 text-center text-white" style={{ background: TER.salvia }}>Online</span><span className="flex-1 py-1.5 text-center" style={{ color: TER.gris }}>Presencial</span></div>
+      </>
+    );
+  } else if (s === "confirmada") {
+    body = (
+      <div className="flex h-full flex-col items-center justify-center gap-3 px-6 pb-12 text-center">
+        <motion.span initial={{ scale: 0.4 }} animate={{ scale: 1 }} transition={{ type: "spring", stiffness: 260, damping: 14 }} className="flex h-16 w-16 items-center justify-center rounded-full text-white" style={{ background: TER.salvia }}>
+          <svg viewBox="0 0 12 12" className="w-7"><path d="M2.5 6.3 5 8.6 9.5 3.4" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" /></svg>
+        </motion.span>
+        <span className="text-[18px] font-bold" style={{ color: TER.texto }}>Sesión reservada</span>
+        <span className="text-[11.5px]" style={{ color: TER.gris }}>Martes 11 · 18:00 · Online</span>
+        <span className="text-[10.5px]" style={{ color: TER.gris }}>Te enviaremos un recordatorio el día antes.</span>
+      </div>
+    );
+  } else if (s === "sesiones") {
+    body = (
+      <>
+        {cab("Mis sesiones", "Próximas y pasadas")}
+        <div className="mt-3 flex flex-col gap-2 px-3">
+          {[["Martes 11 · 18:00", "Online", "Próxima"], ["Martes 4 · 18:00", "Online", "Realizada"], ["Martes 28 · 18:00", "Presencial", "Realizada"]].map(([d, m, e], i) => (
+            <div key={d} className="flex items-center gap-2.5 rounded-[14px] bg-white px-3 py-2.5">
+              <span className="flex min-w-0 flex-1 flex-col"><span className="text-[11.5px] font-bold" style={{ color: TER.texto }}>{d}</span><span className="text-[9.5px]" style={{ color: TER.gris }}>{m}</span></span>
+              <span className="rounded-full px-2 py-0.5 text-[9px] font-semibold" style={i === 0 ? { background: TER.salvia, color: "#fff" } : { background: TER.salviaSoft, color: TER.texto }}>{e}</span>
+            </div>
+          ))}
+          <span className="mt-1 rounded-[12px] border py-2 text-center text-[10.5px] font-semibold" style={{ borderColor: TER.salviaSoft, color: TER.texto }}>Cambiar o cancelar</span>
+        </div>
+      </>
+    );
+  } else {
+    body = (
+      <>
+        {cab("Mi semana", "Vista de la terapeuta")}
+        <div className="mx-3 mt-3 rounded-[16px] bg-white p-3">
+          {["Lun", "Mar", "Mié", "Jue"].map((d, r) => (
+            <div key={d} className="flex items-center gap-2 py-1.5">
+              <span className="w-7 text-[10px] font-semibold" style={{ color: TER.gris }}>{d}</span>
+              <div className="relative h-6 flex-1 rounded-[6px]" style={{ background: TER.fondo }}>
+                {[[10 + r * 6, 22], [50, 18 + r * 4]].map(([l, w], i) => <span key={i} className="absolute inset-y-1 rounded-[4px]" style={{ left: `${l}%`, width: `${w}%`, background: i ? TER.texto : TER.salvia }} />)}
+              </div>
+            </div>
+          ))}
+        </div>
+        <span className="mx-3 mt-2.5 block rounded-[12px] py-2 text-center text-[10.5px] font-bold text-white" style={{ background: TER.salvia }}>8 sesiones esta semana</span>
+      </>
+    );
+  }
+  return <div className="relative flex h-full flex-col font-sys" style={{ background: TER.fondo }}><StatusBar />{body}</div>;
+}
+
+const CLIENTES = [
+  {
+    slug: "un-clu-de-bordado", nombre: "un clu de bordado", tipo: "Comunidad de bordado y reservas",
+    logo: "/clientes/un-clu-de-bordado.png", logoFondo: "#FFFFFF", fondo: "#FBF8F3", brillo: "rgba(242,193,102,0.45)", App: BordadoScreen,
+    resumen: "Una app de reservas para una comunidad de bordado: las alumnas reservan su lugar y la profesora organiza el club desde el móvil.",
+    descripcion: [
+      "Las alumnas ven en un calendario mensual qué clases tienen lugar, reservan con un toque (hasta seis por clase), piden sus kits y reciben las novedades del club con avisos en el móvil.",
+      "La profesora agenda las clases, marca la asistencia y los cobros, gestiona a sus alumnas y exporta sus reportes. La app funciona en español y catalán y se instala desde el navegador, sin pasar por las tiendas.",
+    ],
+    flujo: ["calendario", "clase", "reservada"], toques: [["66%", "57%"], ["50%", "74%"], ["50%", "79%"]],
+    pantallas: ["calendario", "clase", "kits", "noticias", "admin", "perfil"],
+    funciones: ["Calendario mensual", "Hasta 6 lugares por clase", "Cancelación hasta 24 h antes", "Pedidos de kits", "Noticias con avisos", "Español y catalán", "Asistencia y cobros", "Reportes y planillas"],
+  },
+  {
+    slug: "daily", nombre: "DAILY", tipo: "Finanzas personales multidivisa",
+    logo: "/clientes/daily.svg", logoFondo: "#111114", fondo: "#F5F5F7", brillo: "rgba(75,58,214,0.3)", App: DailyScreen,
+    resumen: "Una app web de finanzas personales que reúne todas las cuentas, en pesos, dólares y euros, en un solo lugar.",
+    descripcion: [
+      "Junta bancos, billeteras virtuales, tarjetas, inversiones y efectivo, y muestra el saldo total y cómo evoluciona. Separa los gastos por categoría y lleva al día los pagos de cada mes y las deudas.",
+      "Genera reportes en PDF y Excel, se protege con PIN y funciona en modo claro y oscuro. Se instala en el móvil como cualquier app.",
+    ],
+    flujo: ["pin", "inicio", "bancos"], toques: [["50%", "62%"], ["50%", "48%"], ["50%", "40%"]],
+    pantallas: ["inicio", "bancos", "categorias", "pagos", "reportes"],
+    funciones: ["Bancos y billeteras", "Pesos, dólares y euros", "Evolución del saldo", "Gastos por categoría", "Pagos del mes", "Deudas", "Reportes en PDF y Excel", "Acceso con PIN"],
+  },
+  {
+    // TODO: textos, funciones y marca provisionales. Cambiar por los reales de Daiana Marlene.
+    slug: "daiana-marlene", nombre: "Daiana Marlene", tipo: "Terapeuta",
+    logo: null, monograma: "DM", logoFondo: "#6B8F71", fondo: "#F4F1EC", brillo: "rgba(107,143,113,0.35)", App: TerapiaScreen,
+    resumen: "Una agenda online para una terapeuta: sus pacientes reservan sesiones y ella organiza su semana sin mensajes de ida y vuelta.",
+    descripcion: [
+      "Sus pacientes eligen día y hora, reservan sesiones online o presenciales y reciben un recordatorio el día antes. Si necesitan cambiar o cancelar, lo hacen desde la misma app.",
+      "Ella ve su semana de un vistazo, con todas las sesiones ordenadas, y deja de coordinar horarios por chat.",
+    ],
+    flujo: ["inicio", "reservar", "confirmada"], toques: [["30%", "47%"], ["84%", "48%"], ["50%", "60%"]],
+    pantallas: ["inicio", "reservar", "sesiones", "agenda"],
+    funciones: ["Reserva online", "Online o presencial", "Recordatorios", "Cambios y cancelaciones", "Agenda semanal", "Historial de sesiones"],
+  },
+];
+
+function LogoCliente({ c, className = "h-14 w-14" }) {
+  return (
+    <span className={`flex shrink-0 items-center justify-center overflow-hidden rounded-[18px] shadow-[0_0_0_1px_rgba(17,17,17,0.06),0_10px_24px_-14px_rgba(17,17,17,0.35)] ${className}`} style={{ background: c.logoFondo }}>
+      {c.logo ? <img src={c.logo} alt={`Logo de ${c.nombre}`} className="h-full w-full object-contain p-1.5" /> : <span className="text-[18px] font-bold tracking-[-0.02em] text-white">{c.monograma}</span>}
+    </span>
+  );
+}
+
+/* ---------------------------------------------------------------------
+   SECCIÓN: Clientes (fichas que abren la página de cada proyecto)
+   --------------------------------------------------------------------- */
+function ClienteCard({ c, i }) {
+  const simple = useSimple();
+  return (
+    <motion.a href={enlaceCliente(c.slug)} {...ABRE_CLIENTE} aria-label={`Ver el proyecto ${c.nombre}`}
+      initial={simple ? false : { y: 44 }} whileInView={{ y: 0 }} viewport={{ once: true, margin: "-60px" }} transition={{ duration: 0.8, ease, delay: i * 0.1 }}
+      whileHover="hover" className="sombra group flex flex-col overflow-hidden rounded-[30px] bg-white">
+      <div className="relative flex h-[360px] justify-center overflow-hidden" style={{ background: c.fondo }}>
+        <Blob className="-right-16 -top-16 h-[280px] w-[280px]" color={c.brillo} />
+        <motion.div variants={{ hover: { y: -16, rotate: -2 } }} transition={{ type: "spring", stiffness: 200, damping: 20 }} className="relative mt-12 origin-top scale-[0.84]">
+          <Phone label={`App de ${c.nombre}`}><c.App s={c.pantallas[0]} /></Phone>
+        </motion.div>
+        <span className="absolute left-5 top-5"><LogoCliente c={c} className="h-12 w-12" /></span>
+      </div>
+      <div className="flex items-center justify-between gap-4 p-6">
+        <div className="flex min-w-0 flex-col">
+          <h3 className="text-[20px] font-bold tracking-[-0.02em]">{c.nombre}</h3>
+          <p className="text-[14.5px] text-gris-500">{c.tipo}</p>
+        </div>
+        <span aria-hidden="true" className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-tinta text-[18px] text-white transition-colors duration-300 group-hover:bg-acento group-hover:text-tinta">↗</span>
+      </div>
+    </motion.a>
+  );
+}
+
+function Clientes() {
+  return (
+    <section id="clientes" aria-labelledby="clientes-title" className="scroll-mt-16 bg-white">
+      <div className="container-page flex flex-col gap-12 py-24 md:gap-16 md:py-36">
+        <div className="flex flex-col justify-between gap-8 lg:flex-row lg:items-end">
+          <SectionTitle id="clientes-title" eyebrow="Clientes" title="Apps que ya se usan cada día." />
+          <p className="max-w-[40ch] text-entrada text-gris-500 lg:pb-2">Tres proyectos reales. Ábrelos para ver cómo funcionan y todo lo que hacen.</p>
+        </div>
+        <div className="grid gap-5 md:grid-cols-3">
+          {CLIENTES.map((c, i) => <ClienteCard key={c.slug} c={c} i={i} />)}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ---------------------------------------------------------------------
+   PÁGINA DE PROYECTO
+   --------------------------------------------------------------------- */
+// Demostración en bucle: recorre el flujo principal con un toque animado, como un vídeo.
+function DemoFlujo({ c }) {
+  const reduce = useReducedMotion();
+  const [i, setI] = useState(0);
+  useEffect(() => {
+    if (reduce) return;
+    const id = setInterval(() => setI((x) => (x + 1) % c.flujo.length), 2800);
+    return () => clearInterval(id);
+  }, [c, reduce]);
+  const [tx, ty] = c.toques[i];
+  return (
+    <div className="relative">
+      <Phone label={`Demostración de la app de ${c.nombre}`}>
+        <AnimatePresence mode="wait" initial={false}>
+          <motion.div key={i} className="h-full" initial={{ opacity: 0, x: 24 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -24 }} transition={{ duration: 0.35, ease }}>
+            <c.App s={c.flujo[i]} />
+          </motion.div>
+        </AnimatePresence>
+        {!reduce && (
+          <motion.span key={`t${i}`} aria-hidden="true" className="pointer-events-none absolute z-30 h-9 w-9 -translate-x-1/2 -translate-y-1/2 rounded-full border-2 border-white/90 bg-tinta/25 shadow-lg"
+            style={{ left: tx, top: ty }} initial={{ scale: 0, opacity: 0 }} animate={{ scale: [0, 1, 0.8, 1.4], opacity: [0, 1, 1, 0] }} transition={{ duration: 1.2, delay: 1.3, times: [0, 0.3, 0.5, 1] }} />
+        )}
+        <div className="absolute inset-x-6 top-[38px] z-30 flex gap-1">
+          {c.flujo.map((_, j) => (
+            <span key={j} className="h-[3px] flex-1 overflow-hidden rounded-full bg-black/10">
+              {j < i && <span className="block h-full w-full bg-black/40" />}
+              {j === i && <motion.span key={`b${i}`} className="block h-full bg-black/40" initial={{ width: "0%" }} animate={{ width: "100%" }} transition={{ duration: reduce ? 0 : 2.8, ease: "linear" }} />}
+            </span>
+          ))}
+        </div>
+      </Phone>
+    </div>
+  );
+}
+
+// Móvil en 3D que gira y cambia de pantalla, con etiquetas flotantes de funciones.
+function Telefono3D({ c }) {
+  const reduce = useReducedMotion();
+  const simple = useSimple();
+  const [i, setI] = useState(0);
+  useEffect(() => {
+    if (reduce) return;
+    const id = setInterval(() => setI((x) => (x + 1) % c.pantallas.length), 2400);
+    return () => clearInterval(id);
+  }, [c, reduce]);
+  const mitad = Math.ceil(c.funciones.length / 2);
+  const izq = c.funciones.slice(0, mitad);
+  const der = c.funciones.slice(mitad);
+  const activa = i % c.funciones.length;
+  const etiqueta = (f, j, lado) => (
+    <motion.li key={f} animate={reduce ? undefined : { y: [0, -7, 0] }} transition={{ duration: 4 + (j % 3), repeat: Infinity, ease: "easeInOut", delay: j * 0.4 }}
+      className={`flex ${lado === "izq" ? "lg:justify-end" : "lg:justify-start"} ${j % 2 ? (lado === "izq" ? "lg:pr-10" : "lg:pl-10") : ""}`}>
+      <span className={`glass inline-flex items-center gap-2 rounded-full px-4 py-2.5 text-[14px] font-semibold shadow-[0_14px_34px_-18px_rgba(17,17,17,0.35),0_0_0_1px_rgba(17,17,17,0.06)] transition-colors duration-500 ${(lado === "izq" ? j : j + mitad) === activa ? "!bg-tinta text-white" : ""}`}>
+        <span className={`h-2 w-2 rounded-full ${(lado === "izq" ? j : j + mitad) === activa ? "bg-acento" : "bg-gris-300"}`} />{f}
+      </span>
+    </motion.li>
+  );
+  return (
+    <section aria-labelledby="funciones-title" className="relative overflow-hidden bg-white">
+      <Blob className="left-[calc(50%-300px)] top-[20%] h-[600px] w-[600px]" color={c.brillo} />
+      <div className="container-page relative flex flex-col gap-12 py-24 md:py-32">
+        <SectionTitle center id="funciones-title" eyebrow="Funciones" title="Todo lo que hace la app." />
+        <div className="grid items-center gap-10 lg:grid-cols-[1fr_auto_1fr]">
+          <ul className="order-2 flex flex-wrap justify-center gap-3 lg:order-1 lg:flex-col lg:gap-6">{izq.map((f, j) => etiqueta(f, j, "izq"))}</ul>
+          <div className="order-1 flex justify-center lg:order-2" style={{ perspective: 1400 }}>
+            <motion.div animate={simple || reduce ? undefined : { rotateY: [-24, 24], rotateX: [6, 2] }} transition={{ duration: 7, repeat: Infinity, repeatType: "mirror", ease: "easeInOut" }} style={{ transformStyle: "preserve-3d" }}>
+              <Phone label={`Pantallas de la app de ${c.nombre}`}>
+                <AnimatePresence mode="wait" initial={false}>
+                  <motion.div key={i} className="h-full" initial={{ opacity: 0, scale: 0.96 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 1.02 }} transition={{ duration: 0.4, ease }}>
+                    <c.App s={c.pantallas[i]} />
+                  </motion.div>
+                </AnimatePresence>
+              </Phone>
+            </motion.div>
+          </div>
+          <ul className="order-3 flex flex-wrap justify-center gap-3 lg:flex-col lg:gap-6">{der.map((f, j) => etiqueta(f, j, "der"))}</ul>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function Pie() {
+  return (
+    <footer className="container-page flex flex-col items-center gap-4 border-t border-linea pb-10 pt-10 text-center text-[13px] text-gris-400 md:flex-row md:justify-between md:pb-8 md:pt-8 md:text-left">
+      <Logo className="h-4 w-auto" />
+      <span>Apps web a medida</span>
+      <a href={CONTACTO.gmail} {...EXTERNO} className="select-all font-medium text-tinta transition-colors hover:text-acento-texto">{CONTACTO.email}</a>
+      <span>© 2026 PULSE</span>
+    </footer>
+  );
+}
+
+export function Proyecto({ slug }) {
+  const c = CLIENTES.find((x) => x.slug === slug) || CLIENTES[0];
+  const otros = CLIENTES.filter((x) => x.slug !== c.slug);
+  return (
+    <>
+      <ScrollProgress />
+      <header className="glass sticky z-50 shadow-[0_1px_0_rgba(17,17,17,0.06)]" style={{ top: "env(safe-area-inset-top, 0px)" }}>
+        <div className="container-page flex h-16 items-center justify-between gap-6">
+          <a href={irA("top")} aria-label="PULSE, inicio"><Wordmark className="h-[15px] w-auto md:h-[17px]" /></a>
+          <a href={irA("clientes")} className="text-[14px] font-semibold text-gris-500 transition-colors hover:text-tinta">← Volver a clientes</a>
+        </div>
+      </header>
+      <main>
+        <section aria-labelledby="proyecto-title" className="relative overflow-hidden" style={{ background: c.fondo }}>
+          <Blob className="-right-24 -top-24 h-[520px] w-[520px]" color={c.brillo} />
+          <div className="container-page relative flex flex-col gap-14 py-16 md:py-24">
+            <div className="grid items-center gap-12 lg:grid-cols-[auto_1fr] lg:gap-20">
+              <div className="order-2 flex justify-center lg:order-1">
+                <Tilt max={6}><DemoFlujo c={c} /></Tilt>
+              </div>
+              <div className="order-1 flex flex-col gap-6 lg:order-2">
+                <div className="flex items-center gap-4">
+                  <LogoCliente c={c} className="h-16 w-16" />
+                  <span className="flex flex-col"><span className="text-[13px] font-medium text-gris-500">Cliente</span><span className="text-[15px] font-semibold">{c.tipo}</span></span>
+                </div>
+                <h1 id="proyecto-title" className="text-[clamp(2.6rem,6vw,5rem)] font-bold leading-[0.98] tracking-[-0.045em]">{c.nombre}</h1>
+                <p className="max-w-[44ch] text-[clamp(1.1rem,1.6vw,1.3rem)] leading-relaxed text-gris-700">{c.resumen}</p>
+                <ul className="flex flex-wrap gap-2">
+                  {["App web progresiva", "Se instala desde el navegador", "Hecha a medida"].map((x) => <li key={x} className="rounded-full bg-white/80 px-3.5 py-1.5 text-[13px] font-medium text-gris-700 ring-1 ring-tinta/5">{x}</li>)}
+                </ul>
+              </div>
+            </div>
+            <div className="grid gap-6 border-t border-tinta/10 pt-10 md:grid-cols-2 md:gap-12">
+              {c.descripcion.map((p, i) => <p key={i} className="text-[17px] leading-relaxed text-gris-700">{p}</p>)}
+            </div>
+          </div>
+        </section>
+
+        <Telefono3D c={c} />
+
+        <section aria-labelledby="otros-title" className="bg-papel">
+          <div className="container-page flex flex-col gap-8 py-20">
+            <h2 id="otros-title" className="text-[clamp(1.6rem,3vw,2.2rem)] font-bold tracking-[-0.03em]">Más proyectos</h2>
+            <div className="grid gap-4 md:grid-cols-2">
+              {otros.map((o) => (
+                <a key={o.slug} href={enlaceCliente(o.slug)} className="sombra group flex items-center gap-5 rounded-[24px] bg-white p-5 transition-transform duration-300 hover:-translate-y-1">
+                  <LogoCliente c={o} className="h-14 w-14" />
+                  <span className="flex min-w-0 flex-1 flex-col"><span className="text-[18px] font-bold tracking-[-0.02em]">{o.nombre}</span><span className="text-[14px] text-gris-500">{o.tipo}</span></span>
+                  <span aria-hidden="true" className="flex h-10 w-10 items-center justify-center rounded-full bg-tinta text-white transition-colors group-hover:bg-acento group-hover:text-tinta">→</span>
+                </a>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        <section aria-labelledby="proyecto-cta" className="bg-white">
+          <div className="container-page py-10">
+            <div className="on-dark relative isolate flex flex-col items-start gap-6 overflow-hidden rounded-[36px] bg-tinta px-6 py-14 text-white md:flex-row md:items-center md:justify-between md:px-14">
+              <Blob className="-left-20 -top-28 -z-10 h-[380px] w-[380px]" color="rgba(255,79,0,0.45)" />
+              <h2 id="proyecto-cta" className="max-w-[18ch] text-[clamp(1.8rem,3.6vw,2.8rem)] font-bold leading-[1.05] tracking-[-0.04em]">¿Quieres una app así para tu negocio?</h2>
+              <Button href={irA("contacto")} variant="accent">Cuéntanos qué necesitas</Button>
+            </div>
+          </div>
+        </section>
+      </main>
+      <Pie />
+    </>
+  );
+}
+
+/* ---------------------------------------------------------------------
    SECCIÓN: Cómo trabajamos
    Escritorio: los pasos avanzan con el scroll y el móvil fijo cambia de pantalla.
    Móvil: lista simple de pasos.
@@ -1219,7 +2021,10 @@ function Integraciones() {
             <div className="order-1 flex justify-center lg:order-2">
               <div className="relative flex h-40 w-40 flex-col items-center justify-center gap-3 rounded-[40px] bg-gradient-to-br from-grad-a to-grad-b text-tinta shadow-[0_40px_80px_-30px_rgba(255,79,0,0.7)]">
                 {!simple && <motion.span aria-hidden="true" className="absolute inset-0 rounded-[40px] ring-2 ring-[#FF8A3D]" animate={{ scale: [1, 1.12], opacity: [0.5, 0] }} transition={{ duration: 2.4, repeat: Infinity, ease: "easeOut" }} />}
-                <Iso className="h-14 w-auto" stroke="#111111" />
+                <svg viewBox="0 0 24 24" className="h-12 w-12" aria-hidden="true">
+                  <rect x="3" y="3" width="7.5" height="7.5" rx="2" fill="#111111" /><rect x="13.5" y="3" width="7.5" height="7.5" rx="2" fill="#111111" opacity=".35" />
+                  <rect x="3" y="13.5" width="7.5" height="7.5" rx="2" fill="#111111" opacity=".35" /><rect x="13.5" y="13.5" width="7.5" height="7.5" rx="2" fill="#111111" />
+                </svg>
                 <span className="text-[14px] font-semibold">Tu app</span>
               </div>
             </div>
@@ -1284,7 +2089,7 @@ function WABot() {
         <StatusBar />
         <div className="flex items-center gap-2 px-3 pb-2 pt-1.5">
           <span className="text-[17px] leading-none text-wa-boton" aria-hidden="true">‹</span>
-          <span className="flex h-8 w-8 items-center justify-center rounded-full bg-tinta"><Iso className="h-4 w-auto" heavy onDark /></span>
+          <span className="flex h-8 w-8 items-center justify-center rounded-full bg-tinta font-sans text-[13px] font-bold text-white">A</span>
           <span className="flex min-w-0 flex-1 flex-col">
             <span className="flex items-center gap-1 truncate text-[12.5px] font-semibold text-wa-texto">
               Estudio Arrel
@@ -1376,40 +2181,6 @@ function Asistente() {
         </div>
       </div>
     </section>
-  );
-}
-
-/* ---------------------------------------------------------------------
-   Botón flotante de WhatsApp
-   --------------------------------------------------------------------- */
-function WhatsAppFlotante() {
-  const simple = useSimple();
-  const [tip, setTip] = useState(false);
-  const [cerrado, setCerrado] = useState(false);
-  useEffect(() => {
-    if (simple) return;
-    const t = setTimeout(() => setTip(true), 3500);
-    return () => clearTimeout(t);
-  }, [simple]);
-  const externo = CONTACTO.whatsapp.startsWith("http");
-  return (
-    <div className="fixed z-[80] flex items-end gap-3" style={{ right: "calc(20px + env(safe-area-inset-right, 0px))", bottom: "calc(20px + env(safe-area-inset-bottom, 0px))" }}>
-      <AnimatePresence>
-        {tip && !cerrado && (
-          <motion.div initial={{ opacity: 0, y: 10, scale: 0.96 }} animate={{ opacity: 1, y: 0, scale: 1 }} exit={{ opacity: 0, y: 6, scale: 0.97 }} transition={{ duration: 0.4, ease }}
-            className="glass relative mb-1 hidden w-[250px] flex-col gap-0.5 rounded-[18px] py-3 pl-4 pr-9 shadow-[0_18px_50px_-18px_rgba(17,17,17,0.3),0_0_0_1px_rgba(17,17,17,0.05)] sm:flex">
-            <button type="button" onClick={() => setCerrado(true)} aria-label="Cerrar aviso" className="absolute right-2 top-2 flex h-6 w-6 items-center justify-center rounded-full text-[15px] leading-none text-gris-400 hover:bg-papel hover:text-tinta">×</button>
-            <span className="text-[14px] font-semibold">¿Hablamos por WhatsApp?</span>
-            <span className="text-[13px] text-gris-500">Te respondemos en menos de 24 h hábiles.</span>
-          </motion.div>
-        )}
-      </AnimatePresence>
-      <a href={CONTACTO.whatsapp} {...(externo ? { target: "_blank", rel: "noopener noreferrer" } : {})} aria-label="Escríbenos por WhatsApp"
-        className="relative flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-wa-verde text-white shadow-[0_14px_30px_-10px_rgba(37,211,102,0.75)] transition-transform duration-200 hover:scale-105 active:scale-95">
-        {!simple && <motion.span aria-hidden="true" className="absolute inset-0 rounded-full bg-wa-verde" animate={{ scale: [1, 1.4], opacity: [0.4, 0] }} transition={{ duration: 2.4, repeat: Infinity, ease: "easeOut" }} />}
-        <Glyph kind="wa" className="relative h-7 w-7" />
-      </a>
-    </div>
   );
 }
 
@@ -1531,32 +2302,138 @@ function ComparativaEscritorio() {
   );
 }
 
+// --- Bloques interactivos de Ventajas ---
+// 1. Tu proceso, en tu orden: los pasos se reordenan solos (o con un toque).
+function VisualProceso() {
+  const t = useTick(2400);
+  const [extra, setExtra] = useState(0);
+  const orden = [["Reserva", "Pago", "Recordatorio", "Factura"], ["Pago", "Reserva", "Factura", "Recordatorio"], ["Reserva", "Recordatorio", "Pago", "Factura"]][(t + extra) % 3];
+  return (
+    <div className="flex w-full flex-col items-center gap-4">
+      <div className="flex flex-wrap items-center justify-center gap-2">
+        {orden.map((x, i) => (
+          <motion.span layout key={x} transition={{ type: "spring", stiffness: 320, damping: 28 }}
+            className={`flex items-center gap-2 rounded-full px-3.5 py-2 text-[13.5px] font-semibold ${i === 0 ? "bg-tinta text-white" : "bg-white shadow-[0_0_0_1px_rgba(17,17,17,0.06)]"}`}>
+            <span className={`flex h-5 w-5 items-center justify-center rounded-full text-[11px] tnum ${i === 0 ? "bg-acento text-tinta" : "bg-papel"}`}>{i + 1}</span>{x}
+          </motion.span>
+        ))}
+      </div>
+      <button type="button" onClick={() => setExtra((e) => e + 1)} className="rounded-full bg-white px-3.5 py-1.5 text-[12.5px] font-semibold text-gris-700 ring-1 ring-linea transition hover:ring-tinta">Cambiar el orden</button>
+    </div>
+  );
+}
+
+// 2. Todo en un solo sitio: las herramientas sueltas se juntan en tu app.
+function VisualJunto() {
+  const t = useTick(2600);
+  const [hover, setHover] = useState(false);
+  const junto = hover || t % 2 === 1;
+  const tools = [["cal", "Calendario", -110, -46], ["sheets", "Excel", 104, -52], ["wa", "WhatsApp", -98, 50], ["note", "Libreta", 112, 44]];
+  return (
+    <div onMouseEnter={() => setHover(true)} onMouseLeave={() => setHover(false)} className="relative flex h-[170px] w-full items-center justify-center">
+      {tools.map(([k, l, x, y]) => (
+        <motion.span key={k} animate={junto ? { x: 0, y: 0, scale: 0.4, opacity: 0 } : { x, y, scale: 1, opacity: 1 }} transition={{ type: "spring", stiffness: 160, damping: 20 }}
+          className="absolute flex items-center gap-1.5 rounded-full bg-white px-3 py-1.5 text-[12.5px] font-semibold shadow-[0_0_0_1px_rgba(17,17,17,0.06),0_8px_18px_-10px_rgba(17,17,17,0.3)]">
+          <Glyph kind={k} className="h-4 w-4" />{l}
+        </motion.span>
+      ))}
+      <motion.span animate={{ scale: junto ? 1 : 0.55, opacity: junto ? 1 : 0.35 }} transition={{ type: "spring", stiffness: 200, damping: 18 }}
+        className="relative flex h-20 w-20 flex-col items-center justify-center gap-1 rounded-[24px] bg-gradient-to-br from-grad-a to-grad-b text-[12px] font-bold text-tinta shadow-[0_20px_40px_-18px_rgba(255,79,0,0.8)]">
+        <svg viewBox="0 0 24 24" className="h-7 w-7" aria-hidden="true"><rect x="3" y="3" width="7.5" height="7.5" rx="2" fill="#111111" /><rect x="13.5" y="3" width="7.5" height="7.5" rx="2" fill="#111111" opacity=".35" /><rect x="3" y="13.5" width="7.5" height="7.5" rx="2" fill="#111111" opacity=".35" /><rect x="13.5" y="13.5" width="7.5" height="7.5" rx="2" fill="#111111" /></svg>
+        Tu app
+      </motion.span>
+    </div>
+  );
+}
+
+// 3. Tu marca: elige un color y la app se viste con él.
+const COLORES_MARCA = [["Naranja", "#FF4F00"], ["Violeta", "#4B3AD6"], ["Verde", "#2F7D63"], ["Terracota", "#D9704A"]];
+function VisualMarca() {
+  const t = useTick(2200);
+  const [elegido, setElegido] = useState(null);
+  const i = elegido ?? t % COLORES_MARCA.length;
+  const [nombre, color] = COLORES_MARCA[i];
+  return (
+    <div className="flex w-full items-center justify-center gap-6">
+      <div className="w-[150px] overflow-hidden rounded-[18px] bg-white shadow-[0_0_0_1px_rgba(17,17,17,0.06),0_14px_30px_-16px_rgba(17,17,17,0.35)]">
+        <motion.div animate={{ backgroundColor: color }} transition={{ duration: 0.4 }} className="flex h-12 items-end px-3 pb-2"><span className="text-[12px] font-bold text-white">Tu negocio</span></motion.div>
+        <div className="flex flex-col gap-1.5 p-3">
+          <span className="h-2 w-3/4 rounded-full bg-gris-100" /><span className="h-2 w-1/2 rounded-full bg-gris-100" />
+          <motion.span animate={{ backgroundColor: color }} transition={{ duration: 0.4 }} className="mt-1.5 rounded-full py-1.5 text-center text-[10.5px] font-bold text-white">Reservar</motion.span>
+        </div>
+      </div>
+      <div role="radiogroup" aria-label="Color de tu marca" className="flex flex-col gap-2">
+        {COLORES_MARCA.map(([n, c], j) => (
+          <button key={n} type="button" role="radio" aria-checked={j === i} aria-label={n} onClick={() => setElegido(j)}
+            className={`h-8 w-8 rounded-full transition-transform hover:scale-110 ${j === i ? "ring-2 ring-tinta ring-offset-2" : ""}`} style={{ background: c }} />
+        ))}
+        <span className="sr-only" aria-live="polite">{nombre}</span>
+      </div>
+    </div>
+  );
+}
+
+// 4. Sin cuotas por usuario: suma personas y compara.
+function VisualUsuarios() {
+  const [n, setN] = useState(5);
+  return (
+    <div className="flex w-full max-w-[420px] flex-col gap-4">
+      <div className="flex items-center justify-between gap-3">
+        <label htmlFor="ventajas-personas" className="text-[13px] font-semibold">Personas en tu equipo</label>
+        <span className="rounded-full bg-tinta px-2.5 py-0.5 text-[13px] font-bold text-white tnum">{n}</span>
+      </div>
+      <input id="ventajas-personas" type="range" min={1} max={15} value={n} onChange={(e) => setN(Number(e.target.value))} className="w-full accent-[#FF4F00]" />
+      <div className="flex flex-col gap-2.5">
+        <div className="flex flex-col gap-1">
+          <span className="text-[12px] font-medium text-gris-500">Apps que cobran por usuario</span>
+          <span className="h-3 overflow-hidden rounded-full bg-gris-100"><motion.span className="block h-full rounded-full bg-gris-300" animate={{ width: `${Math.min(100, 8 + n * 6.1)}%` }} transition={{ duration: 0.35, ease }} /></span>
+        </div>
+        <div className="flex flex-col gap-1">
+          <span className="text-[12px] font-semibold">Tu app de PULSE</span>
+          <span className="h-3 overflow-hidden rounded-full bg-gris-100"><span className="block h-full w-[14%] rounded-full bg-gradient-to-r from-grad-a to-grad-b" /></span>
+        </div>
+      </div>
+      <span className="text-[13px] text-gris-500">Con {n} {n === 1 ? "persona" : "personas"}, tu app cuesta lo mismo.</span>
+    </div>
+  );
+}
+
+const VISUAL_VENTAJA = [VisualProceso, VisualJunto, VisualMarca, VisualUsuarios];
+const SPAN_VENTAJA = ["lg:col-span-7", "lg:col-span-5", "lg:col-span-5", "lg:col-span-7"];
+
 function Ventajas() {
   const simple = useSimple();
   return (
     <section id="ventajas" aria-labelledby="ventajas-title" className="relative overflow-hidden bg-white">
       <Blob className="-left-32 top-[18%] h-[520px] w-[520px]" color="rgba(255,79,0,0.12)" />
       <Blob className="-right-24 top-[34%] h-[460px] w-[460px]" color="rgba(255,170,120,0.2)" />
-      <div className="container-page flex flex-col gap-14 py-24 md:gap-20 md:py-36">
-        <SectionTitle as="h3" id="ventajas-title" eyebrow="Ventajas" title="Por qué una app propia." lead="Frente a seguir con papeles y mensajes, o pagar una herramienta pensada para todos a la vez." />
+      <div className="container-page relative flex flex-col gap-14 py-24 md:gap-20 md:py-36">
+        <SectionTitle as="h3" id="ventajas-title" eyebrow="Ventajas" title="Por qué una app propia." lead="Pruébalo tú: toca, cambia y compara." />
 
-        <div className="grid gap-4 sm:grid-cols-2">
-          {BENEFICIOS.map((b, i) => (
-            <motion.div key={b.t} initial={{ y: simple ? 0 : 36 }} whileInView={{ y: 0 }} viewport={{ once: true, margin: "-80px" }} transition={{ duration: 0.8, ease, delay: (i % 2) * 0.12 }}
-              onPointerMove={spot} whileHover={simple ? undefined : { y: -6 }}
-              className="vidrio foco relative flex flex-col gap-10 rounded-[28px] p-7 md:p-9">
-              <Iso className="h-9 w-auto" />
-              <div className="flex flex-col gap-2.5">
-                <h3 className="text-[clamp(1.35rem,2.2vw,1.75rem)] font-bold leading-tight tracking-[-0.03em]">{b.t}</h3>
-                <p className="max-w-[44ch] text-[16px] leading-relaxed text-gris-500">{b.d}</p>
-              </div>
-            </motion.div>
-          ))}
+        <div className="grid gap-4 lg:grid-cols-12">
+          {BENEFICIOS.map((b, i) => {
+            const V = VISUAL_VENTAJA[i];
+            return (
+              <motion.article key={b.t}
+                initial={simple ? false : { y: 50, rotate: i % 2 ? 1.5 : -1.5, opacity: 0.4 }} whileInView={{ y: 0, rotate: 0, opacity: 1 }}
+                viewport={{ once: true, margin: "-80px" }} transition={{ duration: 0.8, ease, delay: (i % 2) * 0.12 }}
+                onPointerMove={spot} whileHover={simple ? undefined : { y: -6 }}
+                className={`vidrio foco relative flex flex-col gap-6 rounded-[30px] p-5 md:p-7 ${SPAN_VENTAJA[i]}`}>
+                <div className="flex min-h-[210px] items-center justify-center rounded-[22px] bg-gradient-to-br from-papel to-[#FBF3EE] px-4 py-6">
+                  <V />
+                </div>
+                <div className="flex flex-col gap-2 px-1">
+                  <h4 className="text-[clamp(1.3rem,2vw,1.6rem)] font-bold leading-tight tracking-[-0.03em]">{b.t}</h4>
+                  <p className="max-w-[46ch] text-[15.5px] leading-relaxed text-gris-500">{b.d}</p>
+                </div>
+              </motion.article>
+            );
+          })}
         </div>
 
         <div className="flex flex-col gap-8">
           <div className="flex flex-col gap-3">
-            <h3 className="text-[clamp(1.5rem,2.6vw,2rem)] font-bold leading-tight tracking-[-0.03em]">PULSE frente a las alternativas</h3>
+            <h4 className="text-[clamp(1.5rem,2.6vw,2rem)] font-bold leading-tight tracking-[-0.03em]">PULSE frente a las alternativas</h4>
             <p className="max-w-[60ch] text-[16px] leading-relaxed text-gris-500">Tu app es una app web progresiva: se abre con un enlace, se instala en el móvil como cualquier otra y funciona en todos los dispositivos.</p>
           </div>
           <ComparativaMovil />
@@ -1769,12 +2646,7 @@ function Contacto() {
           </div>
         </motion.div>
       </div>
-      <footer className="container-page flex flex-col items-center gap-4 border-t border-linea pb-28 pt-10 text-center text-[13px] text-gris-400 md:flex-row md:justify-between md:pb-8 md:pt-8 md:text-left">
-        <Logo className="h-4 w-auto" />
-        <span>Apps web a medida</span>
-        <a href={CONTACTO.gmail} {...EXTERNO} className="select-all font-medium text-tinta transition-colors hover:text-acento-texto">{CONTACTO.email}</a>
-        <span>© 2026 PULSE</span>
-      </footer>
+      <Pie />
     </section>
   );
 }
@@ -1798,14 +2670,14 @@ export default function Landing() {
         <Hero />
         <Soluciones />
         <Integraciones />
-        <Asistente />
+        {/* Asistente de WhatsApp: oculto por ahora. El componente <Asistente /> sigue en este archivo para activarlo más adelante. */}
         <Ventajas />
         <Casos />
+        <Clientes />
         <Trabajamos />
         <Preguntas />
         <Contacto />
       </main>
-      <WhatsAppFlotante />
     </>
   );
 }
