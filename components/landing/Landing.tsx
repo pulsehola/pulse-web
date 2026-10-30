@@ -1408,8 +1408,8 @@ function BordadoScreen({ s }) {
   return <div className="relative flex h-full flex-col font-sys" style={{ background: BOR.crema }}><StatusBar />{body}{["calendario", "kits", "noticias", "perfil"].includes(s) && barra}</div>;
 }
 
-// --- DAILY (verde tipo imagin #03BD85; la app real usa violeta #4B3AD6) ---
-const DLY = { fondo: "#F5F5F7", tinta: "#111114", violeta: "#03BD85", gris: "#7A7A85" };
+// --- DAILY (violeta #4B3AD6, tinta #111114) ---
+const DLY = { fondo: "#F5F5F7", tinta: "#111114", violeta: "#4B3AD6", gris: "#7A7A85" };
 function DailyScreen({ s }) {
   // Cabecera y etiquetas como en la app real: flecha atrás, título grande, rótulos en mayúsculas espaciadas.
   const etq = (t) => <span className="text-[6.5px] font-semibold uppercase tracking-[0.14em]" style={{ color: DLY.gris }}>{t}</span>;
@@ -1453,9 +1453,9 @@ function DailyScreen({ s }) {
           <span className="text-[24px] font-bold tracking-[-0.03em] tnum">US$ 12.480</span>
           <div className="flex gap-1.5">{["ARS", "USD", "EUR"].map((c) => <span key={c} className={`rounded-full px-2 py-0.5 text-[9px] font-bold ${c === "USD" ? "text-white" : "bg-white/10 text-white/60"}`} style={c === "USD" ? { background: DLY.violeta } : undefined}>{c}</span>)}</div>
           <svg viewBox="0 0 200 60" className="mt-1 w-full" aria-hidden="true">
-            <defs><linearGradient id="dly-g" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stopColor="#03BD85" stopOpacity=".6" /><stop offset="1" stopColor="#03BD85" stopOpacity="0" /></linearGradient></defs>
+            <defs><linearGradient id="dly-g" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stopColor="#4B3AD6" stopOpacity=".6" /><stop offset="1" stopColor="#4B3AD6" stopOpacity="0" /></linearGradient></defs>
             <path d="M0 48 L30 42 L60 44 L90 30 L120 34 L150 20 L180 24 L200 12 L200 60 L0 60Z" fill="url(#dly-g)" />
-            <motion.path d="M0 48 L30 42 L60 44 L90 30 L120 34 L150 20 L180 24 L200 12" fill="none" stroke="#46EAB9" strokeWidth="2" initial={{ pathLength: 0 }} animate={{ pathLength: 1 }} transition={{ duration: 1.2 }} />
+            <motion.path d="M0 48 L30 42 L60 44 L90 30 L120 34 L150 20 L180 24 L200 12" fill="none" stroke="#8B7BFF" strokeWidth="2" initial={{ pathLength: 0 }} animate={{ pathLength: 1 }} transition={{ duration: 1.2 }} />
           </svg>
         </div>
         <div className="mx-3 mt-2.5 grid grid-cols-2 gap-2">
@@ -1470,7 +1470,7 @@ function DailyScreen({ s }) {
       <>
         {cab("Mis cuentas")}
         <div className="mt-3 flex flex-col gap-2 px-3">
-          {[["Banco", "Cuenta sueldo", "AR$ 845.200", "#03BD85"], ["Billetera virtual", "Uso diario", "AR$ 92.300", "#111114"], ["Tarjeta de crédito", "Cierra el 24", "− AR$ 210.400", "#C24A7A"], ["Inversiones", "Cartera", "US$ 6.150", "#1F9D6B"], ["Efectivo", "En casa", "€ 320", "#B98A2E"]].map(([n, d, v, c]) => (
+          {[["Banco", "Cuenta sueldo", "AR$ 845.200", "#4B3AD6"], ["Billetera virtual", "Uso diario", "AR$ 92.300", "#111114"], ["Tarjeta de crédito", "Cierra el 24", "− AR$ 210.400", "#C24A7A"], ["Inversiones", "Cartera", "US$ 6.150", "#1F9D6B"], ["Efectivo", "En casa", "€ 320", "#B98A2E"]].map(([n, d, v, c]) => (
             <div key={n} className="flex items-center gap-2.5 rounded-[16px] bg-white px-3 py-2.5">
               <span className="h-8 w-8 shrink-0 rounded-[10px]" style={{ background: c }} />
               <span className="flex min-w-0 flex-1 flex-col"><span className="truncate text-[11.5px] font-bold" style={{ color: DLY.tinta }}>{n}</span><span className="truncate text-[9.5px]" style={{ color: DLY.gris }}>{d}</span></span>
@@ -1481,7 +1481,7 @@ function DailyScreen({ s }) {
       </>
     );
   } else if (s === "categorias") {
-    const seg = [["Vivienda", 38, "#03BD85"], ["Comida", 24, "#46EAB9"], ["Transporte", 18, "#111114"], ["Ocio", 20, "#A7F5DE"]];
+    const seg = [["Vivienda", 38, "#4B3AD6"], ["Comida", 24, "#8B7BFF"], ["Transporte", 18, "#111114"], ["Ocio", 20, "#C9C3FF"]];
     let acc = 0;
     body = (
       <>
@@ -1503,7 +1503,7 @@ function DailyScreen({ s }) {
             <div key={n} className="flex items-center gap-2.5 rounded-[16px] bg-white px-3 py-2.5">
               <span className={`flex h-5 w-5 items-center justify-center rounded-full ${ok ? "text-white" : "border"}`} style={ok ? { background: DLY.violeta } : { borderColor: "#D5D5DC" }}>{ok && OK}</span>
               <span className="flex-1 text-[11.5px] font-bold" style={{ color: DLY.tinta }}>{n}</span>
-              <span className="rounded-full px-2 py-0.5 text-[9px] font-semibold" style={ok ? { background: "#E3F8F0", color: DLY.violeta } : { background: "#FFF1E6", color: "#B4570F" }}>{e}</span>
+              <span className="rounded-full px-2 py-0.5 text-[9px] font-semibold" style={ok ? { background: "#EEEDFB", color: DLY.violeta } : { background: "#FFF1E6", color: "#B4570F" }}>{e}</span>
             </div>
           ))}
         </div>
@@ -1514,7 +1514,7 @@ function DailyScreen({ s }) {
       <>
         {cabR("Importar", "Movimientos")}
         <div className="mx-3 mt-3 flex flex-col gap-2 rounded-[16px] bg-white p-3">
-          <div className="flex items-center gap-2 rounded-[12px] border border-dashed p-2" style={{ borderColor: "#A7F5DE", background: "#EEFBF6" }}>
+          <div className="flex items-center gap-2 rounded-[12px] border border-dashed p-2" style={{ borderColor: "#C9C3FF", background: "#F4F2FF" }}>
             <span className="flex h-7 w-7 items-center justify-center rounded-[8px] text-[7px] font-extrabold text-white" style={{ background: "#1F9D6B" }}>XLSX</span>
             <span className="flex min-w-0 flex-1 flex-col"><span className="truncate text-[9px] font-bold" style={{ color: DLY.tinta }}>extracto_octubre.xlsx</span><span className="text-[7px]" style={{ color: DLY.gris }}>Excel o CSV de cualquier banco</span></span>
             <span className="flex h-4 w-4 items-center justify-center rounded-full text-white" style={{ background: DLY.tinta }}>{OK}</span>
@@ -1573,7 +1573,7 @@ function DailyScreen({ s }) {
           <span className="text-[10px] text-white/60">12 – 18 de noviembre</span>
           <span className="text-[16px] font-bold">Lisboa, Portugal</span>
           <div className="flex justify-between text-[10px]"><span className="text-white/60">Gastado <b className="text-white tnum">€ 640</b></span><span className="text-white/60">Presupuesto <b className="text-white tnum">€ 900</b></span></div>
-          <span className="h-2 overflow-hidden rounded-full bg-white/15"><motion.span className="block h-full rounded-full" style={{ background: "#46EAB9" }} initial={{ width: 0 }} animate={{ width: "71%" }} transition={{ duration: 0.8 }} /></span>
+          <span className="h-2 overflow-hidden rounded-full bg-white/15"><motion.span className="block h-full rounded-full" style={{ background: "#8B7BFF" }} initial={{ width: 0 }} animate={{ width: "71%" }} transition={{ duration: 0.8 }} /></span>
         </div>
         <div className="mt-2.5 flex flex-col gap-2 px-3">
           {[["Hotel", "€ 320"], ["Comidas", "€ 180"], ["Transporte", "€ 140"]].map(([n, v]) => (
@@ -1583,7 +1583,7 @@ function DailyScreen({ s }) {
       </>
     );
   } else if (s === "cartera") {
-    const seg = [["Acciones", 46, DLY.tinta], ["Bonos", 30, DLY.violeta], ["Fondos", 16, "#46EAB9"], ["Cripto", 8, "#D5D5DC"]];
+    const seg = [["Acciones", 46, DLY.tinta], ["Bonos", 30, DLY.violeta], ["Fondos", 16, "#8B7BFF"], ["Cripto", 8, "#D5D5DC"]];
     let acc = 0;
     body = (
       <>
@@ -1600,10 +1600,10 @@ function DailyScreen({ s }) {
         </div>
         <span className="px-4 pt-3">{etq("Movimientos")}</span>
         <div className="mt-1.5 flex flex-col gap-1.5 px-3">
-          {[["Compra", "10 acciones", "− US$ 480", "21/10/2026", DLY.tinta], ["Venta", "5 bonos", "+ US$ 520", "14/10/2026", "#1F9D6B"], ["Compra", "Fondo común", "− US$ 300", "02/10/2026", DLY.tinta]].map(([t, d, v, f, c], i) => (
+          {[["Compra", "10 acciones", "− US$ 480", "21/10/2026", DLY.violeta], ["Venta", "5 bonos", "+ US$ 520", "14/10/2026", "#1F9D6B"], ["Compra", "Fondo común", "− US$ 300", "02/10/2026", DLY.violeta]].map(([t, d, v, f, c], i) => (
             <div key={i} className="flex items-center gap-2 rounded-[12px] bg-white py-2 pl-2 pr-2.5">
               <span className="h-6 w-[2.5px] rounded-full" style={{ background: c }} />
-              <span className="flex h-6 w-6 items-center justify-center rounded-[7px] text-[9px]" style={{ background: t === "Compra" ? "#EFEFF2" : "#E6F6EE", color: c }}>{t === "Compra" ? "↙" : "↗"}</span>
+              <span className="flex h-6 w-6 items-center justify-center rounded-[7px] text-[9px]" style={{ background: t === "Compra" ? "#EEEDFB" : "#E6F6EE", color: c }}>{t === "Compra" ? "↙" : "↗"}</span>
               <span className="flex min-w-0 flex-1 flex-col"><span className="truncate text-[9px] font-bold" style={{ color: DLY.tinta }}>{d}</span><span className="text-[6.5px] font-medium tracking-[0.06em]" style={{ color: DLY.gris }}>{t.toUpperCase()} · COM. 0,5%</span></span>
               <span className="flex flex-col items-end"><span className="text-[9px] font-bold tnum" style={{ color: DLY.tinta }}>{v}</span><span className="text-[6.5px] tnum" style={{ color: DLY.gris }}>{f}</span></span>
             </div>
@@ -1782,7 +1782,7 @@ const CLIENTES = [
   },
   {
     slug: "daily", nombre: "DAILY", tipo: "Finanzas personales multidivisa",
-    logo: "/clientes/daily.svg", logoFondo: "#111114", fondo: "#F5F5F7", fondoApp: "#F5F5F7", brillo: "rgba(4,190,135,0.28)", App: DailyScreen,
+    logo: "/clientes/daily.svg", logoFondo: "#111114", fondo: "#F5F5F7", fondoApp: "#F5F5F7", brillo: "rgba(75,58,214,0.3)", App: DailyScreen,
     resumen: "Una app web de finanzas personales que reúne todas las cuentas, en pesos, dólares y euros, en un solo lugar.",
     descripcion: [
       "Reúne bancos, billeteras virtuales, tarjetas, inversiones y efectivo en pesos, dólares y euros, y muestra cómo evoluciona el capital mes a mes. Los movimientos se cargan a mano o se importan desde el extracto del banco, en Excel o CSV.",
