@@ -2117,7 +2117,7 @@ function FuncionesMovil({ c }) {
   return (
     <section aria-labelledby="funciones-title" className="relative overflow-hidden bg-white">
       <Blob className="left-[calc(50%-260px)] top-[12%] h-[520px] w-[520px]" color={c.brillo} />
-      <div className="container-page relative flex flex-col items-center gap-8 py-20">
+      <div className="container-page relative flex flex-col items-center gap-8 pb-20 pt-28">
         <SectionTitle center id="funciones-title" eyebrow="Funciones" title="Todo lo que hace la app." />
         <TelefonoFuncion c={c} i={i} />
         <Rotulo f={c.funciones[i]} i={i} />
@@ -2161,7 +2161,7 @@ function FuncionesEscritorio({ c }) {
     </ul>
   );
   return (
-    <section ref={ref} aria-labelledby="funciones-title" className="relative bg-white" style={{ height: `${100 + n * (n > 8 ? 30 : 38)}vh` }}>
+    <section ref={ref} aria-labelledby="funciones-title" className="relative mt-24 bg-white" style={{ height: `${100 + n * (n > 8 ? 30 : 38)}vh` }}>
       <div className="sticky top-16 flex h-[calc(100vh-64px)] items-center overflow-hidden">
         <Blob className="left-[calc(50%-300px)] top-[18%] h-[600px] w-[600px]" color={c.brillo} />
         <div className="container-page relative flex flex-col items-center gap-6">
