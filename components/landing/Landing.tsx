@@ -3043,14 +3043,33 @@ function FormContacto() {
   );
 }
 
+// Fondo del bloque de contacto: tres manchas naranjas que se desplazan despacio, se cruzan y rebotan.
+// Solo se mueve transform (barato para el móvil); con "reducir movimiento" quedan quietas.
+function BurbujasContacto() {
+  const reduce = useReducedMotion();
+  const manchas = [
+    { c: "rgba(255,79,0,0.55)", t: "w-[440px] h-[440px] md:w-[560px] md:h-[560px] -left-28 -top-36", x: [0, 220, 120, 0], y: [0, 120, 260, 0], d: 16 },
+    { c: "rgba(255,138,61,0.42)", t: "w-[420px] h-[420px] md:w-[540px] md:h-[540px] -right-24 -bottom-40", x: [0, -240, -80, 0], y: [0, -180, -60, 0], d: 19 },
+    { c: "rgba(255,178,122,0.28)", t: "w-[320px] h-[320px] md:w-[420px] md:h-[420px] left-[40%] top-[30%]", x: [0, -160, 140, 0], y: [0, 110, -90, 0], d: 23 },
+  ];
+  return (
+    <div aria-hidden="true" className="pointer-events-none absolute inset-0 -z-10 overflow-hidden">
+      {manchas.map((m, i) => (
+        <motion.div key={i} className={`absolute rounded-full ${m.t}`}
+          style={{ background: `radial-gradient(closest-side, ${m.c}, transparent)`, willChange: "transform" }}
+          animate={reduce ? undefined : { x: m.x, y: m.y, scale: [1, 1.12, 0.94, 1] }}
+          transition={{ duration: m.d, repeat: Infinity, repeatType: "mirror", ease: [0.45, 0, 0.55, 1] }} />
+      ))}
+    </div>
+  );
+}
+
 function Contacto() {
   const simple = useSimple();
   const ref = useRef(null);
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start end", "center center"] });
-  const draw = useTransform(scrollYProgress, [0, 1], [simple ? 1 : 0, 1]);
   const scale = useSpring(useTransform(scrollYProgress, [0, 1], [simple ? 1 : 0.94, 1]), { stiffness: 90, damping: 24 });
   const radius = useTransform(scrollYProgress, [0, 1], [simple ? 32 : 64, 40]);
-  const d = "M0 120 H1600"; // línea de proceso (antes, pulso)
   const [copied, setCopied] = useState(false);
   const copy = async () => {
     try { await navigator.clipboard.writeText(CONTACTO.email); setCopied(true); setTimeout(() => setCopied(false), 1600); }
@@ -3065,15 +3084,7 @@ function Contacto() {
       <div className="container-page pb-10">
         <motion.div style={{ scale, borderRadius: radius }} className="on-dark relative isolate overflow-hidden bg-tinta px-5 py-16 text-white md:px-14 md:py-24">
           <div className="dot-grid absolute inset-0 -z-10" aria-hidden="true" />
-          <Blob className="-left-24 -top-32 -z-10 h-[460px] w-[460px]" color="rgba(255,79,0,0.5)" />
-          <Blob className="-bottom-40 -right-20 -z-10 h-[520px] w-[520px]" color="rgba(255,138,61,0.35)" />
-          <svg className="pointer-events-none absolute inset-x-0 top-[22%] -z-10 h-[220px] w-full" viewBox="0 0 1600 240" preserveAspectRatio="none" aria-hidden="true">
-            <motion.path d={d} fill="none" stroke="#FF4F00" strokeOpacity="0.3" strokeWidth="2.5" strokeLinejoin="round" strokeLinecap="round" vectorEffect="non-scaling-stroke" style={{ pathLength: draw }} />
-            {!simple && (
-              <motion.path d={d} pathLength={1} fill="none" stroke="#FF8A3D" strokeWidth="4" strokeLinejoin="round" strokeLinecap="round" vectorEffect="non-scaling-stroke" strokeDasharray="0.1 2"
-                initial={{ strokeDashoffset: 0.1 }} animate={{ strokeDashoffset: -1 }} transition={{ duration: 4.5, ease: "linear", repeat: Infinity, delay: 1 }} />
-            )}
-          </svg>
+          <BurbujasContacto />
           <div className="grid gap-12 lg:grid-cols-[0.9fr_1.1fr] lg:items-center lg:gap-16">
             <div className="flex min-w-0 flex-col gap-7">
               <Eyebrow dark>Contacto</Eyebrow>
