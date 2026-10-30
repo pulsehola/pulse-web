@@ -1634,6 +1634,7 @@ const CLIENTES = [
     ],
     // Capturas reales (nombres y cifras cambiados por privacidad).
     portada: SHOT("calendario"),
+    demoFija: true, // la página del proyecto muestra el calendario fijo, sin recorrido
     flujo: [{ p: SHOT("calendario"), toque: ["54%", "64%"] }, { p: SHOT("kits"), toque: ["50%", "73%"] }, { p: SHOT("noticias"), toque: ["11%", "41%"] }],
     funciones: [
       { t: "Calendario mensual", d: "Las alumnas ven de un vistazo qué días hay clase y dónde queda lugar.", p: SHOT("calendario"), foco: { y: 33, h: 41 } },
@@ -1745,6 +1746,10 @@ function Clientes() {
    --------------------------------------------------------------------- */
 // Demostración en bucle: recorre el flujo principal con un toque animado, como un vídeo.
 function DemoFlujo({ c }) {
+  if (c.demoFija) return <Phone label={`App de ${c.nombre}`}><Pantalla c={c} p={c.portada} /></Phone>;
+  return <DemoAnimada c={c} />;
+}
+function DemoAnimada({ c }) {
   const reduce = useReducedMotion();
   const [i, setI] = useState(0);
   useEffect(() => {
@@ -1792,7 +1797,6 @@ function TelefonoFuncion({ c, i, dir = 1 }) {
               <Pantalla c={c} p={f.p} />
             </motion.div>
           </AnimatePresence>
-          <Foco f={f.foco} />
           {/* barrido de luz en cada cambio */}
           <motion.span key={`luz-${i}`} aria-hidden="true" className="pointer-events-none absolute inset-0 z-30 bg-[linear-gradient(115deg,transparent_30%,rgba(255,255,255,0.55)_50%,transparent_70%)]"
             initial={{ x: "-120%" }} animate={{ x: "120%" }} transition={{ duration: 0.9, ease }} />
