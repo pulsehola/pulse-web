@@ -2216,7 +2216,8 @@ export function Proyecto({ slug }) {
           <Blob className="-right-24 -top-24 h-[520px] w-[520px]" color={c.brillo} />
           <div className="container-page relative flex flex-col gap-14 py-16 md:py-24">
             <div className="grid items-center gap-12 lg:grid-cols-[auto_1fr] lg:gap-20">
-              <div className="order-2 flex justify-center lg:order-1">
+              {/* En móvil no se muestra: el teléfono ya aparece en "Todo lo que hace la app". */}
+              <div className="order-2 hidden justify-center md:flex lg:order-1">
                 <Tilt max={6}><DemoFlujo c={c} /></Tilt>
               </div>
               <div className="order-1 flex flex-col gap-6 lg:order-2">
