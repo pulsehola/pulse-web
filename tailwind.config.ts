@@ -3,6 +3,8 @@ import type { Config } from "tailwindcss";
 // Tokens del Manual de marca PULSE v1.0. No agregar colores fuera de esta lista.
 // Excepción: los tokens marcados "Landing" se sumaron para la portada de apps a medida y están pendientes de entrar al manual.
 const config: Config = {
+  // En pantallas táctiles los estilos hover no se quedan "pegados" después de tocar.
+  future: { hoverOnlyWhenSupported: true },
   content: ["./app/**/*.{ts,tsx}", "./components/**/*.{ts,tsx}"],
   theme: {
     extend: {

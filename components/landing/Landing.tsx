@@ -77,10 +77,13 @@ const SOLUCIONES = [
 ];
 
 // Lo que hace cada integración, dicho tal cual. TODO: confirmar alcance técnico antes de publicar.
+// TODO: confirmar alcance. Bizum online necesita la pasarela (TPV) del banco del cliente.
 const INTEGRACIONES = [
   { id: "wa", n: "WhatsApp", d: "Recordatorios y confirmaciones automáticas para tus clientes.", lado: "izq" },
+  { id: "card", n: "Pagos con tarjeta", d: "Cobra reservas, bonos o pedidos online con tarjeta, Apple Pay o Google Pay.", lado: "izq" },
   { id: "ig", n: "Instagram", d: "Un enlace para reservar o pedir desde tu bio y tus historias.", lado: "izq" },
   { id: "sheets", n: "Excel y Google Sheets", d: "Importas lo que ya tienes y exportas cuando quieras.", lado: "der" },
+  { id: "bizum", n: "Bizum", d: "Tus clientes pagan desde el móvil, sin efectivo ni transferencias.", lado: "der" },
   { id: "cal", n: "Google Calendar", d: "Cada cita aparece en tu calendario de siempre.", lado: "der" },
 ];
 
@@ -242,6 +245,8 @@ function Glyph({ kind, className = "h-5 w-5" }) {
   if (kind === "ig") return <svg viewBox="0 0 24 24" className={className} aria-hidden="true"><path {...p} d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-.8.8" /><path {...p} d="M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l.8-.8" /></svg>;
   if (kind === "sheets") return <svg viewBox="0 0 24 24" className={className} aria-hidden="true"><rect {...p} x="4" y="4" width="16" height="16" rx="2.5" /><path {...p} d="M4 9.5h16M4 14.5h16M10 4v16" /></svg>;
   if (kind === "cal") return <svg viewBox="0 0 24 24" className={className} aria-hidden="true"><rect {...p} x="4" y="5.5" width="16" height="14.5" rx="2.5" /><path {...p} d="M4 10h16M8.5 3.5v4M15.5 3.5v4" /><path {...p} d="M8.5 14h2M13.5 14h2M8.5 17h2" /></svg>;
+  if (kind === "card") return <svg viewBox="0 0 24 24" className={className} aria-hidden="true"><rect {...p} x="3" y="5.5" width="18" height="13" rx="2.5" /><path {...p} d="M3 10h18M7 15h4" /></svg>;
+  if (kind === "bizum") return <svg viewBox="0 0 24 24" className={className} aria-hidden="true"><rect {...p} x="6.5" y="2.5" width="11" height="19" rx="2.5" /><path {...p} d="M10 18h4M14.2 8.6a2.6 2.6 0 1 0 0 3.8M9.6 9.7h3.4M9.6 11.3h3.4" /></svg>;
   if (kind === "note") return <svg viewBox="0 0 24 24" className={className} aria-hidden="true"><rect {...p} x="5" y="3.5" width="14" height="17" rx="2.5" /><path {...p} d="M8.5 8h7M8.5 11.5h7M8.5 15h4" /></svg>;
   if (kind === "box") return <svg viewBox="0 0 24 24" className={className} aria-hidden="true"><path {...p} d="M4 8 12 4l8 4v8l-8 4-8-4Z" /><path {...p} d="M4 8l8 4 8-4M12 12v8" /></svg>;
   return null;
@@ -961,7 +966,7 @@ function Soluciones() {
           {/* Escritorio: lista vertical */}
           <div role="tablist" aria-label="Soluciones" aria-orientation="vertical" className="hidden flex-col lg:flex">
             {SOLUCIONES.map((x, i) => (
-              <button key={x.k} type="button" role="tab" id={`sol-tab-${i}`} aria-selected={i === act} aria-controls="sol-panel" onClick={() => pick(i)} onMouseEnter={() => pick(i)}
+              <button key={x.k} type="button" role="tab" id={`sol-tab-${i}`} aria-selected={i === act} aria-controls="sol-panel" onClick={() => pick(i)} onPointerEnter={(e) => e.pointerType === "mouse" && pick(i)}
                 className="group relative flex items-center justify-between gap-4 border-t border-linea py-[14px] text-left last:border-b">
                 {i === act && (
                   <motion.span layoutId="sol-barra" className="absolute -top-px left-0 h-[2px] w-full origin-left bg-gradient-to-r from-grad-a to-grad-b" transition={{ type: "spring", stiffness: 380, damping: 36 }}>
@@ -1029,7 +1034,7 @@ function Nav() {
           <a href="#trabajamos" className="transition-colors hover:text-tinta">Cómo trabajamos</a>
           <a href="#preguntas" className="transition-colors hover:text-tinta">Preguntas</a>
         </nav>
-        <a href="#contacto" className="rounded-full bg-tinta px-4 py-2 text-[13px] font-semibold text-white transition-colors hover:bg-[#2a2a2a]">Hablemos</a>
+        <a href="#contacto" className="inline-flex min-h-[40px] items-center rounded-full bg-tinta px-4 text-[13px] font-semibold text-white transition-colors hover:bg-[#2a2a2a]">Hablemos</a>
       </div>
     </header>
   );
@@ -1994,14 +1999,14 @@ function Integraciones() {
   const draw = useTransform(scrollYProgress, [0, 1], [simple ? 1 : 0, 1]);
   const izq = INTEGRACIONES.filter((i) => i.lado === "izq");
   const der = INTEGRACIONES.filter((i) => i.lado === "der");
-  const paths = ["M250 95 C 370 95, 390 200, 500 200", "M250 305 C 370 305, 390 200, 500 200", "M750 95 C 630 95, 610 200, 500 200", "M750 305 C 630 305, 610 200, 500 200"];
+  const paths = ["M250 67 C 370 67, 390 200, 500 200", "M250 200 L 500 200", "M250 333 C 370 333, 390 200, 500 200", "M750 67 C 630 67, 610 200, 500 200", "M750 200 L 500 200", "M750 333 C 630 333, 610 200, 500 200"];
 
   return (
     <section id="integraciones" ref={ref} aria-labelledby="int-title" className="relative overflow-hidden bg-white">
       <Blob className="left-[8%] top-[38%] h-[420px] w-[420px]" color="rgba(255,79,0,0.14)" />
       <Blob className="right-[6%] top-[52%] h-[460px] w-[460px]" color="rgba(255,170,120,0.22)" />
       <div className="container-page flex flex-col gap-14 py-24 md:gap-20 md:py-36">
-        <SectionTitle as="h3" center id="int-title" eyebrow="Integraciones" title="Se lleva bien con lo que ya usas." lead="Tu app no te obliga a dejar tus herramientas. Las conecta, para que la información pase sola de un sitio a otro." />
+        <SectionTitle as="h3" center id="int-title" eyebrow="Integraciones" title="Se lleva bien con lo que ya usas." lead="Tu app no te obliga a dejar tus herramientas: las conecta y también cobra por ti, para que la información y los pagos pasen solos de un sitio a otro." />
 
         <div className="relative">
           {!simple && (
@@ -2010,14 +2015,14 @@ function Integraciones() {
                 <g key={i}>
                   <motion.path d={d} fill="none" stroke="#D9D9D5" strokeWidth="1.5" vectorEffect="non-scaling-stroke" style={{ pathLength: draw }} />
                   <motion.path d={d} fill="none" stroke={ACENTO.base} strokeWidth="2.5" strokeLinecap="round" vectorEffect="non-scaling-stroke" pathLength={1} strokeDasharray="0.06 1"
-                    initial={{ strokeDashoffset: i < 2 ? 0.06 : -1 }} animate={{ strokeDashoffset: i < 2 ? -1 : 0.06 }}
+                    initial={{ strokeDashoffset: i < 3 ? 0.06 : -1 }} animate={{ strokeDashoffset: i < 3 ? -1 : 0.06 }}
                     transition={{ duration: 2.8, repeat: Infinity, ease: "easeInOut", delay: i * 0.6 }} />
                 </g>
               ))}
             </svg>
           )}
           <div className="relative grid items-center gap-5 lg:grid-cols-[1fr_auto_1fr] lg:gap-24">
-            <div className="order-2 flex flex-col gap-5 lg:order-1 lg:gap-24">{izq.map((it) => <IntegracionTile key={it.id} it={it} align="izq" />)}</div>
+            <div className="order-2 flex flex-col gap-5 lg:order-1 lg:gap-12">{izq.map((it) => <IntegracionTile key={it.id} it={it} align="izq" />)}</div>
             <div className="order-1 flex justify-center lg:order-2">
               <div className="relative flex h-40 w-40 flex-col items-center justify-center gap-3 rounded-[40px] bg-gradient-to-br from-grad-a to-grad-b text-tinta shadow-[0_40px_80px_-30px_rgba(255,79,0,0.7)]">
                 {!simple && <motion.span aria-hidden="true" className="absolute inset-0 rounded-[40px] ring-2 ring-[#FF8A3D]" animate={{ scale: [1, 1.12], opacity: [0.5, 0] }} transition={{ duration: 2.4, repeat: Infinity, ease: "easeOut" }} />}
@@ -2028,7 +2033,7 @@ function Integraciones() {
                 <span className="text-[14px] font-semibold">Tu app</span>
               </div>
             </div>
-            <div className="order-3 flex flex-col gap-5 lg:gap-24">{der.map((it) => <IntegracionTile key={it.id} it={it} align="der" />)}</div>
+            <div className="order-3 flex flex-col gap-5 lg:gap-12">{der.map((it) => <IntegracionTile key={it.id} it={it} align="der" />)}</div>
           </div>
         </div>
         <p className="text-center text-[14px] text-gris-400">¿Usas otra herramienta? Pregúntanos: si tiene forma de conectarse, la conectamos.</p>
@@ -2330,7 +2335,7 @@ function VisualJunto() {
   const junto = hover || t % 2 === 1;
   const tools = [["cal", "Calendario", -110, -46], ["sheets", "Excel", 104, -52], ["wa", "WhatsApp", -98, 50], ["note", "Libreta", 112, 44]];
   return (
-    <div onMouseEnter={() => setHover(true)} onMouseLeave={() => setHover(false)} className="relative flex h-[170px] w-full items-center justify-center">
+    <div onPointerEnter={(e) => e.pointerType === "mouse" && setHover(true)} onPointerLeave={() => setHover(false)} className="relative flex h-[170px] w-full items-center justify-center">
       {tools.map(([k, l, x, y]) => (
         <motion.span key={k} animate={junto ? { x: 0, y: 0, scale: 0.4, opacity: 0 } : { x, y, scale: 1, opacity: 1 }} transition={{ type: "spring", stiffness: 160, damping: 20 }}
           className="absolute flex items-center gap-1.5 rounded-full bg-white px-3 py-1.5 text-[12.5px] font-semibold shadow-[0_0_0_1px_rgba(17,17,17,0.06),0_8px_18px_-10px_rgba(17,17,17,0.3)]">
@@ -2498,7 +2503,7 @@ function Campo({ id, label, error, children }) {
     </div>
   );
 }
-const CAMPO = "w-full rounded-[14px] bg-white/[0.07] px-4 py-3 text-[15px] text-white ring-1 ring-inset ring-white/15 transition placeholder:text-white/35 focus:bg-white/[0.1] focus:outline-none focus:ring-2 focus:ring-[#FF8A3D]";
+const CAMPO = "w-full rounded-[14px] bg-white/[0.07] px-4 py-3 text-[16px] text-white ring-1 ring-inset ring-white/15 transition placeholder:text-white/35 focus:bg-white/[0.1] focus:outline-none focus:ring-2 focus:ring-[#FF8A3D]";
 
 function FormContacto() {
   const [estado, setEstado] = useState("idle"); // idle | enviando | ok | error
