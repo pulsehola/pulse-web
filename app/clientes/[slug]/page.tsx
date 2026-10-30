@@ -15,7 +15,7 @@ const PROYECTOS: Record<string, { titulo: string; descripcion: string }> = {
   },
   "daiana-marlene": {
     titulo: "Daiana Marlene",
-    descripcion: "Agenda online para una terapeuta: reserva de sesiones, recordatorios y agenda semanal.",
+    descripcion: "App para una terapeuta y mentora: cursos en vivo por Meet con su material, reserva de sesiones individuales, recordatorios y panel semanal.",
   },
 };
 

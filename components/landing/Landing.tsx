@@ -1640,86 +1640,223 @@ function DailyScreen({ s }) {
   return <div className="relative flex h-full flex-col font-sys" style={{ background: DLY.fondo, fontFamily: "'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif" }}>{s === "pin" ? <div className="absolute inset-x-0 top-0 z-10"><StatusBar light /></div> : <StatusBar />}{body}{barraApp}</div>;
 }
 
-// --- Daiana Marlene, terapeuta. TODO: contenido y marca provisionales hasta tener los reales. ---
-const TER = { fondo: "#F4F1EC", salvia: "#6B8F71", salviaSoft: "#DDE7DE", texto: "#2F3A33", gris: "#7C857E" };
-function TerapiaScreen({ s }) {
-  const cab = (t, sub) => (
-    <div className="flex items-center justify-between px-4 pt-5">
-      <div className="flex flex-col"><span className="text-[10px]" style={{ color: TER.gris }}>{sub}</span><span className="text-[17px] font-bold" style={{ color: TER.texto }}>{t}</span></div>
-      <span className="flex h-8 w-8 items-center justify-center rounded-full text-[11px] font-bold text-white" style={{ background: TER.salvia }}>DM</span>
+// --- Daiana Marlene (sistema de diseño de su app: crema, rosa empolvado, melocotón y salvia; Kumbh Sans + DM Sans) ---
+// Pantallas inventadas para la propuesta: todavía no son capturas de una app real.
+const DMC = {
+  crema: "#F7F4EE", lino: "#EFE8DE", arena: "#E4D8C8", linea: "#DCD1C3", tinta: "#3A3330", suave: "#6B615B",
+  cacao: "#4A3D38", rosa1: "#F1DCD6", rosa: "#E3BDB4", rosa6: "#8E444A", melocoton: "#EECBAE", salvia: "#C9D1BF", salvia7: "#465747", aviso: "#8A5B14",
+};
+const DM_TIT = { fontFamily: "'Kumbh Sans', system-ui, sans-serif", letterSpacing: "-0.02em" };
+function IcoDM({ d, className = "h-3 w-3" }) {
+  return <svg viewBox="0 0 24 24" className={className} fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">{d}</svg>;
+}
+const DM_ICO = {
+  inicio: <path d="M4 11.5 12 5l8 6.5V19a1 1 0 0 1-1 1h-4v-5h-6v5H5a1 1 0 0 1-1-1z" />,
+  agenda: <><rect x="4" y="5" width="16" height="15" rx="2.5" /><path d="M4 10h16M9 3v4M15 3v4" /></>,
+  formaciones: <><path d="M3 9.5 12 5l9 4.5-9 4.5z" /><path d="M7 11.5V16c0 1.2 2.2 2.5 5 2.5s5-1.3 5-2.5v-4.5" /></>,
+  perfil: <><circle cx="12" cy="8.5" r="3.5" /><path d="M5 19.5c1.2-3.2 3.8-4.8 7-4.8s5.8 1.6 7 4.8" /></>,
+  ok: <path d="m5 12.5 4.5 4.5L19 7.5" />,
+  reloj: <><circle cx="12" cy="12" r="8" /><path d="M12 8v4.5l3 2" /></>,
+  video: <><rect x="3" y="7" width="12" height="10" rx="2.5" /><path d="m15 11 6-3.5v9L15 13" /></>,
+  candado: <><rect x="5" y="11" width="14" height="9" rx="2.5" /><path d="M8 11V8a4 4 0 0 1 8 0v3" /></>,
+  flecha: <path d="M5 12h14m-5-5 5 5-5 5" />,
+  campana: <><path d="M6 16V11a6 6 0 0 1 12 0v5l1.5 2h-15z" /><path d="M10 20.5a2 2 0 0 0 4 0" /></>,
+  doc: <><path d="M7 3.5h7l4 4V20a.5.5 0 0 1-.5.5h-10A.5.5 0 0 1 7 20z" /><path d="M14 3.5V8h4" /></>,
+};
+function MarleneScreen({ s }) {
+  const titulo = (a, b, sub) => (
+    <div className="flex flex-col px-4 pt-3">
+      {sub && <span className="text-[7.5px] font-semibold uppercase tracking-[0.06em]" style={{ color: DMC.suave }}>{sub}</span>}
+      <span className="text-[17px] font-medium leading-[1.15]" style={{ ...DM_TIT, color: DMC.tinta }}>{a}{b && <span style={{ color: DMC.rosa6 }}> {b}</span>}</span>
     </div>
   );
+  const chip = (t, tipo) => {
+    const est = { ok: [DMC.salvia, DMC.salvia7, DM_ICO.ok], pend: [DMC.rosa1, DMC.aviso, DM_ICO.reloj] }[tipo];
+    return <span className="inline-flex w-max items-center gap-1 rounded-full px-1.5 py-0.5 text-[7px] font-semibold" style={{ background: est[0], color: est[1] }}><IcoDM d={est[2]} className="h-2 w-2" />{t}</span>;
+  };
+  const etq = (t) => <span className="text-[7px] font-semibold uppercase tracking-[0.06em]" style={{ color: DMC.tinta }}>{t}</span>;
+  const boton = (t, sec) => <span className="flex h-[26px] items-center justify-center rounded-full text-[8.5px] font-semibold" style={sec ? { border: `1px solid ${DMC.linea}`, color: DMC.tinta } : { background: DMC.cacao, color: DMC.crema }}>{t}</span>;
+  const tarjeta = "rounded-[8px] border p-2.5";
+  const tab = { inicio: 0, reservar: 1, confirmada: 1, agenda: 1, formaciones: 2, curso: 2, avisos: 0 }[s];
   let body;
   if (s === "inicio") {
     body = (
       <>
-        {cab("Hola, Clara", "Tu espacio")}
-        <div className="mx-3 mt-4 flex flex-col gap-2 rounded-[20px] p-4 text-white" style={{ background: TER.salvia }}>
-          <span className="text-[10px] text-white/75">Tu próxima sesión</span>
-          <span className="text-[17px] font-bold leading-tight">Martes 11 · 18:00</span>
-          <span className="w-fit rounded-full bg-white/20 px-2.5 py-0.5 text-[10px] font-semibold">Online</span>
+        <svg viewBox="0 0 100 60" className="absolute right-0 top-8 w-[92px]" aria-hidden="true"><path d="M30 60a35 35 0 0 1 70 0z" fill={DMC.rosa} opacity=".55" /><path d="M58 60a22 22 0 0 1 44 0z" fill={DMC.melocoton} /></svg>
+        {titulo("Hola,", "Lucía", "Jueves 6 de noviembre")}
+        <div className="mx-3 mt-3 flex flex-col gap-1.5 rounded-[13px] p-3" style={{ background: DMC.rosa }}>
+          {etq("Formación online")}
+          <span className="text-[13px] font-medium leading-tight" style={{ ...DM_TIT, color: DMC.tinta }}>Curso 1 · Encuentro 3</span>
+          <span className="flex items-center gap-1 text-[8px]" style={{ color: DMC.tinta }}><IcoDM d={DM_ICO.video} className="h-2.5 w-2.5" />Hoy · 19:00 h · por Meet</span>
+          <span className="mt-1">{boton("Entrar a la clase")}</span>
         </div>
-        <div className="mx-3 mt-2.5 grid grid-cols-2 gap-2">
-          {["Reservar sesión", "Mis sesiones"].map((x, i) => <span key={x} className="rounded-[14px] py-3 text-center text-[11px] font-bold" style={i === 0 ? { background: TER.texto, color: "#fff" } : { background: "#fff", color: TER.texto }}>{x}</span>)}
+        <div className="mx-3 mt-2 flex flex-col gap-1 rounded-[8px] p-2.5" style={{ background: DMC.melocoton }}>
+          {etq("Sesión individual")}
+          <span className="text-[10.5px] font-semibold" style={{ ...DM_TIT, color: DMC.tinta }}>Martes 11, 18:00 h</span>
+          {chip("Confirmada", "ok")}
+        </div>
+        <div className={`mx-3 mt-2 flex items-center justify-between ${tarjeta}`} style={{ background: DMC.lino, borderColor: DMC.linea }}>
+          <span className="flex flex-col"><span className="text-[9px] font-semibold" style={{ color: DMC.tinta }}>Reservá una sesión</span><span className="text-[7.5px]" style={{ color: DMC.suave }}>60 min · virtual</span></span>
+          <span style={{ color: DMC.rosa6 }}><IcoDM d={DM_ICO.flecha} /></span>
         </div>
       </>
     );
   } else if (s === "reservar") {
+    const dias = [["L", 10], ["M", 11], ["X", 12], ["J", 13], ["V", 14]];
+    const horas = ["10:00", "11:30", "16:00", "18:00", "19:30"];
     body = (
       <>
-        {cab("Reservar", "Elige día y hora")}
-        <div className="mt-3 grid grid-cols-5 gap-1.5 px-3">{["L 10", "M 11", "X 12", "J 13", "V 14"].map((d, i) => <span key={d} className="rounded-[10px] py-1.5 text-center text-[10px] font-semibold" style={i === 1 ? { background: TER.texto, color: "#fff" } : { background: "#fff", color: TER.texto }}>{d}</span>)}</div>
-        <div className="mt-3 grid grid-cols-3 gap-1.5 px-3">
-          {["10:00", "11:00", "12:00", "16:00", "17:00", "18:00"].map((h, i) => <span key={h} className="rounded-[10px] py-2 text-center text-[11px] font-semibold tnum" style={i === 5 ? { background: TER.salvia, color: "#fff" } : i === 1 || i === 3 ? { background: TER.salviaSoft, color: TER.gris, textDecoration: "line-through" } : { background: "#fff", color: TER.texto }}>{h}</span>)}
+        {titulo("Reservá tu", "sesión", "Sesión individual")}
+        <div className="mx-3 mt-3 flex justify-between">
+          {dias.map(([d, n]) => (
+            <span key={n} className="flex w-[34px] flex-col items-center gap-0.5 rounded-[8px] border py-1.5" style={n === 11 ? { background: DMC.arena, borderColor: DMC.arena } : { borderColor: DMC.linea }}>
+              <span className="text-[7px] font-semibold" style={{ color: DMC.suave }}>{d}</span><span className="text-[11px] font-semibold" style={{ ...DM_TIT, color: DMC.tinta }}>{n}</span>
+            </span>
+          ))}
         </div>
-        <div className="mx-3 mt-3 flex rounded-full bg-white p-1 text-[10.5px] font-semibold"><span className="flex-1 rounded-full py-1.5 text-center text-white" style={{ background: TER.salvia }}>Online</span><span className="flex-1 py-1.5 text-center" style={{ color: TER.gris }}>Presencial</span></div>
+        <span className="mx-4 mt-3 text-[9px] font-semibold" style={{ color: DMC.tinta }}>Horarios del martes 11</span>
+        <div className="mx-3 mt-1.5 grid grid-cols-3 gap-1.5">
+          {horas.map((h) => <span key={h} className="rounded-[5px] border py-1.5 text-center text-[8.5px] font-semibold tnum" style={h === "18:00" ? { background: DMC.cacao, borderColor: DMC.cacao, color: DMC.crema } : { borderColor: DMC.linea, color: h === "11:30" ? DMC.linea : DMC.tinta, textDecoration: h === "11:30" ? "line-through" : "none" }}>{h}</span>)}
+        </div>
+        <div className={`mx-3 mt-3 flex items-center gap-2 ${tarjeta}`} style={{ background: DMC.lino, borderColor: DMC.linea }}>
+          <span className="flex h-6 w-6 items-center justify-center rounded-full" style={{ background: DMC.salvia, color: DMC.salvia7 }}><IcoDM d={DM_ICO.video} /></span>
+          <span className="flex flex-col"><span className="text-[9px] font-semibold" style={{ color: DMC.tinta }}>Virtual, por Meet</span><span className="text-[7.5px]" style={{ color: DMC.suave }}>60 minutos · el enlace llega al reservar</span></span>
+        </div>
+        <span className="mx-3 mt-3">{boton("Reservar martes 11, 18:00 h")}</span>
       </>
     );
   } else if (s === "confirmada") {
     body = (
-      <div className="flex h-full flex-col items-center justify-center gap-3 px-6 pb-12 text-center">
-        <motion.span initial={{ scale: 0.4 }} animate={{ scale: 1 }} transition={{ type: "spring", stiffness: 260, damping: 14 }} className="flex h-16 w-16 items-center justify-center rounded-full text-white" style={{ background: TER.salvia }}>
-          <svg viewBox="0 0 12 12" className="w-7"><path d="M2.5 6.3 5 8.6 9.5 3.4" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" /></svg>
-        </motion.span>
-        <span className="text-[18px] font-bold" style={{ color: TER.texto }}>Sesión reservada</span>
-        <span className="text-[11.5px]" style={{ color: TER.gris }}>Martes 11 · 18:00 · Online</span>
-        <span className="text-[10.5px]" style={{ color: TER.gris }}>Te enviaremos un recordatorio el día antes.</span>
+      <div className="flex flex-1 flex-col items-center px-5 pt-10 text-center">
+        <svg viewBox="0 0 100 52" className="w-[110px]" aria-hidden="true"><path d="M8 52a42 42 0 0 1 84 0z" fill={DMC.rosa} opacity=".5" /><path d="M26 52a24 24 0 0 1 48 0z" fill={DMC.melocoton} /></svg>
+        <motion.span initial={{ scale: 0.6, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} transition={{ duration: 0.5, ease }} className="-mt-4 flex h-9 w-9 items-center justify-center rounded-full" style={{ background: DMC.salvia, color: DMC.salvia7 }}><IcoDM d={DM_ICO.ok} className="h-4 w-4" /></motion.span>
+        <span className="mt-3 text-[16px] font-medium leading-[1.2]" style={{ ...DM_TIT, color: DMC.tinta }}>Listo, te espero el martes <span style={{ color: DMC.rosa6 }}>a las 18 h</span></span>
+        <span className="mt-2 text-[8.5px] leading-snug" style={{ color: DMC.suave }}>Te mandé el enlace de Meet por mail. Te aviso un día antes.</span>
+        <div className={`mt-4 flex w-full items-center justify-between ${tarjeta}`} style={{ background: DMC.melocoton, borderColor: DMC.melocoton }}>
+          <span className="flex flex-col items-start"><span className="text-[7px] font-semibold uppercase tracking-[0.06em]" style={{ color: DMC.tinta }}>Sesión individual</span><span className="text-[10px] font-semibold" style={{ ...DM_TIT, color: DMC.tinta }}>Martes 11 · 18:00 h</span></span>
+          {chip("Confirmada", "ok")}
+        </div>
+        <div className="mt-3 flex w-full flex-col gap-1.5">{boton("Agregar a mi calendario")}{boton("Volver al inicio", true)}</div>
       </div>
     );
-  } else if (s === "sesiones") {
+  } else if (s === "formaciones") {
     body = (
       <>
-        {cab("Mis sesiones", "Próximas y pasadas")}
-        <div className="mt-3 flex flex-col gap-2 px-3">
-          {[["Martes 11 · 18:00", "Online", "Próxima"], ["Martes 4 · 18:00", "Online", "Realizada"], ["Martes 28 · 18:00", "Presencial", "Realizada"]].map(([d, m, e], i) => (
-            <div key={d} className="flex items-center gap-2.5 rounded-[14px] bg-white px-3 py-2.5">
-              <span className="flex min-w-0 flex-1 flex-col"><span className="text-[11.5px] font-bold" style={{ color: TER.texto }}>{d}</span><span className="text-[9.5px]" style={{ color: TER.gris }}>{m}</span></span>
-              <span className="rounded-full px-2 py-0.5 text-[9px] font-semibold" style={i === 0 ? { background: TER.salvia, color: "#fff" } : { background: TER.salviaSoft, color: TER.texto }}>{e}</span>
+        {titulo("Formate", "conmigo", "Formaciones")}
+        <div className="mx-3 mt-3 flex flex-col gap-1.5 rounded-[13px] p-3" style={{ background: DMC.rosa }}>
+          <span className="flex items-center justify-between">{etq("Formación online")}{chip("Inscripta", "ok")}</span>
+          <span className="text-[14px] font-medium" style={{ ...DM_TIT, color: DMC.tinta }}>Curso 1</span>
+          <span className="text-[8px] leading-snug" style={{ color: DMC.tinta }}>6 encuentros en vivo por Meet, con grabaciones y material de cada clase.</span>
+          <div className="mt-0.5 flex items-center gap-1.5"><span className="h-1 flex-1 overflow-hidden rounded-full bg-white/50"><span className="block h-full w-1/2 rounded-full" style={{ background: DMC.cacao }} /></span><span className="text-[7px] font-medium" style={{ color: DMC.tinta }}>Encuentro 3 de 6</span></div>
+        </div>
+        <div className="mx-3 mt-2 flex flex-col gap-1.5 rounded-[13px] border p-3" style={{ background: DMC.rosa1, borderColor: DMC.rosa1 }}>
+          <span className="flex items-center justify-between">{etq("Formación online")}{chip("Pendiente", "pend")}</span>
+          <span className="text-[14px] font-medium" style={{ ...DM_TIT, color: DMC.tinta }}>Curso 2</span>
+          <span className="text-[8px] leading-snug" style={{ color: DMC.suave }}>Empieza en marzo. Tu inscripción se confirma cuando Daiana revise el pago.</span>
+        </div>
+        <span className="mx-3 mt-3">{boton("Ver programa del Curso 2", true)}</span>
+      </>
+    );
+  } else if (s === "curso") {
+    const enc = [["Encuentro 1", "ok"], ["Encuentro 2", "ok"], ["Encuentro 3", "hoy"], ["Encuentro 4", "lock"]];
+    body = (
+      <>
+        {titulo("Curso 1", null, "Formación online")}
+        <div className="mx-3 mt-3 flex items-center gap-2 rounded-[13px] p-3" style={{ background: DMC.rosa }}>
+          <span className="flex h-8 w-8 items-center justify-center rounded-full" style={{ background: DMC.crema, color: DMC.rosa6 }}><IcoDM d={DM_ICO.video} className="h-4 w-4" /></span>
+          <span className="flex flex-1 flex-col"><span className="text-[7px] font-semibold uppercase tracking-[0.06em]" style={{ color: DMC.tinta }}>En vivo hoy</span><span className="text-[10px] font-semibold" style={{ ...DM_TIT, color: DMC.tinta }}>19:00 h · por Meet</span></span>
+        </div>
+        <span className="mx-3 mt-2">{boton("Entrar a la clase")}</span>
+        <div className="mx-3 mt-3 flex flex-col overflow-hidden rounded-[8px] border" style={{ borderColor: DMC.linea, background: DMC.lino }}>
+          {enc.map(([t, e], i) => (
+            <div key={t} className="flex items-center gap-2 px-2.5 py-2" style={{ borderTop: i ? `1px solid ${DMC.linea}` : "none" }}>
+              <span className="flex h-5 w-5 items-center justify-center rounded-full" style={e === "ok" ? { background: DMC.salvia, color: DMC.salvia7 } : e === "hoy" ? { background: DMC.rosa, color: DMC.tinta } : { background: DMC.arena, color: DMC.suave }}><IcoDM d={e === "ok" ? DM_ICO.ok : e === "hoy" ? DM_ICO.video : DM_ICO.candado} className="h-2.5 w-2.5" /></span>
+              <span className="flex flex-1 flex-col"><span className="text-[9px] font-semibold" style={{ color: DMC.tinta }}>{t}</span><span className="text-[7px]" style={{ color: DMC.suave }}>{e === "ok" ? "Grabación y material" : e === "hoy" ? "Hoy, 19:00 h" : "El material se abre el jueves 13"}</span></span>
+              {e === "ok" && <span style={{ color: DMC.rosa6 }}><IcoDM d={DM_ICO.doc} /></span>}
             </div>
           ))}
-          <span className="mt-1 rounded-[12px] border py-2 text-center text-[10.5px] font-semibold" style={{ borderColor: TER.salviaSoft, color: TER.texto }}>Cambiar o cancelar</span>
+        </div>
+      </>
+    );
+  } else if (s === "agenda") {
+    const forma = [6, 13, 20, 27], ses = [11, 18, 25];
+    body = (
+      <>
+        {titulo("Tu", "agenda", "Noviembre")}
+        <div className={`mx-3 mt-3 ${tarjeta}`} style={{ background: DMC.lino, borderColor: DMC.linea }}>
+          <div className="grid grid-cols-7 text-center text-[6.5px] font-semibold" style={{ color: DMC.suave }}>{["L", "M", "X", "J", "V", "S", "D"].map((d) => <span key={d}>{d}</span>)}</div>
+          <div className="mt-1 grid grid-cols-7 gap-y-1 text-center">
+            {[null, null, null, null, null, 1, 2, ...Array.from({ length: 28 }, (_, i) => i + 3)].map((n, i) => (
+              <span key={i} className="mx-auto flex h-[19px] w-[19px] flex-col items-center justify-center rounded-full text-[8px] tnum" style={{ color: n ? DMC.tinta : "transparent", background: n === 11 ? DMC.arena : "transparent", fontWeight: n === 11 ? 600 : 400 }}>
+                {n || "·"}
+                {(forma.includes(n) || ses.includes(n)) && <span className="h-[3px] w-[3px] rounded-full" style={{ background: forma.includes(n) ? DMC.rosa6 : "#C98B5E" }} />}
+              </span>
+            ))}
+          </div>
+        </div>
+        <div className="mx-4 mt-2 flex gap-3 text-[7px]" style={{ color: DMC.suave }}><span className="flex items-center gap-1"><span className="h-1.5 w-1.5 rounded-full" style={{ background: DMC.rosa6 }} />Formación</span><span className="flex items-center gap-1"><span className="h-1.5 w-1.5 rounded-full" style={{ background: "#C98B5E" }} />Sesión individual</span></div>
+        <div className="mx-3 mt-2 flex items-center gap-2 rounded-[8px] p-2.5" style={{ background: DMC.melocoton }}>
+          <span className="flex flex-1 flex-col"><span className="text-[7px] font-semibold uppercase tracking-[0.06em]" style={{ color: DMC.tinta }}>Martes 11</span><span className="text-[10px] font-semibold" style={{ ...DM_TIT, color: DMC.tinta }}>Sesión · 18:00 h</span></span>
+          {chip("Confirmada", "ok")}
+        </div>
+      </>
+    );
+  } else if (s === "avisos") {
+    const av = [
+      [DM_ICO.campana, "Mañana a las 18 h tenés sesión", "El enlace de Meet ya está en tu mail.", DMC.melocoton],
+      [DM_ICO.ok, "Se confirmó tu inscripción al Curso 2", "Ya podés ver el programa completo.", DMC.salvia],
+      [DM_ICO.doc, "Nuevo material en Curso 1", "Grabación y PDF del encuentro 2.", DMC.rosa],
+      [DM_ICO.video, "La clase empieza en 15 minutos", "Encuentro 3 · 19:00 h", DMC.rosa1],
+    ];
+    body = (
+      <>
+        {titulo("Avisos", null, "Hoy")}
+        <div className="mx-3 mt-3 flex flex-col gap-1.5">
+          {av.map(([ic, t, d, c], i) => (
+            <motion.div key={t} initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.08 * i }} className={`flex items-start gap-2 ${tarjeta}`} style={{ background: DMC.lino, borderColor: DMC.linea }}>
+              <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full" style={{ background: c, color: DMC.tinta }}><IcoDM d={ic} /></span>
+              <span className="flex flex-col"><span className="text-[9px] font-semibold leading-tight" style={{ color: DMC.tinta }}>{t}</span><span className="text-[7.5px]" style={{ color: DMC.suave }}>{d}</span></span>
+            </motion.div>
+          ))}
         </div>
       </>
     );
   } else {
+    // panel: la vista de Daiana
+    const filas = [["09:00", "Sofía", "Sesión", DMC.melocoton], ["11:30", "Marina", "Sesión", DMC.melocoton], ["16:00", "Paula", "Sesión", DMC.melocoton], ["19:00", "Curso 1 · 14 alumnas", "Encuentro 3", DMC.rosa]];
     body = (
       <>
-        {cab("Mi semana", "Vista de la terapeuta")}
-        <div className="mx-3 mt-3 rounded-[16px] bg-white p-3">
-          {["Lun", "Mar", "Mié", "Jue"].map((d, r) => (
-            <div key={d} className="flex items-center gap-2 py-1.5">
-              <span className="w-7 text-[10px] font-semibold" style={{ color: TER.gris }}>{d}</span>
-              <div className="relative h-6 flex-1 rounded-[6px]" style={{ background: TER.fondo }}>
-                {[[10 + r * 6, 22], [50, 18 + r * 4]].map(([l, w], i) => <span key={i} className="absolute inset-y-1 rounded-[4px]" style={{ left: `${l}%`, width: `${w}%`, background: i ? TER.texto : TER.salvia }} />)}
-              </div>
+        {titulo("Tu", "semana", "Panel de Daiana")}
+        <div className="mx-3 mt-3 grid grid-cols-2 gap-1.5">
+          {[["12", "sesiones"], ["3", "inscripciones pendientes"]].map(([n, t], i) => (
+            <span key={t} className="flex flex-col rounded-[8px] p-2.5" style={{ background: i ? DMC.rosa1 : DMC.lino, border: `1px solid ${i ? DMC.rosa1 : DMC.linea}` }}><span className="text-[17px] font-medium tnum" style={{ ...DM_TIT, color: DMC.tinta }}>{n}</span><span className="text-[7.5px] leading-tight" style={{ color: DMC.suave }}>{t}</span></span>
+          ))}
+        </div>
+        <span className="mx-4 mt-3 text-[9px] font-semibold" style={{ color: DMC.tinta }}>Hoy, jueves 6</span>
+        <div className="mx-3 mt-1.5 flex flex-col overflow-hidden rounded-[8px] border" style={{ borderColor: DMC.linea, background: DMC.lino }}>
+          {filas.map(([h, n, t, c], i) => (
+            <div key={h} className="flex items-center gap-2 px-2.5 py-1.5" style={{ borderTop: i ? `1px solid ${DMC.linea}` : "none" }}>
+              <span className="w-[26px] text-[8px] font-semibold tnum" style={{ color: DMC.suave }}>{h}</span>
+              <span className="h-5 w-[3px] rounded-full" style={{ background: c }} />
+              <span className="flex flex-1 flex-col"><span className="text-[9px] font-semibold" style={{ color: DMC.tinta }}>{n}</span><span className="text-[7px]" style={{ color: DMC.suave }}>{t}</span></span>
             </div>
           ))}
         </div>
-        <span className="mx-3 mt-2.5 block rounded-[12px] py-2 text-center text-[10.5px] font-bold text-white" style={{ background: TER.salvia }}>8 sesiones esta semana</span>
+        <div className={`mx-3 mt-2 flex items-center gap-2 ${tarjeta}`} style={{ background: DMC.lino, borderColor: DMC.linea }}>
+          <span className="flex flex-1 flex-col"><span className="text-[9px] font-semibold" style={{ color: DMC.tinta }}>Carla · Curso 2</span>{chip("Pendiente de confirmar", "pend")}</span>
+          <span className="rounded-full px-2.5 py-1 text-[8px] font-semibold" style={{ background: DMC.cacao, color: DMC.crema }}>Confirmar</span>
+        </div>
       </>
     );
   }
-  return <div className="relative flex h-full flex-col font-sys" style={{ background: TER.fondo }}><StatusBar />{body}</div>;
+  const nav = tab !== undefined && (
+    <div className="absolute inset-x-0 bottom-0 flex justify-around border-t px-2 pb-4 pt-2" style={{ background: DMC.crema, borderColor: DMC.linea, boxShadow: "0 -8px 24px rgba(58,51,48,0.06)" }} aria-hidden="true">
+      {[["inicio", "Inicio"], ["agenda", "Agenda"], ["formaciones", "Cursos"], ["perfil", "Perfil"]].map(([k, t], i) => (
+        <span key={k} className="flex flex-col items-center gap-0.5 text-[6.5px] font-semibold uppercase tracking-[0.04em]" style={{ color: i === tab ? DMC.rosa6 : DMC.suave }}><IcoDM d={DM_ICO[k]} className="h-3.5 w-3.5" />{t}</span>
+      ))}
+    </div>
+  );
+  return <div className="relative flex h-full flex-col" style={{ background: DMC.crema, fontFamily: "'DM Sans', system-ui, sans-serif" }}><StatusBar />{body}{nav}</div>;
 }
 
 // Captura real de una app dentro del teléfono. Sin barras del sistema y con los datos anonimizados.
@@ -1805,23 +1942,25 @@ const CLIENTES = [
     ],
   },
   {
-    // TODO: textos, funciones y marca provisionales. Cambiar por los reales de Daiana Marlene.
-    slug: "daiana-marlene", nombre: "Daiana Marlene", tipo: "Terapeuta",
-    logo: null, monograma: "DM", logoFondo: "#6B8F71", fondo: "#F4F1EC", fondoApp: "#F4F1EC", brillo: "rgba(107,143,113,0.35)", App: TerapiaScreen,
-    resumen: "Una agenda online para una terapeuta: sus pacientes reservan sesiones y ella organiza su semana sin mensajes de ida y vuelta.",
+    // Propuesta: funciones y pantallas inventadas sobre su sistema de diseño (todavía no es una app real).
+    slug: "daiana-marlene", nombre: "Daiana Marlene", tipo: "Terapeuta y mentora",
+    logo: null, monograma: "DM", monogramaColor: "#3A3330", monogramaFuente: "'Cormorant Garamond', Georgia, serif", logoFondo: "#E3BDB4", fondo: "#F7F4EE", fondoApp: "#F7F4EE", brillo: "rgba(227,189,180,0.55)", App: MarleneScreen,
+    resumen: "Una app para una terapeuta y mentora: sus alumnas siguen sus cursos en vivo por Meet y sus pacientes reservan sesiones individuales, todo desde el móvil.",
     descripcion: [
-      "Sus pacientes eligen día y hora, reservan sesiones online o presenciales y reciben un recordatorio el día antes. Si necesitan cambiar o cancelar, lo hacen desde la misma app.",
-      "Ella ve su semana de un vistazo, con todas las sesiones ordenadas, y deja de coordinar horarios por chat.",
+      "Las alumnas se inscriben en el Curso 1 y el Curso 2, entran a cada clase en vivo con un toque y encuentran las grabaciones y el material de cada encuentro. Quien busca una sesión individual elige día y hora, y recibe la confirmación y un recordatorio antes de la cita.",
+      "Daiana ve su semana en un panel: las sesiones del día, sus grupos y las inscripciones que tiene que confirmar. La app sigue su marca, con tonos crema, rosa empolvado y melocotón, y se instala en el móvil sin pasar por las tiendas.",
     ],
     portada: { s: "inicio" },
-    flujo: [{ p: { s: "inicio" }, toque: ["30%", "49%"] }, { p: { s: "reservar" }, toque: ["84%", "50%"] }, { p: { s: "confirmada" }, toque: ["50%", "60%"] }],
+    flujo: [{ p: { s: "inicio" }, toque: ["50%", "68%"] }, { p: { s: "reservar" }, toque: ["50%", "71%"] }, { p: { s: "confirmada" }, toque: ["50%", "79%"] }],
     funciones: [
-      { t: "Próxima sesión", d: "Cada paciente ve su próxima sesión al abrir la app.", p: { s: "inicio" }, foco: { y: 23, h: 21 } },
-      { t: "Reserva online", d: "Eligen día y hora entre los huecos libres.", p: { s: "reservar" } },
-      { t: "Online o presencial", d: "Cada sesión indica si es por videollamada o en consulta.", p: { s: "reservar" }, foco: { y: 49, h: 8 } },
-      { t: "Recordatorios", d: "Un aviso el día antes para que nadie se olvide.", p: { s: "confirmada" } },
-      { t: "Cambios y cancelaciones", d: "Las pacientes mueven o cancelan sus sesiones solas.", p: { s: "sesiones" } },
-      { t: "Agenda semanal", d: "Ella ve toda su semana ordenada de un vistazo.", p: { s: "agenda" } },
+      { t: "Tu próxima clase", d: "Al abrir la app, cada persona ve su próxima clase o sesión.", p: { s: "inicio" } },
+      { t: "Reserva de sesiones", d: "Eligen día y hora entre los huecos libres de Daiana.", p: { s: "reservar" } },
+      { t: "Confirmación al instante", d: "La reserva se confirma sola y el enlace de Meet llega por mail.", p: { s: "confirmada" } },
+      { t: "Formaciones", d: "Curso 1 y Curso 2, con el estado de cada inscripción.", p: { s: "formaciones" } },
+      { t: "Clases en vivo y material", d: "Entran a la clase con un toque y luego tienen la grabación y el PDF.", p: { s: "curso" } },
+      { t: "Agenda del mes", d: "Clases y sesiones en un calendario, cada una con su color.", p: { s: "agenda" } },
+      { t: "Recordatorios", d: "Avisos antes de cada sesión, de cada clase y cuando hay material nuevo.", p: { s: "avisos" } },
+      { t: "Panel de Daiana", d: "Su semana, sus grupos y las inscripciones por confirmar.", p: { s: "panel" } },
     ],
   },
 ];
@@ -1829,7 +1968,7 @@ const CLIENTES = [
 function LogoCliente({ c, className = "h-14 w-14" }) {
   return (
     <span className={`flex shrink-0 items-center justify-center overflow-hidden rounded-[18px] shadow-[0_0_0_1px_rgba(17,17,17,0.06),0_10px_24px_-14px_rgba(17,17,17,0.35)] ${className}`} style={{ background: c.logoFondo }}>
-      {c.logo ? <img src={c.logo} alt={`Logo de ${c.nombre}`} className="h-full w-full object-contain p-1.5" /> : <span className="text-[18px] font-bold tracking-[-0.02em] text-white">{c.monograma}</span>}
+      {c.logo ? <img src={c.logo} alt={`Logo de ${c.nombre}`} className="h-full w-full object-contain p-1.5" /> : <span className="text-[18px] font-bold tracking-[-0.02em] text-white" style={c.monogramaFuente ? { color: c.monogramaColor, fontFamily: c.monogramaFuente, fontWeight: 600, fontSize: 22, letterSpacing: 0 } : undefined}>{c.monograma}</span>}
     </span>
   );
 }
