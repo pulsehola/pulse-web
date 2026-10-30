@@ -27,10 +27,16 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   const { slug } = await params;
   const p = PROYECTOS[slug];
   if (!p) return {};
+  const titulo = `${p.titulo}, proyecto de PULSE`;
   return {
-    title: `${p.titulo} — Proyecto de PULSE`,
+    title: `${p.titulo} · Proyecto`,
     description: p.descripcion,
-    openGraph: { title: `${p.titulo} — Proyecto de PULSE`, description: p.descripcion, type: "website", locale: "es_ES" },
+    alternates: { canonical: `/clientes/${slug}` },
+    openGraph: {
+      type: "article", locale: "es_ES", siteName: "PULSE", url: `/clientes/${slug}`, title: titulo, description: p.descripcion,
+      images: [{ url: "/og.jpg", width: 1200, height: 630, alt: "PULSE: tu negocio, en una app propia" }],
+    },
+    twitter: { card: "summary_large_image", title: titulo, description: p.descripcion, images: ["/og.jpg"] },
   };
 }
 

@@ -2920,7 +2920,7 @@ function Campo({ id, label, error, children }) {
     </div>
   );
 }
-const CAMPO = "w-full rounded-[14px] bg-white/[0.07] px-4 py-3 text-[16px] text-white ring-1 ring-inset ring-white/15 transition placeholder:text-white/35 focus:bg-white/[0.1] focus:outline-none focus:ring-2 focus:ring-[#FF8A3D]";
+const CAMPO = "w-full rounded-[14px] bg-white/[0.07] px-4 py-3 text-[16px] text-white ring-1 ring-inset ring-white/15 transition placeholder:text-white/50 focus:bg-white/[0.1] focus:outline-none focus:ring-2 focus:ring-[#FF8A3D]";
 
 function FormContacto() {
   const [estado, setEstado] = useState("idle"); // idle | enviando | ok | error

@@ -19,7 +19,7 @@ const config: Config = {
           100: "#EFEFEC", // landing: fondos de pista y separadores finos
           200: "#D0D0D0",
           300: "#B8B8B8",
-          400: "#8A8A86", // landing: texto terciario
+          400: "#6E6E6A", // landing: texto terciario (5,1:1 sobre blanco, 4,6:1 sobre papel)
           500: "#5C5C5C",
           700: "#3D3D3D",
         },

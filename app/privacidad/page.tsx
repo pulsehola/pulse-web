@@ -1,7 +1,12 @@
 import Link from "next/link";
 import { Logo } from "@/components/Logo";
 
-export const metadata = { title: "Política de privacidad — PULSE" };
+export const metadata = {
+  title: "Política de privacidad",
+  description: "Cómo trata PULSE los datos que envías desde el formulario de contacto.",
+  alternates: { canonical: "/privacidad" },
+  robots: { index: false, follow: true },
+};
 
 // Marcador: este texto lo tiene que redactar o revisar alguien con conocimiento legal (RGPD / LOPDGDD).
 export default function Privacidad() {
