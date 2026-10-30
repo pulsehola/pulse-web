@@ -1411,6 +1411,23 @@ function BordadoScreen({ s }) {
 // --- DAILY (violeta #4B3AD6, tinta #111114) ---
 const DLY = { fondo: "#F5F5F7", tinta: "#111114", violeta: "#4B3AD6", gris: "#7A7A85" };
 function DailyScreen({ s }) {
+  // Cabecera y etiquetas como en la app real: flecha atrás, título grande, rótulos en mayúsculas espaciadas.
+  const etq = (t) => <span className="text-[6.5px] font-semibold uppercase tracking-[0.14em]" style={{ color: DLY.gris }}>{t}</span>;
+  const cabR = (t, sup) => (
+    <div className="flex items-center gap-2.5 px-4 pt-4">
+      <span className="text-[13px]" style={{ color: DLY.tinta }}>←</span>
+      <span className="flex flex-col">{sup && etq(sup)}<span className="text-[14px] font-bold leading-tight tracking-[-0.02em]" style={{ color: DLY.tinta }}>{t}</span></span>
+    </div>
+  );
+  const ico = (d) => <svg viewBox="0 0 24 24" className="h-3.5 w-3.5" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">{d}</svg>;
+  const activa = { importar: 3, graficos: 0, cartera: 0 }[s];
+  const barraApp = activa !== undefined && (
+    <div className="absolute bottom-3 left-1/2 flex -translate-x-1/2 items-center gap-3 rounded-full bg-white/90 px-3.5 py-1.5 shadow-[0_6px_20px_-6px_rgba(17,17,20,0.25)] ring-1 ring-black/5" aria-hidden="true">
+      {[ico(<><rect x="3" y="6" width="18" height="14" rx="3" /><path d="M16 13h2M3 9h15V6" /></>), ico(<><circle cx="12" cy="12" r="9" /><path d="m15 9-2 4-4 2 2-4z" /></>), null, ico(<path d="M4 9h14l-3-3M20 15H6l3 3" />), ico(<><rect x="4" y="4" width="16" height="16" rx="3" /><path d="m8 12 3 3 5-6" /></>)].map((x, i) =>
+        x ? <span key={i} className="relative flex flex-col items-center" style={{ color: i === activa ? DLY.tinta : "#A3A3AD" }}>{x}{i === activa && <span className="absolute -bottom-1.5 h-[3px] w-[3px] rounded-full" style={{ background: DLY.violeta }} />}</span>
+          : <span key={i} className="flex h-7 w-7 items-center justify-center rounded-[9px] text-[14px] font-light text-white" style={{ background: DLY.tinta }}>+</span>)}
+    </div>
+  );
   const cab = (t) => (
     <div className="flex items-center justify-between px-4 pt-5">
       <span className="flex items-center gap-2"><img src="/clientes/daily.svg" alt="" className="h-7 w-7 rounded-[9px]" /><span className="text-[16px] font-bold" style={{ color: DLY.tinta }}>{t}</span></span>
@@ -1495,38 +1512,38 @@ function DailyScreen({ s }) {
   } else if (s === "importar") {
     body = (
       <>
-        {cab("Importar")}
-        <div className="mx-3 mt-3 flex flex-col gap-2.5 rounded-[20px] bg-white p-3.5">
-          <div className="flex items-center gap-2.5 rounded-[14px] border border-dashed p-2.5" style={{ borderColor: "#C9C3FF", background: "#F6F5FF" }}>
-            <span className="flex h-8 w-8 items-center justify-center rounded-[9px] text-[9px] font-bold text-white" style={{ background: "#1F9D6B" }}>XLSX</span>
-            <span className="flex min-w-0 flex-1 flex-col"><span className="truncate text-[11px] font-bold" style={{ color: DLY.tinta }}>extracto_octubre.xlsx</span><span className="text-[9px]" style={{ color: DLY.gris }}>Excel o CSV de cualquier banco</span></span>
-            <span className="flex h-5 w-5 items-center justify-center rounded-full text-white" style={{ background: DLY.violeta }}>{OK}</span>
+        {cabR("Importar", "Movimientos")}
+        <div className="mx-3 mt-3 flex flex-col gap-2 rounded-[16px] bg-white p-3">
+          <div className="flex items-center gap-2 rounded-[12px] border border-dashed p-2" style={{ borderColor: "#C9C3FF", background: "#F4F2FF" }}>
+            <span className="flex h-7 w-7 items-center justify-center rounded-[8px] text-[7px] font-extrabold text-white" style={{ background: "#1F9D6B" }}>XLSX</span>
+            <span className="flex min-w-0 flex-1 flex-col"><span className="truncate text-[9px] font-bold" style={{ color: DLY.tinta }}>extracto_octubre.xlsx</span><span className="text-[7px]" style={{ color: DLY.gris }}>Excel o CSV de cualquier banco</span></span>
+            <span className="flex h-4 w-4 items-center justify-center rounded-full text-white" style={{ background: DLY.tinta }}>{OK}</span>
           </div>
-          <span className="text-[9.5px] font-semibold" style={{ color: DLY.gris }}>Moneda de este extracto</span>
-          <div className="flex gap-1.5">{["ARS", "USD", "EUR"].map((c) => <span key={c} className="rounded-full px-2.5 py-0.5 text-[9.5px] font-bold" style={c === "ARS" ? { background: DLY.violeta, color: "#fff" } : { background: DLY.fondo, color: DLY.gris }}>{c}</span>)}</div>
+          {etq("Moneda del extracto")}
+          <div className="flex w-max gap-0.5 rounded-full p-0.5" style={{ background: DLY.fondo }}>{["EUR", "ARS", "USD"].map((c) => <span key={c} className="rounded-full px-2.5 py-1 text-[8px] font-bold" style={c === "EUR" ? { background: DLY.tinta, color: "#fff" } : { color: DLY.gris }}>{c}</span>)}</div>
+          {etq("Columnas")}
           {[["Fecha", "Columna A"], ["Concepto", "Columna B"], ["Monto", "Columna D"]].map(([k, v]) => (
-            <span key={k} className="flex items-center justify-between rounded-[10px] px-2.5 py-2 text-[10.5px]" style={{ background: DLY.fondo, color: DLY.tinta }}><b>{k}</b><span style={{ color: DLY.gris }}>{v} ▾</span></span>
+            <span key={k} className="flex items-center justify-between rounded-[10px] px-2.5 py-1.5 text-[8.5px]" style={{ background: DLY.fondo, color: DLY.tinta }}><b className="font-bold">{k}</b><span style={{ color: DLY.gris }}>{v} ▾</span></span>
           ))}
-          <span className="rounded-[12px] py-2.5 text-center text-[11.5px] font-bold text-white" style={{ background: DLY.violeta }}>Importar 42 movimientos</span>
+          <span className="mt-0.5 rounded-full py-2 text-center text-[9px] font-bold text-white" style={{ background: DLY.tinta }}>Importar 42 movimientos</span>
         </div>
       </>
     );
   } else if (s === "graficos") {
-    const v = [42, 46, 44, 52, 50, 58, 55, 61, 66, 63, 70, 76];
+    const v = [64, 38, 41, 70, 66, 60];
     body = (
       <>
-        {cab("Gráficos")}
-        <div className="mx-3 mt-3 flex flex-col gap-2 rounded-[20px] bg-white p-3.5">
-          <span className="text-[11.5px] font-bold" style={{ color: DLY.tinta }}>Evolución de capital</span>
-          <span className="text-[9.5px]" style={{ color: DLY.gris }}>Últimos 12 meses · USD</span>
-          <div className="flex h-[120px] items-end gap-[3px] pt-2">
-            {v.map((x, i) => <motion.span key={i} className="flex-1 rounded-t-[4px]" style={{ background: i === v.length - 1 ? DLY.violeta : "#C9C3FF" }} initial={{ height: 0 }} animate={{ height: `${x}%` }} transition={{ duration: 0.6, delay: i * 0.03 }} />)}
+        <span className="px-4 pt-4 text-[12px] font-bold tracking-[-0.01em]" style={{ color: DLY.tinta }}>Rendimiento (Últimos 6 meses)</span>
+        <div className="mx-3 mt-2.5 flex flex-col rounded-[16px] bg-white px-3 pb-3 pt-3.5">
+          <span className="text-center">{etq("Histórico EUR")}</span>
+          <div className="mt-2 flex h-[130px] items-end justify-around px-1">
+            {v.map((x, i) => <motion.span key={i} className="w-[14px] rounded-t-[5px]" style={{ background: DLY.violeta }} initial={{ height: 0 }} animate={{ height: `${x}%` }} transition={{ duration: 0.6, delay: i * 0.05 }} />)}
           </div>
-          <div className="flex justify-between text-[8.5px]" style={{ color: DLY.gris }}><span>Nov</span><span>May</span><span>Oct</span></div>
+          <div className="mt-1.5 flex justify-around text-[6.5px] font-medium tracking-[0.04em]" style={{ color: DLY.gris }}>{["MAY", "JUN", "JUL", "AGO", "SEPT", "OCT"].map((m) => <span key={m}>{m}</span>)}</div>
         </div>
-        <div className="mx-3 mt-2 flex items-center justify-between rounded-[16px] bg-white px-3 py-2.5">
-          <span className="text-[10px]" style={{ color: DLY.gris }}>Mayor caída del período</span>
-          <span className="rounded-full px-2 py-0.5 text-[10px] font-bold" style={{ background: "#FDECEC", color: "#D04545" }}>− 4,5 %</span>
+        <div className="mx-3 mt-2 flex items-center justify-between rounded-[14px] bg-white px-3 py-2.5">
+          <span className="flex flex-col">{etq("Evolución anual")}<span className="text-[11px] font-bold tnum" style={{ color: DLY.tinta }}>+ 18,4 %</span></span>
+          <span className="flex flex-col items-end">{etq("Mayor caída")}<span className="rounded-full px-1.5 py-0.5 text-[8px] font-bold" style={{ background: "#FDECEC", color: "#D04545" }}>− 4,5 %</span></span>
         </div>
       </>
     );
@@ -1566,27 +1583,29 @@ function DailyScreen({ s }) {
       </>
     );
   } else if (s === "cartera") {
-    const seg = [["Acciones", 55, "#4B3AD6"], ["Bonos", 30, "#8B7BFF"], ["Fondos", 15, "#C9C3FF"]];
+    const seg = [["Acciones", 46, DLY.tinta], ["Bonos", 30, DLY.violeta], ["Fondos", 16, "#8B7BFF"], ["Cripto", 8, "#D5D5DC"]];
     let acc = 0;
     body = (
       <>
-        {cab("Inversiones")}
-        <div className="mx-3 mt-3 flex items-center gap-3 rounded-[20px] bg-white p-3.5">
-          <svg viewBox="0 0 42 42" className="h-20 w-20 shrink-0 -rotate-90" aria-hidden="true">
-            {seg.map(([n, p, c]) => { const el = <circle key={n} cx="21" cy="21" r="15.9" fill="none" stroke={c} strokeWidth="6" strokeDasharray={`${p} ${100 - p}`} strokeDashoffset={-acc} />; acc += p; return el; })}
+        {cabR("Inversiones", "Cartera")}
+        <div className="mx-3 mt-3 flex items-center gap-3 rounded-[16px] bg-white p-3">
+          <svg viewBox="0 0 42 42" className="h-[70px] w-[70px] shrink-0 -rotate-90" aria-hidden="true">
+            {seg.map(([n, p, c]) => { const el = <circle key={n} cx="21" cy="21" r="16" fill="none" stroke={c} strokeWidth="3.2" strokeLinecap="round" strokeDasharray={`${p - 3} ${103 - p}`} strokeDashoffset={-acc} />; acc += p; return el; })}
           </svg>
-          <div className="flex flex-col gap-0.5">
-            <span className="text-[9.5px]" style={{ color: DLY.gris }}>Total invertido</span>
-            <span className="text-[16px] font-bold tnum" style={{ color: DLY.tinta }}>US$ 6.150</span>
-            <span className="text-[9px]" style={{ color: DLY.gris }}>con comisiones</span>
+          <div className="flex flex-col gap-1">
+            {etq("Total invertido")}
+            <span className="text-[14px] font-bold tnum" style={{ color: DLY.tinta }}>US$ 6.150</span>
+            <div className="grid grid-cols-2 gap-x-3 gap-y-0.5">{seg.map(([n, p, c]) => <span key={n} className="flex items-center gap-1 whitespace-nowrap text-[6.5px]" style={{ color: DLY.tinta }}><span className="h-1.5 w-1.5 rounded-full" style={{ background: c }} />{n} <span style={{ color: DLY.gris }}>{p}%</span></span>)}</div>
           </div>
         </div>
-        <div className="mt-2.5 flex flex-col gap-2 px-3">
-          {[["Compra", "10 acciones", "− US$ 480"], ["Venta", "5 bonos", "+ US$ 520"], ["Compra", "Fondo común", "− US$ 300"]].map(([t, d, v], i) => (
-            <div key={i} className="flex items-center gap-2.5 rounded-[14px] bg-white px-3 py-2.5">
-              <span className="rounded-full px-2 py-0.5 text-[9px] font-bold" style={t === "Compra" ? { background: "#EEEDFB", color: DLY.violeta } : { background: "#E6F6EE", color: "#1F9D6B" }}>{t}</span>
-              <span className="flex-1 text-[11px] font-semibold" style={{ color: DLY.tinta }}>{d}</span>
-              <span className="text-[10.5px] font-bold tnum" style={{ color: DLY.tinta }}>{v}</span>
+        <span className="px-4 pt-3">{etq("Movimientos")}</span>
+        <div className="mt-1.5 flex flex-col gap-1.5 px-3">
+          {[["Compra", "10 acciones", "− US$ 480", "21/10/2026", DLY.violeta], ["Venta", "5 bonos", "+ US$ 520", "14/10/2026", "#1F9D6B"], ["Compra", "Fondo común", "− US$ 300", "02/10/2026", DLY.violeta]].map(([t, d, v, f, c], i) => (
+            <div key={i} className="flex items-center gap-2 rounded-[12px] bg-white py-2 pl-2 pr-2.5">
+              <span className="h-6 w-[2.5px] rounded-full" style={{ background: c }} />
+              <span className="flex h-6 w-6 items-center justify-center rounded-[7px] text-[9px]" style={{ background: t === "Compra" ? "#EEEDFB" : "#E6F6EE", color: c }}>{t === "Compra" ? "↙" : "↗"}</span>
+              <span className="flex min-w-0 flex-1 flex-col"><span className="truncate text-[9px] font-bold" style={{ color: DLY.tinta }}>{d}</span><span className="text-[6.5px] font-medium tracking-[0.06em]" style={{ color: DLY.gris }}>{t.toUpperCase()} · COM. 0,5%</span></span>
+              <span className="flex flex-col items-end"><span className="text-[9px] font-bold tnum" style={{ color: DLY.tinta }}>{v}</span><span className="text-[6.5px] tnum" style={{ color: DLY.gris }}>{f}</span></span>
             </div>
           ))}
         </div>
@@ -1618,7 +1637,7 @@ function DailyScreen({ s }) {
       </>
     );
   }
-  return <div className="relative flex h-full flex-col font-sys" style={{ background: DLY.fondo }}>{s === "pin" ? <div className="absolute inset-x-0 top-0 z-10"><StatusBar light /></div> : <StatusBar />}{body}</div>;
+  return <div className="relative flex h-full flex-col font-sys" style={{ background: DLY.fondo, fontFamily: "'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif" }}>{s === "pin" ? <div className="absolute inset-x-0 top-0 z-10"><StatusBar light /></div> : <StatusBar />}{body}{barraApp}</div>;
 }
 
 // --- Daiana Marlene, terapeuta. TODO: contenido y marca provisionales hasta tener los reales. ---
@@ -1714,7 +1733,7 @@ function Captura({ src, fondo, alt = "" }) {
 
 // Una pantalla de cliente: captura real (img) o pantalla simulada (s).
 function Pantalla({ c, p }) {
-  if (p.img) return <Captura src={p.img} fondo={c.fondoApp} alt={p.alt} />;
+  if (p.img) return <Captura src={p.img} fondo={p.fondo || c.fondoApp} alt={p.alt} />;
   return <c.App s={p.s} />;
 }
 
@@ -1735,6 +1754,7 @@ function Foco({ f }) {
 }
 
 const SHOT = (n) => ({ img: `/clientes/bordado/${n}.webp`, alt: `Pantalla de ${n} de la app un clu de bordado` });
+const DSHOT = (n, fondo) => ({ img: `/clientes/daily/${n}.webp`, alt: `Pantalla de ${n} de la app DAILY`, fondo });
 
 const CLIENTES = [
   {
@@ -1768,20 +1788,20 @@ const CLIENTES = [
       "Reúne bancos, billeteras virtuales, tarjetas, inversiones y efectivo en pesos, dólares y euros, y muestra cómo evoluciona el capital mes a mes. Los movimientos se cargan a mano o se importan desde el extracto del banco, en Excel o CSV.",
       "Lleva los pagos de cada mes, las deudas, el presupuesto de cada viaje y la cartera de inversiones con sus comisiones. Genera un informe mensual en PDF, avisa de los vencimientos, se protege con PIN y se instala en el móvil como cualquier app.",
     ],
-    // TODO: reemplazar por capturas reales cuando estén.
-    portada: { s: "inicio" },
-    flujo: [{ p: { s: "pin" }, toque: ["50%", "62%"] }, { p: { s: "inicio" }, toque: ["50%", "48%"] }, { p: { s: "bancos" }, toque: ["50%", "40%"] }],
+    // Capturas reales (nombres y cifras cambiados por privacidad). Importar, evolución e inversiones son pantallas recreadas con el mismo diseño.
+    portada: DSHOT("inicio"),
+    flujo: [{ p: DSHOT("inicio"), toque: ["50%", "86%"] }, { p: DSHOT("pagos", "#939393"), toque: ["50%", "52%"] }, { p: DSHOT("cuentas"), toque: ["30%", "38%"] }],
     funciones: [
-      { t: "Todas tus cuentas", d: "Bancos, billeteras virtuales, tarjetas, inversiones y efectivo en una sola lista.", p: { s: "bancos" } },
-      { t: "Pesos, dólares y euros", d: "El saldo total en ARS, USD o EUR, con un toque para cambiar de moneda.", p: { s: "inicio" } },
+      { t: "Todas tus cuentas", d: "Bancos, billeteras virtuales, tarjetas, inversiones y efectivo en una sola lista.", p: DSHOT("cuentas") },
+      { t: "Pesos, dólares y euros", d: "El saldo en ARS, USD y EUR, con un toque para cambiar de moneda.", p: DSHOT("inicio") },
       { t: "Importar extractos", d: "Sube el Excel o CSV de tu banco y los movimientos se cargan solos.", p: { s: "importar" } },
       { t: "Evolución del capital", d: "Cómo crece tu dinero mes a mes y año a año, con la mayor caída del período.", p: { s: "graficos" } },
-      { t: "Gastos por categoría", d: "En qué se va el dinero, separado por categorías.", p: { s: "categorias" } },
-      { t: "Pagos del mes", d: "Lo que vence, lo que ya pagaste y lo que falta, con avisos de vencimiento.", p: { s: "pagos" } },
-      { t: "Deudas", d: "Lo que te deben y lo que debes, en cualquier moneda.", p: { s: "deudas" } },
-      { t: "Viajes con presupuesto", d: "Un presupuesto por viaje, sus gastos y un aviso si te pasas.", p: { s: "viajes" } },
+      { t: "Gastos por categoría", d: "En qué se va el dinero cada mes, separado por categorías.", p: DSHOT("categorias") },
+      { t: "Pagos del mes", d: "Lo que vence, lo que ya pagaste y lo que falta, con las cuotas de cada pago.", p: DSHOT("pagos", "#939393") },
+      { t: "Deudas", d: "Lo que te deben y lo que debes, en cualquier moneda.", p: DSHOT("deudas") },
+      { t: "Viajes con presupuesto", d: "Un presupuesto por viaje, sus gastos y cuánto llevas gastado.", p: DSHOT("viajes") },
       { t: "Inversiones", d: "Compras y ventas con sus comisiones y la composición de tu cartera.", p: { s: "cartera" } },
-      { t: "Informes en PDF", d: "Un informe mensual con el balance y cada movimiento, listo para descargar.", p: { s: "reportes" } },
+      { t: "Informes en PDF", d: "Un informe por mes con todos los movimientos, listo para descargar.", p: DSHOT("informes", "#FFFFFF") },
     ],
   },
   {
