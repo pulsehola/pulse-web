@@ -2925,6 +2925,10 @@ const CAMPO = "w-full rounded-[14px] bg-white/[0.07] px-4 py-3 text-[16px] text-
 function FormContacto() {
   const [estado, setEstado] = useState("idle"); // idle | enviando | ok | error
   const [errores, setErrores] = useState({});
+  const [motivo, setMotivo] = useState(""); // por qué falló, para decírselo a la persona
+  const [enviadoA, setEnviadoA] = useState("");
+  const avisoRef = useRef(null);
+  useEffect(() => { if ((estado === "ok" || estado === "error") && avisoRef.current) avisoRef.current.focus(); }, [estado]);
 
   async function enviar(e) {
     e.preventDefault();
@@ -2944,10 +2948,18 @@ function FormContacto() {
       form.querySelector(`#contacto-${Object.keys(next)[0]}`)?.focus();
       return;
     }
+    if (typeof navigator !== "undefined" && navigator.onLine === false) {
+      setMotivo("Parece que no tienes conexión a internet. Revisa la conexión y vuelve a intentarlo.");
+      setEstado("error");
+      return;
+    }
     setEstado("enviando");
+    const corte = new AbortController();
+    const reloj = setTimeout(() => corte.abort(), 15000);
     try {
       const res = await fetch(FORM_ENDPOINT, {
         method: "POST",
+        signal: corte.signal,
         headers: { "Content-Type": "application/json", Accept: "application/json" },
         body: JSON.stringify({
           Nombre: nombre,
@@ -2961,21 +2973,27 @@ function FormContacto() {
         }),
       });
       const data = await res.json().catch(() => ({}));
-      if (!res.ok || String(data.success) === "false") throw new Error();
+      if (!res.ok || String(data.success) === "false") throw new Error("servicio");
+      setEnviadoA(email);
       setEstado("ok");
       form.reset();
-    } catch {
+    } catch (err) {
+      setMotivo(err?.name === "AbortError"
+        ? "El envío tardó demasiado. Tus datos siguen aquí: vuelve a intentarlo en un momento."
+        : "Hubo un problema al enviar. Tus datos siguen aquí: vuelve a intentarlo en un momento.");
       setEstado("error");
+    } finally {
+      clearTimeout(reloj);
     }
   }
 
   if (estado === "ok") {
     return (
-      <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4, ease }} role="status"
-        className="flex flex-col items-start gap-4 rounded-[28px] bg-white/[0.06] p-8 ring-1 ring-inset ring-white/10">
+      <motion.div ref={avisoRef} tabIndex={-1} initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4, ease }} role="status" aria-live="polite"
+        className="flex flex-col items-start gap-4 rounded-[28px] bg-white/[0.06] p-8 outline-none ring-1 ring-inset ring-white/10">
         <span className="flex h-12 w-12 items-center justify-center rounded-full bg-gradient-to-br from-grad-a to-grad-b"><svg viewBox="0 0 12 12" className="w-5"><path d="M2.5 6.3 5 8.6 9.5 3.4" fill="none" stroke="#111111" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" /></svg></span>
         <span className="text-[22px] font-bold tracking-[-0.02em]">Mensaje enviado</span>
-        <span className="text-[15.5px] leading-relaxed text-white/70">Gracias. Te respondemos en menos de 24 horas hábiles.</span>
+        <span className="text-[15.5px] leading-relaxed text-white/70">Gracias. Te respondemos en menos de 24 horas hábiles{enviadoA ? <> a <b className="font-semibold text-white">{enviadoA}</b></> : null}.</span>
         <button type="button" onClick={() => setEstado("idle")} className="text-[14px] font-semibold text-white underline decoration-white/30 underline-offset-4 hover:decoration-white">Enviar otro mensaje</button>
       </motion.div>
     );
@@ -3006,13 +3024,20 @@ function FormContacto() {
         {errores.acepto && <span className="text-[12.5px] font-medium text-[#FFB27A]">{errores.acepto}</span>}
       </div>
       {estado === "error" && (
-        <p role="alert" className="rounded-[14px] bg-[#FF4F00]/15 px-4 py-3 text-[14px] leading-snug text-white">
-          No se pudo enviar el mensaje. Prueba de nuevo o escríbenos a <a href={CONTACTO.gmail} {...EXTERNO} className="font-semibold underline underline-offset-2">{CONTACTO.email}</a>.
-        </p>
+        <motion.div ref={avisoRef} tabIndex={-1} role="alert" initial={{ opacity: 0, y: -6 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.3, ease }}
+          className="flex items-start gap-3 rounded-[16px] bg-[#FF4F00]/15 px-4 py-3.5 outline-none ring-1 ring-inset ring-[#FF8A3D]/40">
+          <span aria-hidden="true" className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-[#FF8A3D] text-[14px] font-bold text-tinta">!</span>
+          <span className="flex flex-col gap-1 text-[14px] leading-snug text-white">
+            <b className="font-semibold">No se pudo enviar el mensaje</b>
+            <span className="text-white/80">{motivo} También puedes escribirnos a <a href={CONTACTO.gmail} {...EXTERNO} className="font-semibold text-white underline underline-offset-2">{CONTACTO.email}</a>.</span>
+          </span>
+        </motion.div>
       )}
-      <button type="submit" disabled={estado === "enviando"}
+      <button type="submit" disabled={estado === "enviando"} aria-busy={estado === "enviando"}
         className="mt-1 inline-flex min-h-[52px] items-center justify-center gap-2.5 rounded-full bg-gradient-to-r from-grad-a to-grad-b px-6 text-[15px] font-semibold text-tinta shadow-[0_12px_32px_-12px_rgba(255,79,0,0.75)] transition hover:brightness-105 disabled:cursor-wait disabled:opacity-70">
-        {estado === "enviando" ? "Enviando…" : "Enviar mensaje"}
+        {estado === "enviando"
+          ? <><span aria-hidden="true" className="h-4 w-4 animate-spin rounded-full border-2 border-tinta/25 border-t-tinta" />Enviando…</>
+          : estado === "error" ? "Volver a intentar" : "Enviar mensaje"}
       </button>
     </form>
   );
