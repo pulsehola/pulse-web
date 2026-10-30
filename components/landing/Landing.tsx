@@ -12,6 +12,8 @@
 
 import React, { useState, useEffect, useRef, useId } from "react";
 import { motion, AnimatePresence, useScroll, useTransform, useSpring, useReducedMotion, useMotionValueEvent, useMotionValue } from "framer-motion";
+import { Logo } from "../Logo";
+import { Isotipo } from "../Isotipo";
 const ease = [0.22, 1, 0.36, 1];
 
 /* ---------------------------------------------------------------------
@@ -161,33 +163,11 @@ function useToast(ms = 1800) {
 const LOGO_NARANJA = "#FF4F00";
 const ACENTO = { base: "#FF4F00", texto: "#C2410C", suave: "#FFF1EA", claro: "#FF4F00", a: "#FF4F00", b: "#FF8A3D" };
 
-const ISO_POINTS = "0,12 12,12 16,3 21,21 26,8 29,12 44,12";
-const WORDMARK_PATH = "M1.54 0V-15.84H8.23Q8.46 -15.84 8.85 -15.82Q9.24 -15.81 9.55 -15.75Q10.97 -15.53 11.87 -14.82Q12.78 -14.1 13.21 -13.02Q13.64 -11.93 13.64 -10.6Q13.64 -9.27 13.21 -8.19Q12.77 -7.11 11.86 -6.39Q10.96 -5.68 9.55 -5.46Q9.24 -5.41 8.84 -5.39Q8.45 -5.37 8.23 -5.37H4.53V0ZM4.53 -8.16H8.1Q8.33 -8.16 8.6 -8.18Q8.88 -8.21 9.11 -8.27Q9.71 -8.44 10.04 -8.83Q10.37 -9.22 10.5 -9.7Q10.63 -10.17 10.63 -10.6Q10.63 -11.03 10.5 -11.51Q10.37 -11.99 10.04 -12.38Q9.71 -12.77 9.11 -12.94Q8.88 -13 8.6 -13.02Q8.33 -13.05 8.1 -13.05H4.53Z M26.25 0.33Q24.33 0.33 22.88 -0.45Q21.43 -1.22 20.61 -2.63Q19.8 -4.04 19.8 -5.94V-15.82L22.84 -15.84V-5.96Q22.84 -5.18 23.1 -4.54Q23.36 -3.9 23.83 -3.44Q24.3 -2.98 24.92 -2.73Q25.54 -2.49 26.25 -2.49Q26.97 -2.49 27.59 -2.74Q28.21 -2.99 28.68 -3.45Q29.14 -3.92 29.4 -4.55Q29.66 -5.19 29.66 -5.96V-15.84H32.69V-5.94Q32.69 -4.04 31.88 -2.63Q31.06 -1.22 29.61 -0.45Q28.16 0.33 26.25 0.33Z M39.95 0V-15.84H42.94V-2.79H49.76V0Z M61.58 0.33Q59.82 0.33 58.4 -0.29Q56.99 -0.91 56.08 -2.07Q55.18 -3.23 54.93 -4.84L58.06 -5.3Q58.39 -3.94 59.42 -3.2Q60.46 -2.46 61.78 -2.46Q62.51 -2.46 63.21 -2.69Q63.9 -2.93 64.34 -3.38Q64.79 -3.83 64.79 -4.49Q64.79 -4.73 64.72 -4.96Q64.65 -5.18 64.48 -5.38Q64.32 -5.58 64.01 -5.75Q63.71 -5.93 63.25 -6.07L59.14 -7.28Q58.67 -7.41 58.06 -7.66Q57.45 -7.9 56.88 -8.35Q56.31 -8.8 55.93 -9.54Q55.55 -10.29 55.55 -11.42Q55.55 -13.01 56.35 -14.07Q57.16 -15.12 58.5 -15.64Q59.84 -16.16 61.47 -16.15Q63.11 -16.13 64.39 -15.59Q65.68 -15.05 66.55 -14.02Q67.42 -12.99 67.8 -11.51L64.57 -10.96Q64.39 -11.73 63.92 -12.25Q63.45 -12.78 62.79 -13.06Q62.14 -13.33 61.42 -13.35Q60.72 -13.38 60.1 -13.16Q59.48 -12.95 59.09 -12.54Q58.7 -12.13 58.7 -11.57Q58.7 -11.05 59.01 -10.73Q59.33 -10.41 59.82 -10.21Q60.3 -10.01 60.81 -9.88L63.56 -9.13Q64.17 -8.96 64.92 -8.7Q65.67 -8.43 66.36 -7.95Q67.04 -7.47 67.49 -6.69Q67.94 -5.91 67.94 -4.71Q67.94 -3.43 67.4 -2.48Q66.87 -1.53 65.97 -0.91Q65.06 -0.29 63.93 0.02Q62.79 0.33 61.58 0.33Z M74.32 0V-15.84H84.66V-13.05H77.31V-9.66H83.34V-6.86H77.31V-2.79H84.66V0Z";
-
-function Logo({ className = "h-6 w-auto", tone = "light" }) {
-  return (
-    <svg viewBox="0 0 143 24" className={className} role="img" aria-label="PULSE">
-      <polyline transform="translate(1.25 0)" points={ISO_POINTS} fill="none" stroke={LOGO_NARANJA} strokeWidth="2.5" strokeLinejoin="round" strokeLinecap="round" />
-      <path transform="translate(57.25 19.92)" fill={tone === "dark" ? "#FFFFFF" : "#111111"} d={WORDMARK_PATH} />
-    </svg>
-  );
-}
-function Iso({ className = "w-5", stroke = ACENTO.base, width = 4 }) {
-  return (
-    <svg viewBox="0 0 44 24" className={className} aria-hidden="true">
-      <polyline points={ISO_POINTS} fill="none" stroke={stroke} strokeWidth={width} strokeLinejoin="round" strokeLinecap="round" />
-    </svg>
-  );
-}
-const BEAT = [[0, 0], [12 / 44, 0], [16 / 44, -9 / 12], [21 / 44, 9 / 12], [26 / 44, -4 / 12], [29 / 44, 0], [1, 0]];
-function pulsePath(width, y, amp, beats, flatStart = 0) {
-  const w = (width - flatStart) / beats;
-  let d = `M0 ${y} L${flatStart} ${y}`;
-  for (let b = 0; b < beats; b++) {
-    const x0 = flatStart + b * w;
-    for (const [px, py] of BEAT.slice(1)) d += ` L${(x0 + px * w).toFixed(1)} ${(y + py * amp).toFixed(1)}`;
-  }
-  return d;
+// Isotipo "Trazo" (manual de marca v1.1): la P en una sola línea + punto naranja.
+// Logo oficial desde components/Logo.tsx; acá solo una envoltura para los usos decorativos.
+function Iso({ className = "h-5 w-auto", stroke = ACENTO.base, onDark = false, heavy = false }) {
+  const mono = stroke === "#111111";
+  return <Isotipo className={className} heavy={heavy} line={onDark ? "#FFFFFF" : "#111111"} dot={mono ? "#111111" : LOGO_NARANJA} />;
 }
 
 const BTN = {
@@ -224,7 +204,7 @@ function Button({ href = "#contacto", variant = "dark", children, className = ""
 function Eyebrow({ children, dark }) {
   return (
     <span className={`inline-flex items-center gap-2.5 font-mono text-label font-medium uppercase ${dark ? "text-white/60" : "text-gris-500"}`}>
-      <Iso className="w-5" width={4} />{children}
+      <Iso className="h-4 w-auto" onDark={dark} />{children}
     </span>
   );
 }
@@ -300,7 +280,7 @@ function Notif({ icon = "pulse", app, title, body, time = "ahora", className = "
     <div className={`glass ${/\bw-\[/.test(className) ? "" : "w-[292px]"} rounded-[20px] p-3.5 text-left shadow-[inset_0_1px_0_rgba(255,255,255,0.9),0_2px_6px_rgba(17,17,17,0.04),0_24px_60px_-20px_rgba(17,17,17,0.32),0_0_0_1px_rgba(17,17,17,0.05)] ${className}`}>
       <div className="flex items-center gap-2">
         {icon === "wa" && <span className="flex h-[22px] w-[22px] items-center justify-center rounded-[6px] bg-wa-verde text-white"><Glyph kind="wa" className="h-3.5 w-3.5" /></span>}
-        {icon === "pulse" && <span className="flex h-[22px] w-[22px] items-center justify-center rounded-[6px] bg-tinta"><Iso className="w-3.5" width={5} stroke={ACENTO.claro} /></span>}
+        {icon === "pulse" && <span className="flex h-[22px] w-[22px] items-center justify-center rounded-[6px] bg-tinta"><Iso className="h-3.5 w-auto" heavy onDark /></span>}
         {icon === "box" && <span className="flex h-[22px] w-[22px] items-center justify-center rounded-[6px] bg-aviso text-white"><Glyph kind="box" className="h-3.5 w-3.5" /></span>}
         {icon === "cal" && <span className="flex h-[22px] w-[22px] items-center justify-center rounded-[6px] bg-white text-tinta ring-1 ring-linea"><Glyph kind="cal" className="h-3.5 w-3.5" /></span>}
         <span className="font-sys text-[11.5px] font-medium uppercase tracking-[0.02em] text-gris-500">{app}</span>
@@ -589,7 +569,7 @@ function WAChat({ name, sub = "Cuenta de empresa", msgs, delayStep = 0.6 }) {
         <StatusBar />
         <div className="flex items-center gap-2 px-3 pb-2 pt-1.5">
           <span className="text-[17px] leading-none text-wa-boton" aria-hidden="true">‹</span>
-          <span className="flex h-8 w-8 items-center justify-center rounded-full bg-tinta"><Iso className="w-4" width={5} stroke={ACENTO.claro} /></span>
+          <span className="flex h-8 w-8 items-center justify-center rounded-full bg-tinta"><Iso className="h-4 w-auto" heavy onDark /></span>
           <span className="flex min-w-0 flex-1 flex-col">
             <span className="flex items-center gap-1 truncate text-[12.5px] font-semibold text-wa-texto">
               {name}
@@ -794,7 +774,7 @@ function Soluciones() {
               className="group flex flex-col gap-2 border-t-[1.5px] border-tinta pb-10 pt-6">
               <span className="flex items-center justify-between gap-4">
                 <h3 className="text-[clamp(1.4rem,2.2vw,1.75rem)] font-bold tracking-[-0.03em]">{x.t}</h3>
-                <Iso className="w-8 -translate-x-2 opacity-0 transition duration-300 group-hover:translate-x-0 group-hover:opacity-100" width={3.5} />
+                <Iso className="h-6 w-auto -translate-x-2 opacity-0 transition duration-300 group-hover:translate-x-0 group-hover:opacity-100" width={3.5} />
               </span>
               <p className="max-w-[36ch] text-[15.5px] leading-relaxed text-gris-500">{x.d}</p>
             </motion.li>
@@ -1239,7 +1219,7 @@ function Integraciones() {
             <div className="order-1 flex justify-center lg:order-2">
               <div className="relative flex h-40 w-40 flex-col items-center justify-center gap-3 rounded-[40px] bg-gradient-to-br from-grad-a to-grad-b text-tinta shadow-[0_40px_80px_-30px_rgba(255,79,0,0.7)]">
                 {!simple && <motion.span aria-hidden="true" className="absolute inset-0 rounded-[40px] ring-2 ring-[#FF8A3D]" animate={{ scale: [1, 1.12], opacity: [0.5, 0] }} transition={{ duration: 2.4, repeat: Infinity, ease: "easeOut" }} />}
-                <Iso className="w-14" width={3.2} stroke="#111111" />
+                <Iso className="h-14 w-auto" stroke="#111111" />
                 <span className="text-[14px] font-semibold">Tu app</span>
               </div>
             </div>
@@ -1304,7 +1284,7 @@ function WABot() {
         <StatusBar />
         <div className="flex items-center gap-2 px-3 pb-2 pt-1.5">
           <span className="text-[17px] leading-none text-wa-boton" aria-hidden="true">‹</span>
-          <span className="flex h-8 w-8 items-center justify-center rounded-full bg-tinta"><Iso className="w-4" width={5} stroke={ACENTO.claro} /></span>
+          <span className="flex h-8 w-8 items-center justify-center rounded-full bg-tinta"><Iso className="h-4 w-auto" heavy onDark /></span>
           <span className="flex min-w-0 flex-1 flex-col">
             <span className="flex items-center gap-1 truncate text-[12.5px] font-semibold text-wa-texto">
               Estudio Arrel
@@ -1565,7 +1545,7 @@ function Ventajas() {
             <motion.div key={b.t} initial={{ y: simple ? 0 : 36 }} whileInView={{ y: 0 }} viewport={{ once: true, margin: "-80px" }} transition={{ duration: 0.8, ease, delay: (i % 2) * 0.12 }}
               onPointerMove={spot} whileHover={simple ? undefined : { y: -6 }}
               className="vidrio foco relative flex flex-col gap-10 rounded-[28px] p-7 md:p-9">
-              <Iso className="w-9" width={3} />
+              <Iso className="h-9 w-auto" />
               <div className="flex flex-col gap-2.5">
                 <h3 className="text-[clamp(1.35rem,2.2vw,1.75rem)] font-bold leading-tight tracking-[-0.03em]">{b.t}</h3>
                 <p className="max-w-[44ch] text-[16px] leading-relaxed text-gris-500">{b.d}</p>
@@ -1746,7 +1726,7 @@ function Contacto() {
   const draw = useTransform(scrollYProgress, [0, 1], [simple ? 1 : 0, 1]);
   const scale = useSpring(useTransform(scrollYProgress, [0, 1], [simple ? 1 : 0.94, 1]), { stiffness: 90, damping: 24 });
   const radius = useTransform(scrollYProgress, [0, 1], [simple ? 32 : 64, 40]);
-  const d = pulsePath(1600, 120, 80, 3, 260);
+  const d = "M0 120 H1600"; // línea de proceso (antes, pulso)
   const [copied, setCopied] = useState(false);
   const copy = async () => {
     try { await navigator.clipboard.writeText(CONTACTO.email); setCopied(true); setTimeout(() => setCopied(false), 1600); }
