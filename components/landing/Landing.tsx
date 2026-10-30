@@ -265,16 +265,10 @@ function Ticks({ read = true, className = "w-[15px]" }) {
 /* ---------------------------------------------------------------------
    DISPOSITIVOS
    --------------------------------------------------------------------- */
-function StatusBar({ light }) {
-  return (
-    <div className={`flex items-center justify-between px-6 pt-[11px] font-sys text-[11px] font-semibold tnum ${light ? "text-white" : "text-tinta"}`}>
-      <span>9:41</span>
-      <span className="flex items-center gap-1" aria-hidden="true">
-        <span className="flex items-end gap-[1.5px]"><span className="h-[4px] w-[2.5px] rounded-[1px] bg-current" /><span className="h-[6px] w-[2.5px] rounded-[1px] bg-current" /><span className="h-[8px] w-[2.5px] rounded-[1px] bg-current" /><span className="h-[10px] w-[2.5px] rounded-[1px] bg-current" /></span>
-        <span className="ml-1 h-[10px] w-[20px] rounded-[3px] border border-current/60 p-[1.5px]"><span className="block h-full w-4/5 rounded-[1.5px] bg-current" /></span>
-      </span>
-    </div>
-  );
+// Los mockups no muestran la barra del sistema (hora, batería, cobertura): solo dejan
+// el espacio de la isla del teléfono para que la app se vea limpia.
+function StatusBar() {
+  return <div aria-hidden="true" className="h-9 shrink-0" />;
 }
 function Phone({ children, className = "", label = "Móvil de ejemplo" }) {
   return (
@@ -1596,43 +1590,102 @@ function TerapiaScreen({ s }) {
   return <div className="relative flex h-full flex-col font-sys" style={{ background: TER.fondo }}><StatusBar />{body}</div>;
 }
 
+// Captura real de una app dentro del teléfono. Sin barras del sistema y con los datos anonimizados.
+function Captura({ src, fondo, alt = "" }) {
+  return (
+    <div className="relative h-full w-full overflow-hidden" style={{ background: fondo }}>
+      <img src={src} alt={alt} draggable={false} className="absolute inset-x-0 top-9 w-full select-none" />
+    </div>
+  );
+}
+
+// Una pantalla de cliente: captura real (img) o pantalla simulada (s).
+function Pantalla({ c, p }) {
+  if (p.img) return <Captura src={p.img} fondo={c.fondoApp} alt={p.alt} />;
+  return <c.App s={p.s} />;
+}
+
+// Foco: oscurece la pantalla y deja a la vista la zona de la función, con un borde naranja.
+// Se desliza de una zona a otra cuando cambia la función.
+function Foco({ f }) {
+  return (
+    <AnimatePresence>
+      {f && (
+        <motion.span key="foco" aria-hidden="true" className="pointer-events-none absolute z-20 rounded-[14px] ring-2 ring-[#FF4F00]"
+          style={{ boxShadow: "0 0 0 999px rgba(17,17,17,0.42), 0 0 24px 2px rgba(255,79,0,0.45)" }}
+          initial={{ opacity: 0, top: `${f.y}%`, height: `${f.h}%`, left: `${f.x ?? 2.5}%`, width: `${f.w ?? 95}%` }}
+          animate={{ opacity: 1, top: `${f.y}%`, height: `${f.h}%`, left: `${f.x ?? 2.5}%`, width: `${f.w ?? 95}%` }}
+          exit={{ opacity: 0 }} transition={{ duration: 0.6, ease }} />
+      )}
+    </AnimatePresence>
+  );
+}
+
+const SHOT = (n) => ({ img: `/clientes/bordado/${n}.webp`, alt: `Pantalla de ${n} de la app un clu de bordado` });
+
 const CLIENTES = [
   {
     slug: "un-clu-de-bordado", nombre: "un clu de bordado", tipo: "Comunidad de bordado y reservas",
-    logo: "/clientes/un-clu-de-bordado.png", logoFondo: "#FFFFFF", fondo: "#FBF8F3", brillo: "rgba(242,193,102,0.45)", App: BordadoScreen,
+    logo: "/clientes/un-clu-de-bordado.png", logoFondo: "#FFFFFF", fondo: "#FBF8F3", fondoApp: "#F8F5F0", brillo: "rgba(242,193,102,0.45)", App: BordadoScreen,
     resumen: "Una app de reservas para una comunidad de bordado: las alumnas reservan su lugar y la profesora organiza el club desde el móvil.",
     descripcion: [
       "Las alumnas ven en un calendario mensual qué clases tienen lugar, reservan con un toque (hasta seis por clase), piden sus kits y reciben las novedades del club con avisos en el móvil.",
       "La profesora agenda las clases, marca la asistencia y los cobros, gestiona a sus alumnas y exporta sus reportes. La app funciona en español y catalán y se instala desde el navegador, sin pasar por las tiendas.",
     ],
-    flujo: ["calendario", "clase", "reservada"], toques: [["66%", "57%"], ["50%", "74%"], ["50%", "79%"]],
-    pantallas: ["calendario", "clase", "kits", "noticias", "admin", "perfil"],
-    funciones: ["Calendario mensual", "Hasta 6 lugares por clase", "Cancelación hasta 24 h antes", "Pedidos de kits", "Noticias con avisos", "Español y catalán", "Asistencia y cobros", "Reportes y planillas"],
+    // Capturas reales (nombres y cifras cambiados por privacidad).
+    portada: SHOT("calendario"),
+    flujo: [{ p: SHOT("calendario"), toque: ["54%", "64%"] }, { p: SHOT("kits"), toque: ["50%", "73%"] }, { p: SHOT("noticias"), toque: ["11%", "41%"] }],
+    funciones: [
+      { t: "Calendario mensual", d: "Las alumnas ven de un vistazo qué días hay clase y dónde queda lugar.", p: SHOT("calendario"), foco: { y: 33, h: 41 } },
+      { t: "Tu próxima clase", d: "Al entrar, la app recuerda a cada alumna cuándo es su próxima clase.", p: SHOT("calendario"), foco: { y: 22.5, h: 10.5 } },
+      { t: "Kits del club", d: "Reservan su kit desde la app y la profe coordina la entrega.", p: SHOT("kits"), foco: { y: 39, h: 22 } },
+      { t: "Noticias con reacciones", d: "La profe publica novedades y las alumnas responden con un emoji.", p: SHOT("noticias"), foco: { y: 21, h: 26 } },
+      { t: "Horarios y cupos", d: "La profe crea franjas y ve cuántos lugares quedan en cada clase.", p: SHOT("horarios"), foco: { y: 15, h: 26 } },
+      { t: "Cobros por alumna", d: "Un toque marca cada clase como cobrada, sin cobrar o baja con cargo.", p: SHOT("alumnas"), foco: { y: 41, h: 24 } },
+      { t: "Dashboard del mes", d: "Lo recaudado, las clases cobradas y las alumnas nuevas, en una pantalla.", p: SHOT("dashboard"), foco: { y: 26, h: 25 } },
+      { t: "Reporte automático", d: "El último día de cada mes se genera solo y llega por email.", p: SHOT("reportes"), foco: { y: 24, h: 39 } },
+    ],
   },
   {
     slug: "daily", nombre: "DAILY", tipo: "Finanzas personales multidivisa",
-    logo: "/clientes/daily.svg", logoFondo: "#111114", fondo: "#F5F5F7", brillo: "rgba(75,58,214,0.3)", App: DailyScreen,
+    logo: "/clientes/daily.svg", logoFondo: "#111114", fondo: "#F5F5F7", fondoApp: "#F5F5F7", brillo: "rgba(75,58,214,0.3)", App: DailyScreen,
     resumen: "Una app web de finanzas personales que reúne todas las cuentas, en pesos, dólares y euros, en un solo lugar.",
     descripcion: [
       "Junta bancos, billeteras virtuales, tarjetas, inversiones y efectivo, y muestra el saldo total y cómo evoluciona. Separa los gastos por categoría y lleva al día los pagos de cada mes y las deudas.",
       "Genera reportes en PDF y Excel, se protege con PIN y funciona en modo claro y oscuro. Se instala en el móvil como cualquier app.",
     ],
-    flujo: ["pin", "inicio", "bancos"], toques: [["50%", "62%"], ["50%", "48%"], ["50%", "40%"]],
-    pantallas: ["inicio", "bancos", "categorias", "pagos", "reportes"],
-    funciones: ["Bancos y billeteras", "Pesos, dólares y euros", "Evolución del saldo", "Gastos por categoría", "Pagos del mes", "Deudas", "Reportes en PDF y Excel", "Acceso con PIN"],
+    // TODO: reemplazar por capturas reales cuando estén.
+    portada: { s: "inicio" },
+    flujo: [{ p: { s: "pin" }, toque: ["50%", "62%"] }, { p: { s: "inicio" }, toque: ["50%", "48%"] }, { p: { s: "bancos" }, toque: ["50%", "40%"] }],
+    funciones: [
+      { t: "Todas tus cuentas", d: "Bancos, billeteras, tarjetas, inversiones y efectivo en una sola lista.", p: { s: "bancos" } },
+      { t: "Saldo total", d: "El total de todo lo que tienes y cómo evoluciona mes a mes.", p: { s: "inicio" }, foco: { y: 17, h: 43 } },
+      { t: "Pesos, dólares y euros", d: "Cambia de moneda con un toque y ve cada saldo en la suya.", p: { s: "inicio" }, foco: { y: 38, h: 7, x: 8, w: 52 } },
+      { t: "Gastos por categoría", d: "En qué se va el dinero, separado por categorías.", p: { s: "categorias" } },
+      { t: "Pagos del mes", d: "Lo que vence, lo que ya pagaste y lo que falta.", p: { s: "pagos" } },
+      { t: "Reportes en PDF y Excel", d: "Exporta el resumen de cualquier mes en un toque.", p: { s: "reportes" } },
+      { t: "Acceso con PIN", d: "Tus finanzas quedan protegidas aunque presten el móvil.", p: { s: "pin" } },
+    ],
   },
   {
     // TODO: textos, funciones y marca provisionales. Cambiar por los reales de Daiana Marlene.
     slug: "daiana-marlene", nombre: "Daiana Marlene", tipo: "Terapeuta",
-    logo: null, monograma: "DM", logoFondo: "#6B8F71", fondo: "#F4F1EC", brillo: "rgba(107,143,113,0.35)", App: TerapiaScreen,
+    logo: null, monograma: "DM", logoFondo: "#6B8F71", fondo: "#F4F1EC", fondoApp: "#F4F1EC", brillo: "rgba(107,143,113,0.35)", App: TerapiaScreen,
     resumen: "Una agenda online para una terapeuta: sus pacientes reservan sesiones y ella organiza su semana sin mensajes de ida y vuelta.",
     descripcion: [
       "Sus pacientes eligen día y hora, reservan sesiones online o presenciales y reciben un recordatorio el día antes. Si necesitan cambiar o cancelar, lo hacen desde la misma app.",
       "Ella ve su semana de un vistazo, con todas las sesiones ordenadas, y deja de coordinar horarios por chat.",
     ],
-    flujo: ["inicio", "reservar", "confirmada"], toques: [["30%", "47%"], ["84%", "48%"], ["50%", "60%"]],
-    pantallas: ["inicio", "reservar", "sesiones", "agenda"],
-    funciones: ["Reserva online", "Online o presencial", "Recordatorios", "Cambios y cancelaciones", "Agenda semanal", "Historial de sesiones"],
+    portada: { s: "inicio" },
+    flujo: [{ p: { s: "inicio" }, toque: ["30%", "49%"] }, { p: { s: "reservar" }, toque: ["84%", "50%"] }, { p: { s: "confirmada" }, toque: ["50%", "60%"] }],
+    funciones: [
+      { t: "Próxima sesión", d: "Cada paciente ve su próxima sesión al abrir la app.", p: { s: "inicio" }, foco: { y: 23, h: 21 } },
+      { t: "Reserva online", d: "Eligen día y hora entre los huecos libres.", p: { s: "reservar" } },
+      { t: "Online o presencial", d: "Cada sesión indica si es por videollamada o en consulta.", p: { s: "reservar" }, foco: { y: 49, h: 8 } },
+      { t: "Recordatorios", d: "Un aviso el día antes para que nadie se olvide.", p: { s: "confirmada" } },
+      { t: "Cambios y cancelaciones", d: "Las pacientes mueven o cancelan sus sesiones solas.", p: { s: "sesiones" } },
+      { t: "Agenda semanal", d: "Ella ve toda su semana ordenada de un vistazo.", p: { s: "agenda" } },
+    ],
   },
 ];
 
@@ -1656,7 +1709,7 @@ function ClienteCard({ c, i }) {
       <div className="relative flex h-[360px] justify-center overflow-hidden" style={{ background: c.fondo }}>
         <Blob className="-right-16 -top-16 h-[280px] w-[280px]" color={c.brillo} />
         <motion.div variants={{ hover: { y: -16, rotate: -2 } }} transition={{ type: "spring", stiffness: 200, damping: 20 }} className="relative mt-12 origin-top scale-[0.84]">
-          <Phone label={`App de ${c.nombre}`}><c.App s={c.pantallas[0]} /></Phone>
+          <Phone label={`App de ${c.nombre}`}><Pantalla c={c} p={c.portada} /></Phone>
         </motion.div>
         <span className="absolute left-5 top-5"><LogoCliente c={c} className="h-12 w-12" /></span>
       </div>
@@ -1696,80 +1749,164 @@ function DemoFlujo({ c }) {
   const [i, setI] = useState(0);
   useEffect(() => {
     if (reduce) return;
-    const id = setInterval(() => setI((x) => (x + 1) % c.flujo.length), 2800);
+    const id = setInterval(() => setI((x) => (x + 1) % c.flujo.length), 3000);
     return () => clearInterval(id);
   }, [c, reduce]);
-  const [tx, ty] = c.toques[i];
+  const paso = c.flujo[i];
+  const [tx, ty] = paso.toque;
   return (
     <div className="relative">
       <Phone label={`Demostración de la app de ${c.nombre}`}>
         <AnimatePresence mode="wait" initial={false}>
           <motion.div key={i} className="h-full" initial={{ opacity: 0, x: 24 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -24 }} transition={{ duration: 0.35, ease }}>
-            <c.App s={c.flujo[i]} />
+            <Pantalla c={c} p={paso.p} />
           </motion.div>
         </AnimatePresence>
         {!reduce && (
-          <motion.span key={`t${i}`} aria-hidden="true" className="pointer-events-none absolute z-30 h-9 w-9 -translate-x-1/2 -translate-y-1/2 rounded-full border-2 border-white/90 bg-tinta/25 shadow-lg"
-            style={{ left: tx, top: ty }} initial={{ scale: 0, opacity: 0 }} animate={{ scale: [0, 1, 0.8, 1.4], opacity: [0, 1, 1, 0] }} transition={{ duration: 1.2, delay: 1.3, times: [0, 0.3, 0.5, 1] }} />
+          <motion.span key={`t${i}`} aria-hidden="true" className="pointer-events-none absolute z-30 h-9 w-9 -translate-x-1/2 -translate-y-1/2 rounded-full border-2 border-white bg-tinta/25 shadow-lg"
+            style={{ left: tx, top: ty }} initial={{ scale: 0, opacity: 0 }} animate={{ scale: [0, 1, 0.8, 1.4], opacity: [0, 1, 1, 0] }} transition={{ duration: 1.2, delay: 1.5, times: [0, 0.3, 0.5, 1] }} />
         )}
-        <div className="absolute inset-x-6 top-[38px] z-30 flex gap-1">
-          {c.flujo.map((_, j) => (
-            <span key={j} className="h-[3px] flex-1 overflow-hidden rounded-full bg-black/10">
-              {j < i && <span className="block h-full w-full bg-black/40" />}
-              {j === i && <motion.span key={`b${i}`} className="block h-full bg-black/40" initial={{ width: "0%" }} animate={{ width: "100%" }} transition={{ duration: reduce ? 0 : 2.8, ease: "linear" }} />}
-            </span>
-          ))}
-        </div>
       </Phone>
+      <div className="mx-auto mt-5 flex w-32 gap-1.5" aria-hidden="true">
+        {c.flujo.map((_, j) => (
+          <span key={j} className="h-[3px] flex-1 overflow-hidden rounded-full bg-tinta/10">
+            {j < i && <span className="block h-full w-full bg-tinta/50" />}
+            {j === i && <motion.span key={`b${i}`} className="block h-full bg-gradient-to-r from-grad-a to-grad-b" initial={{ width: "0%" }} animate={{ width: "100%" }} transition={{ duration: reduce ? 0 : 3, ease: "linear" }} />}
+          </span>
+        ))}
+      </div>
     </div>
   );
 }
 
-// Móvil en 3D que gira y cambia de pantalla, con etiquetas flotantes de funciones.
-function Telefono3D({ c }) {
-  const reduce = useReducedMotion();
-  const simple = useSimple();
-  const [i, setI] = useState(0);
-  useEffect(() => {
-    if (reduce) return;
-    const id = setInterval(() => setI((x) => (x + 1) % c.pantallas.length), 2400);
-    return () => clearInterval(id);
-  }, [c, reduce]);
-  const mitad = Math.ceil(c.funciones.length / 2);
-  const izq = c.funciones.slice(0, mitad);
-  const der = c.funciones.slice(mitad);
-  const activa = i % c.funciones.length;
-  const etiqueta = (f, j, lado) => (
-    <motion.li key={f} animate={reduce ? undefined : { y: [0, -7, 0] }} transition={{ duration: 4 + (j % 3), repeat: Infinity, ease: "easeInOut", delay: j * 0.4 }}
-      className={`flex ${lado === "izq" ? "lg:justify-end" : "lg:justify-start"} ${j % 2 ? (lado === "izq" ? "lg:pr-10" : "lg:pl-10") : ""}`}>
-      <span className={`glass inline-flex items-center gap-2 rounded-full px-4 py-2.5 text-[14px] font-semibold shadow-[0_14px_34px_-18px_rgba(17,17,17,0.35),0_0_0_1px_rgba(17,17,17,0.06)] transition-colors duration-500 ${(lado === "izq" ? j : j + mitad) === activa ? "!bg-tinta text-white" : ""}`}>
-        <span className={`h-2 w-2 rounded-full ${(lado === "izq" ? j : j + mitad) === activa ? "bg-acento" : "bg-gris-300"}`} />{f}
-      </span>
-    </motion.li>
+// Funciones de la app: cada función cambia la pantalla con un fundido y un acercamiento
+// a la zona que la muestra. En escritorio avanza con el scroll; en móvil, con toques.
+function TelefonoFuncion({ c, i, dir = 1 }) {
+  const f = c.funciones[i];
+  return (
+    <div className="relative">
+      <motion.div key={`marco-${i}`} initial={{ scale: 0.965, y: 10 * dir }} animate={{ scale: 1, y: 0 }} transition={{ type: "spring", stiffness: 160, damping: 18 }}>
+        <Phone label={`${f.t}: ${f.d}`}>
+          <AnimatePresence initial={false} mode="popLayout">
+            <motion.div key={f.p.img || f.p.s} className="absolute inset-0" initial={{ opacity: 0, scale: 1.04, filter: "blur(6px)" }} animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }} exit={{ opacity: 0, scale: 0.98, filter: "blur(4px)" }} transition={{ duration: 0.55, ease }}>
+              <Pantalla c={c} p={f.p} />
+            </motion.div>
+          </AnimatePresence>
+          <Foco f={f.foco} />
+          {/* barrido de luz en cada cambio */}
+          <motion.span key={`luz-${i}`} aria-hidden="true" className="pointer-events-none absolute inset-0 z-30 bg-[linear-gradient(115deg,transparent_30%,rgba(255,255,255,0.55)_50%,transparent_70%)]"
+            initial={{ x: "-120%" }} animate={{ x: "120%" }} transition={{ duration: 0.9, ease }} />
+        </Phone>
+      </motion.div>
+      <motion.span key={`num-${i}`} initial={{ scale: 0.6, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} transition={{ type: "spring", stiffness: 300, damping: 18 }}
+        className="absolute -right-5 -top-4 z-40 rounded-full bg-tinta px-3 py-1.5 text-[12px] font-semibold text-white shadow-lg tnum">
+        {i + 1} / {c.funciones.length}
+      </motion.span>
+    </div>
   );
+}
+
+function Etiqueta({ f, activa, onClick }) {
+  return (
+    <button type="button" onClick={onClick} aria-pressed={activa}
+      className={`inline-flex items-center gap-2 rounded-full px-4 py-2.5 text-[14px] font-semibold transition-all duration-500 ${activa ? "scale-105 bg-tinta text-white shadow-[0_14px_34px_-14px_rgba(17,17,17,0.55)]" : "glass text-gris-700 shadow-[0_10px_26px_-18px_rgba(17,17,17,0.35),0_0_0_1px_rgba(17,17,17,0.06)] hover:text-tinta"}`}>
+      <span className={`h-2 w-2 rounded-full transition-colors duration-500 ${activa ? "bg-acento" : "bg-gris-300"}`} />{f.t}
+    </button>
+  );
+}
+
+function Rotulo({ f, i }) {
+  return (
+    <AnimatePresence mode="wait">
+      <motion.div key={i} initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -8 }} transition={{ duration: 0.35, ease }} className="flex max-w-[34ch] flex-col items-center gap-1 text-center">
+        <span className="text-[19px] font-bold tracking-[-0.02em]">{f.t}</span>
+        <span className="text-[15px] leading-snug text-gris-500">{f.d}</span>
+      </motion.div>
+    </AnimatePresence>
+  );
+}
+
+function FuncionesMovil({ c }) {
+  const reduce = useReducedMotion();
+  const [i, setI] = useState(0);
+  const [auto, setAuto] = useState(true);
+  useEffect(() => {
+    if (!auto || reduce) return;
+    const id = setInterval(() => setI((x) => (x + 1) % c.funciones.length), 3400);
+    return () => clearInterval(id);
+  }, [auto, reduce, c]);
   return (
     <section aria-labelledby="funciones-title" className="relative overflow-hidden bg-white">
-      <Blob className="left-[calc(50%-300px)] top-[20%] h-[600px] w-[600px]" color={c.brillo} />
-      <div className="container-page relative flex flex-col gap-12 py-24 md:py-32">
+      <Blob className="left-[calc(50%-260px)] top-[12%] h-[520px] w-[520px]" color={c.brillo} />
+      <div className="container-page relative flex flex-col items-center gap-8 py-20">
         <SectionTitle center id="funciones-title" eyebrow="Funciones" title="Todo lo que hace la app." />
-        <div className="grid items-center gap-10 lg:grid-cols-[1fr_auto_1fr]">
-          <ul className="order-2 flex flex-wrap justify-center gap-3 lg:order-1 lg:flex-col lg:gap-6">{izq.map((f, j) => etiqueta(f, j, "izq"))}</ul>
-          <div className="order-1 flex justify-center lg:order-2" style={{ perspective: 1400 }}>
-            <motion.div animate={simple || reduce ? undefined : { rotateY: [-24, 24], rotateX: [6, 2] }} transition={{ duration: 7, repeat: Infinity, repeatType: "mirror", ease: "easeInOut" }} style={{ transformStyle: "preserve-3d" }}>
-              <Phone label={`Pantallas de la app de ${c.nombre}`}>
-                <AnimatePresence mode="wait" initial={false}>
-                  <motion.div key={i} className="h-full" initial={{ opacity: 0, scale: 0.96 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 1.02 }} transition={{ duration: 0.4, ease }}>
-                    <c.App s={c.pantallas[i]} />
-                  </motion.div>
-                </AnimatePresence>
-              </Phone>
-            </motion.div>
-          </div>
-          <ul className="order-3 flex flex-wrap justify-center gap-3 lg:flex-col lg:gap-6">{der.map((f, j) => etiqueta(f, j, "der"))}</ul>
+        <TelefonoFuncion c={c} i={i} />
+        <Rotulo f={c.funciones[i]} i={i} />
+        <div className="flex flex-wrap justify-center gap-2">
+          {c.funciones.map((f, j) => <Etiqueta key={f.t} f={f} activa={j === i} onClick={() => { setI(j); setAuto(false); }} />)}
         </div>
       </div>
     </section>
   );
+}
+
+function FuncionesEscritorio({ c }) {
+  const ref = useRef(null);
+  const n = c.funciones.length;
+  const [i, setI] = useState(0);
+  const prev = useRef(0);
+  const { scrollYProgress } = useScroll({ target: ref, offset: ["start start", "end end"] });
+  useMotionValueEvent(scrollYProgress, "change", (v) => {
+    const k = Math.min(n - 1, Math.max(0, Math.floor(v * n)));
+    setI((x) => { prev.current = x; return k; });
+  });
+  const barra = useTransform(scrollYProgress, [0, 1], [0, 1]);
+  const ir = (j) => {
+    const el = ref.current; if (!el) return;
+    const top = el.getBoundingClientRect().top + window.scrollY;
+    const recorrido = el.offsetHeight - window.innerHeight;
+    window.scrollTo({ top: top + recorrido * ((j + 0.5) / n), behavior: "smooth" });
+  };
+  const mitad = Math.ceil(n / 2);
+  const columna = (desde, hasta, lado) => (
+    <ul className={`flex flex-col gap-5 ${lado === "izq" ? "items-end" : "items-start"}`}>
+      {c.funciones.slice(desde, hasta).map((f, k) => {
+        const j = desde + k;
+        return (
+          <motion.li key={f.t} animate={{ x: j === i ? (lado === "izq" ? -8 : 8) : 0, opacity: j === i ? 1 : 0.55 }} transition={{ duration: 0.45, ease }}
+            className={k % 2 ? (lado === "izq" ? "pr-10" : "pl-10") : ""}>
+            <Etiqueta f={f} activa={j === i} onClick={() => ir(j)} />
+          </motion.li>
+        );
+      })}
+    </ul>
+  );
+  return (
+    <section ref={ref} aria-labelledby="funciones-title" className="relative bg-white" style={{ height: `${100 + n * 38}vh` }}>
+      <div className="sticky top-16 flex h-[calc(100vh-64px)] items-center overflow-hidden">
+        <Blob className="left-[calc(50%-300px)] top-[18%] h-[600px] w-[600px]" color={c.brillo} />
+        <div className="container-page relative flex flex-col items-center gap-6">
+          <SectionTitle center id="funciones-title" eyebrow="Funciones" title="Todo lo que hace la app." />
+          <div className="grid w-full grid-cols-[1fr_auto_1fr] items-center gap-10 [@media(max-height:860px)]:-my-10 [@media(max-height:860px)]:scale-[0.86]">
+            {columna(0, mitad, "izq")}
+            <TelefonoFuncion c={c} i={i} dir={i >= prev.current ? 1 : -1} />
+            {columna(mitad, n, "der")}
+          </div>
+          <div className="flex w-full max-w-[420px] flex-col items-center gap-4">
+            <Rotulo f={c.funciones[i]} i={i} />
+            <span className="relative h-[3px] w-40 overflow-hidden rounded-full bg-gris-100" aria-hidden="true">
+              <motion.span style={{ scaleX: barra }} className="absolute inset-0 origin-left rounded-full bg-gradient-to-r from-grad-a to-grad-b" />
+            </span>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function Telefono3D({ c }) {
+  const simple = useSimple();
+  return simple ? <FuncionesMovil c={c} /> : <FuncionesEscritorio c={c} />;
 }
 
 function Pie() {
