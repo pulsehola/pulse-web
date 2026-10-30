@@ -36,7 +36,7 @@ export const site = {
     subtitle: "Diseñamos soluciones web, PWAs avanzadas y piezas creativas para potenciar tu marca.",
     primaryCta: { label: "Ver nuestros proyectos", href: "#proyectos" },
     secondaryCta: { label: "Agendá una llamada", href: "#contacto" },
-    // Dejá el video en /public/video/. Si no existe, el hero muestra la línea de pulso animada.
+    // Dejá el video en /public/video/. Si no existe, el hero muestra el isotipo Trazo animado.
     video: {
       mp4: "/video/hero.mp4",
       webm: "/video/hero.webm",

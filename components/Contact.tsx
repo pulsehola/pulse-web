@@ -5,6 +5,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { SectionHeader } from "./ui/SectionHeader";
 import { Reveal } from "./ui/Reveal";
 import { site } from "@/lib/content";
+import { Isotipo } from "./Isotipo";
 
 const c = site.contact_section;
 const { contact } = site;
@@ -93,19 +94,7 @@ export function Contact() {
                 animate={{ opacity: 1, y: 0 }}
                 className="flex min-h-[320px] flex-col justify-center gap-4 rounded bg-naranja p-8 text-tinta"
               >
-                <svg aria-hidden="true" viewBox="0 0 44 24" className="h-8 w-auto self-start">
-                  <motion.polyline
-                    points="0,12 12,12 16,3 21,21 26,8 29,12 44,12"
-                    fill="none"
-                    stroke="#111111"
-                    strokeWidth="2.5"
-                    strokeLinejoin="round"
-                    strokeLinecap="round"
-                    initial={{ pathLength: 0 }}
-                    animate={{ pathLength: 1 }}
-                    transition={{ duration: 0.8 }}
-                  />
-                </svg>
+                <Isotipo draw line="#111111" dot="#111111" className="h-12 w-auto self-start" />
                 <p className="text-h3">{c.success}</p>
               </motion.div>
             ) : (
@@ -215,7 +204,7 @@ export function Contact() {
   );
 }
 
-/** "Hablemos." gigante, letra por letra, con la línea de pulso dibujándose debajo. */
+/** "Hablemos." gigante, letra por letra, con una línea de proceso que termina en el punto del isotipo. */
 function BigTitle({ text }: { text: string }) {
   return (
     <div aria-hidden="true" className="relative">
@@ -237,21 +226,23 @@ function BigTitle({ text }: { text: string }) {
           </span>
         ))}
       </motion.p>
-      <svg viewBox="0 0 1200 80" className="mt-4 w-full" preserveAspectRatio="none">
-        <motion.polyline
-          points="0,40 640,40 690,8 740,72 790,22 815,40 1200,40"
-          fill="none"
-          stroke="#FF4F00"
-          strokeWidth="3"
-          strokeLinejoin="round"
-          strokeLinecap="round"
-          vectorEffect="non-scaling-stroke"
-          initial={{ pathLength: 0 }}
-          whileInView={{ pathLength: 1 }}
+      {/* Línea de proceso que termina en el punto del isotipo: de principio a fin */}
+      <div className="mt-6 flex items-center gap-3">
+        <motion.span
+          className="h-[3px] flex-1 origin-left rounded-full bg-white/25"
+          initial={{ scaleX: 0 }}
+          whileInView={{ scaleX: 1 }}
           viewport={{ once: true }}
-          transition={{ duration: 1.4, ease: [0.65, 0, 0.35, 1], delay: 0.4 }}
+          transition={{ duration: 1.2, ease: [0.65, 0, 0.35, 1], delay: 0.4 }}
         />
-      </svg>
+        <motion.span
+          className="h-4 w-4 flex-none rounded-[3px] bg-naranja"
+          initial={{ scale: 0 }}
+          whileInView={{ scale: 1 }}
+          viewport={{ once: true }}
+          transition={{ type: "spring", stiffness: 300, damping: 18, delay: 1.5 }}
+        />
+      </div>
     </div>
   );
 }

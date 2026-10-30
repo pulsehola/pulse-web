@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { pulsePath } from "./fx/pulse";
+import { Isotipo } from "./Isotipo";
 
 /** Ilustración animada para cada servicio. Todo construido con formas de la marca, sin imágenes. */
 export function ServiceVisual({ id }: { id: string }) {
@@ -139,9 +139,7 @@ function PwaVisual() {
               className="absolute -left-10 top-6 flex w-[230px] items-start gap-2 rounded bg-white p-2.5 shadow-[0_0_0_1.5px_#111111] md:-left-14"
             >
               <span className="flex h-7 w-7 flex-none items-center justify-center rounded-sm bg-tinta">
-                <svg viewBox="0 0 44 24" className="h-3 w-auto" aria-hidden="true">
-                  <polyline points="0,12 12,12 16,3 21,21 26,8 29,12 44,12" fill="none" stroke="#FF4F00" strokeWidth="4" strokeLinejoin="round" strokeLinecap="round" />
-                </svg>
+                <Isotipo heavy line="#FFFFFF" dot="#FF4F00" className="h-4 w-auto" />
               </span>
               <span className="flex flex-col">
                 <span className="text-[11px] font-bold text-tinta">Recordatorio</span>
@@ -194,19 +192,9 @@ function RrssVisual() {
 
 function MiniPulse() {
   return (
-    <svg viewBox="0 0 160 80" className="w-full" aria-hidden="true">
-      <motion.path
-        d={pulsePath(160, 50, 30, 1, 20)}
-        fill="none"
-        stroke="#FF4F00"
-        strokeWidth="4"
-        strokeLinejoin="round"
-        strokeLinecap="round"
-        initial={{ pathLength: 0 }}
-        animate={{ pathLength: 1 }}
-        transition={{ duration: 1.2, delay: 0.4 }}
-      />
-    </svg>
+    <div className="flex w-full justify-center py-2">
+      <Isotipo draw line="#111111" dot="#FF4F00" className="h-16 w-auto" />
+    </div>
   );
 }
 

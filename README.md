@@ -26,7 +26,7 @@ Se despliega tal cual en Vercel.
 
 ## Antes de publicar
 
-- [ ] **Video del hero**: subí `hero.mp4`, `hero.webm` y `hero-poster.jpg` a `public/video/` y poné `hero.video.enabled: true` en `lib/content.ts`. Recomendado: 10–20 s en loop, sin audio, 1920×1080, menos de 4 MB, poco movimiento (el texto va encima). Sin video se ve la línea de pulso animada.
+- [ ] **Video del hero**: subí `hero.mp4`, `hero.webm` y `hero-poster.jpg` a `public/video/` y poné `hero.video.enabled: true` en `lib/content.ts`. Recomendado: 10–20 s en loop, sin audio, 1920×1080, menos de 4 MB, poco movimiento (el texto va encima). Sin video se ve el isotipo Trazo animado.
 - [ ] **Proyectos**: los 6 son marcadores. Reemplazalos por casos reales con permiso del cliente (imagen 4:3 en `public/projects/`, campo `image`). Si todavía no hay casos, sacá la sección de `app/page.tsx` y el link del menú.
 - [ ] **Contacto**: email y número de WhatsApp en `lib/content.ts` (`[CORCHETES]`).
 - [ ] **Formulario**: `app/api/contact/route.ts` hoy solo valida y registra en el log. Conectalo a un proveedor de email (Resend, Postmark) o a tu CRM.

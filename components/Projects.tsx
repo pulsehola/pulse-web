@@ -4,7 +4,6 @@ import { useState } from "react";
 import Image from "next/image";
 import { AnimatePresence, LayoutGroup, motion } from "framer-motion";
 import { SectionHeader } from "./ui/SectionHeader";
-import { pulsePath } from "./fx/pulse";
 import { site, type Project } from "@/lib/content";
 
 const { projects } = site;
@@ -133,9 +132,15 @@ function PlaceholderArt({ category, variant }: { category: Project["category"]; 
             <span key={i} className="h-2 w-2 rounded-sm border border-tinta" />
           ))}
         </div>
-        <svg viewBox="0 0 400 200" className="w-full flex-1" preserveAspectRatio="none" aria-hidden="true">
-          <path d={pulsePath(400, 110, 60, 2, 40)} fill="none" stroke="#FF4F00" strokeWidth="5" strokeLinejoin="round" strokeLinecap="round" vectorEffect="non-scaling-stroke" />
-        </svg>
+        <div className="flex flex-1 flex-col gap-2 p-3">
+          <span className="h-3 w-1/2 rounded-sm bg-tinta" />
+          <span className="h-2 w-3/4 rounded-sm bg-gris-200" />
+          <div className="mt-auto grid grid-cols-3 gap-2">
+            <span className="h-10 rounded-sm bg-papel" />
+            <span className="h-10 rounded-sm bg-naranja" />
+            <span className="h-10 rounded-sm bg-papel" />
+          </div>
+        </div>
       </div>
     </div>
   );

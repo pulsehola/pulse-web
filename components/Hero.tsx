@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { motion, useReducedMotion, useScroll, useTransform } from "framer-motion";
 import { Button } from "./ui/Button";
-import { pulsePath } from "./fx/pulse";
+import { TRAZO_PATH } from "./Isotipo";
 import { site } from "@/lib/content";
 
 const { hero } = site;
@@ -43,7 +43,7 @@ export function Hero() {
           </>
         )}
         <div className="dot-grid absolute inset-0" />
-        <PulseMonitor />
+        <TrazoBackdrop />
       </div>
 
       <motion.div style={{ y: yText, opacity: fade }} className="container-page flex flex-1 flex-col justify-end gap-8 pb-28 pt-32 md:pb-36">
@@ -113,35 +113,50 @@ export function Hero() {
   );
 }
 
-/** Línea de pulso tipo monitor: trazo tenue fijo + un tramo brillante que la recorre. */
-function PulseMonitor() {
-  const d = pulsePath(1600, 330, 150, 4, 120);
+/** Fondo: el isotipo Trazo a gran escala. Se dibuja una vez, aparece el punto y un tramo de luz lo recorre. */
+function TrazoBackdrop() {
   return (
-    <svg className="absolute inset-x-0 top-[10%] h-[60%] w-full" viewBox="0 0 1600 600" preserveAspectRatio="xMidYMid slice">
+    <svg
+      className="absolute -right-[30%] -top-[2%] h-[36%] w-auto md:-right-[6%] md:top-[8%] md:h-[56%]"
+      viewBox="2.5 1.25 19 22.25"
+    >
       <motion.path
-        d={d}
+        d={TRAZO_PATH}
         fill="none"
-        stroke="#FF4F00"
-        strokeOpacity="0.16"
-        strokeWidth="3"
+        stroke="#FFFFFF"
+        strokeOpacity="0.08"
+        strokeWidth="3.5"
         strokeLinejoin="round"
         strokeLinecap="round"
         initial={{ pathLength: 0 }}
         animate={{ pathLength: 1 }}
-        transition={{ duration: 2, ease: [0.65, 0, 0.35, 1] }}
+        transition={{ duration: 1.6, ease: [0.65, 0, 0.35, 1] }}
       />
       <motion.path
-        d={d}
+        d={TRAZO_PATH}
         pathLength={1}
         fill="none"
         stroke="#FF4F00"
-        strokeWidth="5"
+        strokeWidth="3.5"
         strokeLinejoin="round"
         strokeLinecap="round"
-        strokeDasharray="0.14 2"
-        initial={{ strokeDashoffset: 0.14 }}
-        animate={{ strokeDashoffset: -1 }}
-        transition={{ duration: 4.2, ease: "linear", repeat: Infinity, delay: 1.4 }}
+        strokeDasharray="0.1 2"
+        initial={{ strokeDashoffset: 0.1, opacity: 0 }}
+        animate={{ strokeDashoffset: -1, opacity: 0.9 }}
+        transition={{ strokeDashoffset: { duration: 3.6, ease: "linear", repeat: Infinity, delay: 1.9 }, opacity: { delay: 1.9, duration: 0.2 } }}
+      />
+      <motion.rect
+        className="hidden md:block"
+        x="2.5"
+        y="18.5"
+        width="5"
+        height="5"
+        rx="1"
+        fill="#FF4F00"
+        initial={{ scale: 0, opacity: 0 }}
+        animate={{ scale: 1, opacity: 1 }}
+        style={{ transformOrigin: "5px 21px" }}
+        transition={{ type: "spring", stiffness: 260, damping: 18, delay: 1.6 }}
       />
     </svg>
   );

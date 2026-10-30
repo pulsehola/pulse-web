@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion";
 import { site } from "@/lib/content";
+import { Isotipo } from "./Isotipo";
 
 function Row({ words, reverse, tone }: { words: string[]; reverse?: boolean; tone: "naranja" | "tinta" }) {
   const items = [...words, ...words];
@@ -19,9 +20,7 @@ function Row({ words, reverse, tone }: { words: string[]; reverse?: boolean; ton
             {items.map((w, i) => (
               <span key={`${copy}-${i}`} className="flex flex-none items-center gap-8 md:gap-12">
                 <span className={`whitespace-nowrap text-[2rem] font-bold leading-none tracking-[-0.03em] md:text-[4.5rem] ${text}`}>{w}</span>
-                <svg aria-hidden="true" viewBox="0 0 44 24" className="h-6 w-auto flex-none md:h-10">
-                  <polyline points="0,12 12,12 16,3 21,21 26,8 29,12 44,12" fill="none" stroke={sep} strokeWidth="2.5" strokeLinejoin="round" strokeLinecap="round" />
-                </svg>
+                <Isotipo line={tone === "naranja" ? "#111111" : "#FFFFFF"} dot={sep} className="h-7 w-auto flex-none md:h-12" />
               </span>
             ))}
           </div>
