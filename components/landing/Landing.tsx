@@ -649,7 +649,7 @@ function ReunionScreen() {
   return (
     <div className="flex h-full flex-col bg-[#FAFAF8] font-sys text-tinta">
       <StatusBar />
-      <AppHeader eyebrow="Calendario · martes 4" title="Reunión con PULSE" />
+      <AppHeader eyebrow="Calendario · martes 4" title="Tu reunión" />
       <div className="mx-4 mt-5 flex flex-col gap-3 rounded-[18px] bg-white p-4 shadow-[0_0_0_1px_rgba(17,17,17,0.06)]">
         <span className="h-1 w-10 rounded-full bg-gradient-to-r from-grad-a to-grad-b" />
         <span className="text-[16px] font-bold leading-tight">Primera reunión</span>
@@ -1080,49 +1080,114 @@ function PantallaPaso({ i }) {
   return <PilatesScreen />;
 }
 
-function Trabajamos() {
-  const [step, setStep] = useState(0);
+// Aviso flotante de cada paso. lado: dónde aparece respecto del teléfono.
+const AVISOS_PASO = [
+  { icon: "cal", app: "Calendario", title: "Reunión con PULSE", body: "Martes 4 · 10:00 · Videollamada", time: "ahora", lado: "der" },
+  { icon: "wa", app: "WhatsApp", title: "Laura · Estudio Arrel", body: "Quiero que las alumnas reserven solas.", time: "10:09", lado: "der" },
+  { icon: "pulse", app: "PULSE", title: "Presupuesto enviado", body: "Versión 1, hecha a tu medida", time: "ahora", lado: "izq" },
+  { icon: "pulse", app: "PULSE", title: "Tu prototipo está listo", body: "Pruébalo desde el móvil y dinos qué cambiarías.", time: "ahora", lado: "der" },
+  { icon: "pulse", app: "PULSE", title: "2 cambios aplicados", body: "Botón más grande y lista de espera.", time: "hace 1 min", lado: "der" },
+  { icon: "pulse", app: "Arrel Reservas", title: "Primera reserva", body: "Reformer · jueves 9:00", time: "ahora", lado: "izq" },
+];
+
+function TrabajamosMovil() {
   return (
-    <section id="trabajamos" aria-labelledby="trabajamos-title" className="relative scroll-mt-16 bg-papel">
-      <div className="container-page grid gap-12 py-24 md:py-36 lg:grid-cols-[1.05fr_0.95fr] lg:gap-16">
-        <div className="flex min-w-0 flex-col gap-10 lg:gap-0">
-          <div className="lg:pb-16">
-            <SectionTitle id="trabajamos-title" title="¿Cómo trabajamos?" lead="Cada negocio es distinto, pero el camino es siempre el mismo: primero escuchamos, después diseñamos." />
+    <section id="trabajamos" aria-labelledby="trabajamos-title-m" className="scroll-mt-16 bg-papel">
+      <div className="container-page flex flex-col gap-10 py-24">
+        <SectionTitle id="trabajamos-title-m" title="¿Cómo trabajamos?" />
+        <ol className="flex flex-col gap-3">
+          {PASOS.map((p, i) => (
+            <li key={p.t} className="flex gap-4 rounded-[22px] bg-white p-5">
+              <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-grad-a to-grad-b text-[14px] font-bold text-tinta">{i + 1}</span>
+              <span className="flex flex-col gap-1 pt-1">
+                <span className="text-[18px] font-bold leading-tight tracking-[-0.02em]">{p.t}</span>
+                <span className="text-[15px] leading-relaxed text-gris-500">{p.d}</span>
+              </span>
+            </li>
+          ))}
+        </ol>
+      </div>
+    </section>
+  );
+}
+
+// Escritorio: la sección queda fija y cada tramo de scroll es un paso con su propio movimiento del teléfono.
+function TrabajamosEscritorio() {
+  const ref = useRef(null);
+  const [step, setStep] = useState(0);
+  const { scrollYProgress: p } = useScroll({ target: ref, offset: ["start start", "end end"] });
+  const n = PASOS.length;
+  useMotionValueEvent(p, "change", (v) => setStep(Math.min(n - 1, Math.max(0, Math.floor(v * n)))));
+
+  const sp = { stiffness: 80, damping: 20, mass: 0.7 };
+  const at = PASOS.map((_, i) => i / (n - 1));
+  const x = useSpring(useTransform(p, at, [0, -150, 150, 0, -120, 0]), sp);
+  const y = useSpring(useTransform(p, at, [24, 0, -12, -6, 12, 0]), sp);
+  const rot = useSpring(useTransform(p, at, [-3, -8, 7, 0, -5, 0]), sp);
+  const sc = useSpring(useTransform(p, at, [0.94, 1, 1, 1.07, 1, 1.03]), sp);
+  const bar = useTransform(p, [0, 1], [0, 1]);
+  const aviso = AVISOS_PASO[step];
+
+  return (
+    <section id="trabajamos" ref={ref} aria-labelledby="trabajamos-title" className="relative h-[300vh] bg-papel">
+      <div className="sticky top-16 flex h-[calc(100vh-64px)] items-center overflow-hidden">
+        <div className="container-page grid grid-cols-[0.85fr_1.15fr] items-center gap-10">
+          <div className="flex min-w-0 flex-col gap-10">
+            <SectionTitle id="trabajamos-title" title="¿Cómo trabajamos?" />
+            <div className="flex gap-6">
+              <div className="relative w-[2px] shrink-0 overflow-hidden rounded-full bg-gris-200" aria-hidden="true">
+                <motion.div style={{ scaleY: bar }} className="absolute inset-0 origin-top bg-gradient-to-b from-grad-a to-grad-b" />
+              </div>
+              <ol className="flex flex-col gap-4">
+                {PASOS.map((s, i) => (
+                  <li key={s.t} className="flex flex-col gap-1.5">
+                    <span className="flex items-baseline gap-3">
+                      <motion.span animate={{ color: i <= step ? "#C2410C" : "#B8B8B4" }} transition={{ duration: 0.4 }} className="w-5 shrink-0 text-[14px] font-bold tnum">{i + 1}</motion.span>
+                      <motion.span animate={{ color: i === step ? "#111111" : "#B8B8B4" }} transition={{ duration: 0.4 }} className="text-[clamp(1.1rem,1.6vw,1.375rem)] font-bold leading-tight tracking-[-0.025em]">{s.t}</motion.span>
+                    </span>
+                    <AnimatePresence initial={false}>
+                      {i === step && (
+                        <motion.p initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} exit={{ height: 0, opacity: 0 }} transition={{ duration: 0.4, ease }}
+                          className="max-w-[40ch] overflow-hidden pl-8 text-[15.5px] leading-relaxed text-gris-500">
+                          {s.d}
+                        </motion.p>
+                      )}
+                    </AnimatePresence>
+                  </li>
+                ))}
+              </ol>
+            </div>
           </div>
-          <ol className="relative flex flex-col gap-4 lg:gap-0">
-            <span aria-hidden="true" className="absolute bottom-6 left-[19px] top-6 hidden w-[2px] rounded-full bg-gris-200 lg:block" />
-            <motion.span aria-hidden="true" className="absolute left-[19px] top-6 hidden w-[2px] origin-top rounded-full bg-gradient-to-b from-grad-a to-grad-b lg:block"
-              animate={{ height: `calc((100% - 3rem) * ${step / (PASOS.length - 1)})` }} transition={{ duration: 0.5, ease }} />
-            {PASOS.map((p, i) => (
-              <motion.li key={p.t} onViewportEnter={() => setStep(i)} viewport={{ margin: "-45% 0px -45% 0px" }}
-                className={`relative flex gap-5 rounded-[22px] bg-white p-5 transition-opacity duration-500 lg:min-h-[42vh] lg:items-center lg:bg-transparent lg:p-0 ${i === step ? "" : "lg:opacity-35"}`}>
-                <span className={`relative z-10 flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-[15px] font-bold transition-colors duration-500 bg-gradient-to-br from-grad-a to-grad-b text-tinta ${i <= step ? "" : "lg:bg-none lg:bg-white lg:text-gris-500 lg:ring-1 lg:ring-gris-200"}`}>{i + 1}</span>
-                <span className="flex flex-col gap-1.5 pt-1.5 lg:pt-0">
-                  <span className="text-[clamp(1.25rem,2.2vw,1.75rem)] font-bold leading-tight tracking-[-0.03em]">{p.t}</span>
-                  <span className="max-w-[42ch] text-[16px] leading-relaxed text-gris-500">{p.d}</span>
-                </span>
-              </motion.li>
-            ))}
-          </ol>
-        </div>
-        <div className="relative hidden lg:block">
-          <div className="sticky top-24 flex h-[calc(100vh-8rem)] items-center justify-center">
-            <Blob className="left-[calc(50%-240px)] top-[calc(50%-240px)] h-[480px] w-[480px]" color="rgba(255,79,0,0.18)" />
-            <div className="relative">
+
+          <div className="relative flex h-[560px] origin-center scale-[0.8] items-center justify-center lg:scale-[0.9] xl:scale-100">
+            <Blob className="left-[calc(50%-260px)] top-[calc(50%-260px)] h-[520px] w-[520px]" color="rgba(255,79,0,0.18)" />
+            <motion.div style={{ x, y, rotate: rot, scale: sc }} className="relative z-10">
               <Phone label={`Paso ${step + 1}: ${PASOS[step].t}`}>
                 <AnimatePresence mode="wait" initial={false}>
-                  <motion.div key={step} className="h-full" initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -12 }} transition={{ duration: 0.4, ease }}>
+                  <motion.div key={step} className="h-full" initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} transition={{ duration: 0.35, ease }}>
                     <PantallaPaso i={step} />
                   </motion.div>
                 </AnimatePresence>
               </Phone>
-              <span className="absolute -right-6 -top-4 rounded-full bg-tinta px-3 py-1.5 text-[12px] font-semibold text-white shadow-lg tnum">{step + 1} / {PASOS.length}</span>
-            </div>
+              <span className="absolute -right-5 -top-4 rounded-full bg-tinta px-3 py-1.5 text-[12px] font-semibold text-white shadow-lg tnum">{step + 1} / {n}</span>
+            </motion.div>
+            <AnimatePresence mode="wait">
+              <motion.div key={step} aria-hidden="true"
+                initial={{ opacity: 0, x: aviso.lado === "der" ? 30 : -30, y: 10, scale: 0.96 }} animate={{ opacity: 1, x: 0, y: 0, scale: 1 }} exit={{ opacity: 0, y: -12, scale: 0.97 }} transition={{ duration: 0.45, ease, delay: 0.15 }}
+                className={`pointer-events-none absolute z-20 ${aviso.lado === "der" ? "right-0 top-[90px]" : "left-0 bottom-[110px]"}`}>
+                <Notif icon={aviso.icon} app={aviso.app} title={aviso.title} body={aviso.body} time={aviso.time} className="w-[270px]" />
+              </motion.div>
+            </AnimatePresence>
           </div>
         </div>
       </div>
     </section>
   );
+}
+
+function Trabajamos() {
+  const simple = useSimple();
+  return simple ? <TrabajamosMovil /> : <TrabajamosEscritorio />;
 }
 
 /* ---------------------------------------------------------------------
