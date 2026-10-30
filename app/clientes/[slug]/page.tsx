@@ -11,7 +11,7 @@ const PROYECTOS: Record<string, { titulo: string; descripcion: string }> = {
   },
   daily: {
     titulo: "DAILY",
-    descripcion: "App web de finanzas personales multidivisa: cuentas, gastos, pagos del mes y reportes en PDF y Excel.",
+    descripcion: "App web de finanzas personales multidivisa: cuentas en pesos, dólares y euros, importación de extractos, deudas, viajes, inversiones e informes en PDF.",
   },
   "daiana-marlene": {
     titulo: "Daiana Marlene",

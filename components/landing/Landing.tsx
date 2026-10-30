@@ -1492,15 +1492,128 @@ function DailyScreen({ s }) {
         </div>
       </>
     );
+  } else if (s === "importar") {
+    body = (
+      <>
+        {cab("Importar")}
+        <div className="mx-3 mt-3 flex flex-col gap-2.5 rounded-[20px] bg-white p-3.5">
+          <div className="flex items-center gap-2.5 rounded-[14px] border border-dashed p-2.5" style={{ borderColor: "#C9C3FF", background: "#F6F5FF" }}>
+            <span className="flex h-8 w-8 items-center justify-center rounded-[9px] text-[9px] font-bold text-white" style={{ background: "#1F9D6B" }}>XLSX</span>
+            <span className="flex min-w-0 flex-1 flex-col"><span className="truncate text-[11px] font-bold" style={{ color: DLY.tinta }}>extracto_octubre.xlsx</span><span className="text-[9px]" style={{ color: DLY.gris }}>Excel o CSV de cualquier banco</span></span>
+            <span className="flex h-5 w-5 items-center justify-center rounded-full text-white" style={{ background: DLY.violeta }}>{OK}</span>
+          </div>
+          <span className="text-[9.5px] font-semibold" style={{ color: DLY.gris }}>Moneda de este extracto</span>
+          <div className="flex gap-1.5">{["ARS", "USD", "EUR"].map((c) => <span key={c} className="rounded-full px-2.5 py-0.5 text-[9.5px] font-bold" style={c === "ARS" ? { background: DLY.violeta, color: "#fff" } : { background: DLY.fondo, color: DLY.gris }}>{c}</span>)}</div>
+          {[["Fecha", "Columna A"], ["Concepto", "Columna B"], ["Monto", "Columna D"]].map(([k, v]) => (
+            <span key={k} className="flex items-center justify-between rounded-[10px] px-2.5 py-2 text-[10.5px]" style={{ background: DLY.fondo, color: DLY.tinta }}><b>{k}</b><span style={{ color: DLY.gris }}>{v} ▾</span></span>
+          ))}
+          <span className="rounded-[12px] py-2.5 text-center text-[11.5px] font-bold text-white" style={{ background: DLY.violeta }}>Importar 42 movimientos</span>
+        </div>
+      </>
+    );
+  } else if (s === "graficos") {
+    const v = [42, 46, 44, 52, 50, 58, 55, 61, 66, 63, 70, 76];
+    body = (
+      <>
+        {cab("Gráficos")}
+        <div className="mx-3 mt-3 flex flex-col gap-2 rounded-[20px] bg-white p-3.5">
+          <span className="text-[11.5px] font-bold" style={{ color: DLY.tinta }}>Evolución de capital</span>
+          <span className="text-[9.5px]" style={{ color: DLY.gris }}>Últimos 12 meses · USD</span>
+          <div className="flex h-[120px] items-end gap-[3px] pt-2">
+            {v.map((x, i) => <motion.span key={i} className="flex-1 rounded-t-[4px]" style={{ background: i === v.length - 1 ? DLY.violeta : "#C9C3FF" }} initial={{ height: 0 }} animate={{ height: `${x}%` }} transition={{ duration: 0.6, delay: i * 0.03 }} />)}
+          </div>
+          <div className="flex justify-between text-[8.5px]" style={{ color: DLY.gris }}><span>Nov</span><span>May</span><span>Oct</span></div>
+        </div>
+        <div className="mx-3 mt-2 flex items-center justify-between rounded-[16px] bg-white px-3 py-2.5">
+          <span className="text-[10px]" style={{ color: DLY.gris }}>Mayor caída del período</span>
+          <span className="rounded-full px-2 py-0.5 text-[10px] font-bold" style={{ background: "#FDECEC", color: "#D04545" }}>− 4,5 %</span>
+        </div>
+      </>
+    );
+  } else if (s === "deudas") {
+    body = (
+      <>
+        {cab("Deudas")}
+        <div className="mx-3 mt-3 grid grid-cols-2 gap-2">
+          <div className="flex flex-col rounded-[16px] bg-white p-3"><span className="text-[9px] font-semibold tracking-[0.04em]" style={{ color: DLY.gris }}>ME DEBEN</span><span className="text-[14px] font-bold tnum" style={{ color: "#1F9D6B" }}>US$ 120</span></div>
+          <div className="flex flex-col rounded-[16px] bg-white p-3"><span className="text-[9px] font-semibold tracking-[0.04em]" style={{ color: DLY.gris }}>DEBO</span><span className="text-[14px] font-bold tnum" style={{ color: "#D04545" }}>AR$ 35.000</span></div>
+        </div>
+        <div className="mt-2.5 flex flex-col gap-2 px-3">
+          {[["Cena de cumpleaños", "Me deben", "US$ 80", "#1F9D6B"], ["Entradas del concierto", "Me deben", "US$ 40", "#1F9D6B"], ["Préstamo de mamá", "Debo", "AR$ 35.000", "#D04545"]].map(([n, t, v, c]) => (
+            <div key={n} className="flex items-center gap-2.5 rounded-[16px] bg-white px-3 py-2.5">
+              <span className="flex min-w-0 flex-1 flex-col"><span className="truncate text-[11.5px] font-bold" style={{ color: DLY.tinta }}>{n}</span><span className="text-[9.5px]" style={{ color: DLY.gris }}>{t}</span></span>
+              <span className="text-[11px] font-bold tnum" style={{ color: c }}>{v}</span>
+            </div>
+          ))}
+        </div>
+      </>
+    );
+  } else if (s === "viajes") {
+    body = (
+      <>
+        {cab("Viajes")}
+        <div className="mx-3 mt-3 flex flex-col gap-2 rounded-[20px] p-4 text-white" style={{ background: DLY.tinta }}>
+          <span className="text-[10px] text-white/60">12 – 18 de noviembre</span>
+          <span className="text-[16px] font-bold">Lisboa, Portugal</span>
+          <div className="flex justify-between text-[10px]"><span className="text-white/60">Gastado <b className="text-white tnum">€ 640</b></span><span className="text-white/60">Presupuesto <b className="text-white tnum">€ 900</b></span></div>
+          <span className="h-2 overflow-hidden rounded-full bg-white/15"><motion.span className="block h-full rounded-full" style={{ background: "#8B7BFF" }} initial={{ width: 0 }} animate={{ width: "71%" }} transition={{ duration: 0.8 }} /></span>
+        </div>
+        <div className="mt-2.5 flex flex-col gap-2 px-3">
+          {[["Hotel", "€ 320"], ["Comidas", "€ 180"], ["Transporte", "€ 140"]].map(([n, v]) => (
+            <div key={n} className="flex items-center justify-between rounded-[14px] bg-white px-3 py-2.5 text-[11.5px]"><span className="font-bold" style={{ color: DLY.tinta }}>{n}</span><span className="font-bold tnum" style={{ color: DLY.tinta }}>{v}</span></div>
+          ))}
+        </div>
+      </>
+    );
+  } else if (s === "cartera") {
+    const seg = [["Acciones", 55, "#4B3AD6"], ["Bonos", 30, "#8B7BFF"], ["Fondos", 15, "#C9C3FF"]];
+    let acc = 0;
+    body = (
+      <>
+        {cab("Inversiones")}
+        <div className="mx-3 mt-3 flex items-center gap-3 rounded-[20px] bg-white p-3.5">
+          <svg viewBox="0 0 42 42" className="h-20 w-20 shrink-0 -rotate-90" aria-hidden="true">
+            {seg.map(([n, p, c]) => { const el = <circle key={n} cx="21" cy="21" r="15.9" fill="none" stroke={c} strokeWidth="6" strokeDasharray={`${p} ${100 - p}`} strokeDashoffset={-acc} />; acc += p; return el; })}
+          </svg>
+          <div className="flex flex-col gap-0.5">
+            <span className="text-[9.5px]" style={{ color: DLY.gris }}>Total invertido</span>
+            <span className="text-[16px] font-bold tnum" style={{ color: DLY.tinta }}>US$ 6.150</span>
+            <span className="text-[9px]" style={{ color: DLY.gris }}>con comisiones</span>
+          </div>
+        </div>
+        <div className="mt-2.5 flex flex-col gap-2 px-3">
+          {[["Compra", "10 acciones", "− US$ 480"], ["Venta", "5 bonos", "+ US$ 520"], ["Compra", "Fondo común", "− US$ 300"]].map(([t, d, v], i) => (
+            <div key={i} className="flex items-center gap-2.5 rounded-[14px] bg-white px-3 py-2.5">
+              <span className="rounded-full px-2 py-0.5 text-[9px] font-bold" style={t === "Compra" ? { background: "#EEEDFB", color: DLY.violeta } : { background: "#E6F6EE", color: "#1F9D6B" }}>{t}</span>
+              <span className="flex-1 text-[11px] font-semibold" style={{ color: DLY.tinta }}>{d}</span>
+              <span className="text-[10.5px] font-bold tnum" style={{ color: DLY.tinta }}>{v}</span>
+            </div>
+          ))}
+        </div>
+      </>
+    );
   } else {
     body = (
       <>
-        {cab("Reportes")}
-        <div className="mx-3 mt-3 flex flex-col gap-2.5 rounded-[20px] bg-white p-4">
-          <span className="text-[10px]" style={{ color: DLY.gris }}>Período</span>
-          <span className="rounded-[12px] px-3 py-2 text-[12px] font-bold" style={{ background: DLY.fondo, color: DLY.tinta }}>Octubre 2026</span>
-          <span className="mt-1 rounded-[12px] py-2.5 text-center text-[11.5px] font-bold text-white" style={{ background: DLY.violeta }}>Exportar PDF</span>
-          <span className="rounded-[12px] py-2.5 text-center text-[11.5px] font-bold" style={{ background: DLY.fondo, color: DLY.tinta }}>Exportar Excel</span>
+        {cab("Informes")}
+        <div className="mx-3 mt-3 flex flex-col gap-2 rounded-[20px] bg-white p-3.5">
+          <span className="text-[11px] font-bold" style={{ color: DLY.tinta }}>Gasto por entidad</span>
+          {[["Banco", 42], ["Tarjeta de crédito", 30], ["Billetera virtual", 28]].map(([n, p]) => (
+            <div key={n} className="flex flex-col gap-1">
+              <span className="flex justify-between text-[9.5px]" style={{ color: DLY.gris }}><span>{n}</span><span className="tnum">{p} %</span></span>
+              <span className="h-1.5 overflow-hidden rounded-full" style={{ background: DLY.fondo }}><span className="block h-full rounded-full" style={{ width: `${p}%`, background: DLY.violeta }} /></span>
+            </div>
+          ))}
+          <span className="mt-1 rounded-[12px] py-2.5 text-center text-[11.5px] font-bold text-white" style={{ background: DLY.violeta }}>Generar PDF mensual</span>
+        </div>
+        <div className="mt-2.5 flex flex-col gap-2 px-3">
+          {["Octubre 2026", "Septiembre 2026"].map((m) => (
+            <div key={m} className="flex items-center gap-2.5 rounded-[14px] bg-white px-3 py-2.5">
+              <span className="flex h-7 w-7 items-center justify-center rounded-[8px] text-[8px] font-bold text-white" style={{ background: "#D04545" }}>PDF</span>
+              <span className="flex-1 text-[11px] font-bold" style={{ color: DLY.tinta }}>Reporte {m}</span>
+              <span className="text-[13px]" style={{ color: DLY.violeta }}>↓</span>
+            </div>
+          ))}
         </div>
       </>
     );
@@ -1652,20 +1765,23 @@ const CLIENTES = [
     logo: "/clientes/daily.svg", logoFondo: "#111114", fondo: "#F5F5F7", fondoApp: "#F5F5F7", brillo: "rgba(75,58,214,0.3)", App: DailyScreen,
     resumen: "Una app web de finanzas personales que reúne todas las cuentas, en pesos, dólares y euros, en un solo lugar.",
     descripcion: [
-      "Junta bancos, billeteras virtuales, tarjetas, inversiones y efectivo, y muestra el saldo total y cómo evoluciona. Separa los gastos por categoría y lleva al día los pagos de cada mes y las deudas.",
-      "Genera reportes en PDF y Excel, se protege con PIN y funciona en modo claro y oscuro. Se instala en el móvil como cualquier app.",
+      "Reúne bancos, billeteras virtuales, tarjetas, inversiones y efectivo en pesos, dólares y euros, y muestra cómo evoluciona el capital mes a mes. Los movimientos se cargan a mano o se importan desde el extracto del banco, en Excel o CSV.",
+      "Lleva los pagos de cada mes, las deudas, el presupuesto de cada viaje y la cartera de inversiones con sus comisiones. Genera un informe mensual en PDF, avisa de los vencimientos, se protege con PIN y se instala en el móvil como cualquier app.",
     ],
     // TODO: reemplazar por capturas reales cuando estén.
     portada: { s: "inicio" },
     flujo: [{ p: { s: "pin" }, toque: ["50%", "62%"] }, { p: { s: "inicio" }, toque: ["50%", "48%"] }, { p: { s: "bancos" }, toque: ["50%", "40%"] }],
     funciones: [
-      { t: "Todas tus cuentas", d: "Bancos, billeteras, tarjetas, inversiones y efectivo en una sola lista.", p: { s: "bancos" } },
-      { t: "Saldo total", d: "El total de todo lo que tienes y cómo evoluciona mes a mes.", p: { s: "inicio" }, foco: { y: 17, h: 43 } },
-      { t: "Pesos, dólares y euros", d: "Cambia de moneda con un toque y ve cada saldo en la suya.", p: { s: "inicio" }, foco: { y: 38, h: 7, x: 8, w: 52 } },
+      { t: "Todas tus cuentas", d: "Bancos, billeteras virtuales, tarjetas, inversiones y efectivo en una sola lista.", p: { s: "bancos" } },
+      { t: "Pesos, dólares y euros", d: "El saldo total en ARS, USD o EUR, con un toque para cambiar de moneda.", p: { s: "inicio" } },
+      { t: "Importar extractos", d: "Sube el Excel o CSV de tu banco y los movimientos se cargan solos.", p: { s: "importar" } },
+      { t: "Evolución del capital", d: "Cómo crece tu dinero mes a mes y año a año, con la mayor caída del período.", p: { s: "graficos" } },
       { t: "Gastos por categoría", d: "En qué se va el dinero, separado por categorías.", p: { s: "categorias" } },
-      { t: "Pagos del mes", d: "Lo que vence, lo que ya pagaste y lo que falta.", p: { s: "pagos" } },
-      { t: "Reportes en PDF y Excel", d: "Exporta el resumen de cualquier mes en un toque.", p: { s: "reportes" } },
-      { t: "Acceso con PIN", d: "Tus finanzas quedan protegidas aunque presten el móvil.", p: { s: "pin" } },
+      { t: "Pagos del mes", d: "Lo que vence, lo que ya pagaste y lo que falta, con avisos de vencimiento.", p: { s: "pagos" } },
+      { t: "Deudas", d: "Lo que te deben y lo que debes, en cualquier moneda.", p: { s: "deudas" } },
+      { t: "Viajes con presupuesto", d: "Un presupuesto por viaje, sus gastos y un aviso si te pasas.", p: { s: "viajes" } },
+      { t: "Inversiones", d: "Compras y ventas con sus comisiones y la composición de tu cartera.", p: { s: "cartera" } },
+      { t: "Informes en PDF", d: "Un informe mensual con el balance y cada movimiento, listo para descargar.", p: { s: "reportes" } },
     ],
   },
   {
@@ -1886,7 +2002,7 @@ function FuncionesEscritorio({ c }) {
     </ul>
   );
   return (
-    <section ref={ref} aria-labelledby="funciones-title" className="relative bg-white" style={{ height: `${100 + n * 38}vh` }}>
+    <section ref={ref} aria-labelledby="funciones-title" className="relative bg-white" style={{ height: `${100 + n * (n > 8 ? 30 : 38)}vh` }}>
       <div className="sticky top-16 flex h-[calc(100vh-64px)] items-center overflow-hidden">
         <Blob className="left-[calc(50%-300px)] top-[18%] h-[600px] w-[600px]" color={c.brillo} />
         <div className="container-page relative flex flex-col items-center gap-6">
