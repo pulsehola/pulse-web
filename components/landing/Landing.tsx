@@ -38,70 +38,90 @@ const CASOS = [
   {
     id: "stock", word: "tu stock", tab: "Almacén y comercio", corto: "Almacén",
     titulo: "Entradas, salidas y avisos antes de quedarte sin nada.",
-    texto: "Cada movimiento queda registrado y ves qué queda en cada momento. Cuando algo baja del mínimo, te avisa a vos y a quien tenga que pedirlo.",
+    texto: "Cada movimiento queda registrado y ves qué queda en cada momento. Cuando algo baja del mínimo, te avisa a ti y a quien tenga que pedirlo.",
     puntos: ["Entradas y salidas en un toque", "Alertas de stock bajo", "Historial de cada movimiento", "Exporta a Excel cuando quieras"],
     para: "Logística, comercios, distribución, e-commerce",
   },
   {
     id: "agenda", word: "tus citas", tab: "Profesional independiente", corto: "Profesional",
     titulo: "Tu agenda llena, y los avisos salen solos.",
-    texto: "Tus clientes reservan desde un enlace, la cita aparece en tu calendario y el recordatorio les llega por WhatsApp. Vos solo atendés.",
+    texto: "Tus clientes reservan desde un enlace, la cita aparece en tu calendario y el recordatorio les llega por WhatsApp. Tú solo atiendes.",
     puntos: ["Reservas desde un enlace", "Recordatorios por WhatsApp", "Citas en tu Google Calendar", "Huecos libres a la vista"],
     para: "Fisios, peluquerías, asesoras, terapeutas",
   },
 ];
 
+// Cómo trabajamos: proceso real, en orden.
 const PASOS = [
-  { t: "Hoy, todo pasa por WhatsApp.", d: "Preguntas por huecos, cambios de hora y confirmaciones. Mensajes que contestás a mano, a cualquier hora." },
-  { t: "Lo convertimos en pantallas simples.", d: "Partimos de cómo trabajás y lo dibujamos. Lo ves y lo probás antes de programar nada." },
-  { t: "Tus clientes reservan solos.", d: "Eligen hueco, ven las plazas libres y usan su bono. Vos lo ves todo en tu panel." },
-  { t: "Y WhatsApp trabaja para vos.", d: "Los recordatorios y las confirmaciones salen solos. Tus clientes responden donde ya están." },
+  { t: "Coordinamos una reunión", d: "Una primera charla, por videollamada o en persona, para conocer tu negocio." },
+  { t: "Nos cuentas tus necesidades específicas", d: "Cómo trabajas hoy, qué te quita tiempo y qué te gustaría resolver." },
+  { t: "Presupuestamos", d: "Cada negocio o proyecto es único, así que el presupuesto también se hace a medida." },
+  { t: "Diseñamos un prototipo", d: "Ves y pruebas las pantallas de tu app antes de que la programemos." },
+  { t: "Ajustamos detalles a partir de tu feedback", d: "Afinamos lo que haga falta hasta que encaje con tu día a día." },
+  { t: "¡Y listo! Puedes comenzar a usarla", d: "Tu app queda lista para ti, tu equipo y tus clientes." },
+];
+
+// Soluciones: lo que puede resolver una app de PULSE.
+const SOLUCIONES = [
+  { t: "Reservas", d: "Tus clientes reservan solos, a cualquier hora, y ven las plazas libres al momento." },
+  { t: "Citas", d: "Confirmaciones y recordatorios automáticos para que nadie se olvide de venir." },
+  { t: "Agendas", d: "El día de cada persona del equipo en una pantalla, sin choques ni dobles reservas." },
+  { t: "Stock", d: "Entradas, salidas y un aviso antes de que algo se agote." },
+  { t: "Presupuestos", d: "Prepara y envía presupuestos en minutos, con tu marca." },
+  { t: "Datos", d: "Clientes, pedidos e historial ordenados en un solo sitio, siempre a mano." },
+  { t: "Dashboards", d: "Los números de tu negocio de un vistazo: reservas, ventas y ocupación." },
+  { t: "Análisis", d: "Qué se vende más, qué horarios se llenan y dónde puedes mejorar." },
+  { t: "Soporte", d: "Seguimos a tu lado después de la entrega, para resolver dudas y hacer ajustes." },
 ];
 
 // Lo que hace cada integración, dicho tal cual. TODO: confirmar alcance técnico antes de publicar.
 const INTEGRACIONES = [
-  { id: "wa", n: "WhatsApp", d: "Recordatorios automáticos y un asistente que contesta por vos.", lado: "izq" },
+  { id: "wa", n: "WhatsApp", d: "Recordatorios automáticos y un asistente que contesta por ti.", lado: "izq" },
   { id: "ig", n: "Instagram", d: "Un enlace para reservar o pedir desde tu bio y tus historias.", lado: "izq" },
-  { id: "sheets", n: "Excel y Google Sheets", d: "Importás lo que ya tenés y exportás cuando quieras.", lado: "der" },
+  { id: "sheets", n: "Excel y Google Sheets", d: "Importas lo que ya tienes y exportas cuando quieras.", lado: "der" },
   { id: "cal", n: "Google Calendar", d: "Cada cita aparece en tu calendario de siempre.", lado: "der" },
 ];
 
 const BENEFICIOS = [
-  { t: "Funciona como trabajás vos", d: "No te adaptás a pantallas pensadas para otro negocio. La app sigue tus pasos, en tu orden." },
+  { t: "Funciona como trabajas tú", d: "No te adaptas a pantallas pensadas para otro negocio. La app sigue tus pasos, en tu orden." },
   { t: "Todo en un solo sitio", d: "Reservas, clientes, stock y números juntos, en vez de cinco herramientas que no se hablan." },
   { t: "Tu marca y tus datos", d: "La app lleva tu nombre y tus colores. La información de tu negocio es tuya." },
-  { t: "El equipo crece, la cuota no", d: "Sumar a una persona más no te sube la factura, como pasa con las apps que cobran por usuario." },
+  { t: "Sin cuotas por usuario", d: "Sumar a una persona más a tu equipo no te cuesta nada extra, como pasa con las apps que cobran por usuario." },
 ];
 
 // Comparativa: PULSE frente a software por suscripción y app nativa de tiendas.
-// TODO: confirmar "mantenimiento fijo" y "sin comisiones de PULSE" con el modelo de precios real.
+// TODO: confirmar "sin cuotas de mantenimiento ni comisiones" con el modelo de precios real (alojamiento y mensajes de WhatsApp).
 const COMPARATIVA = {
   alt: [
     { t: "Software de pago mensual", sub: "Plataformas por suscripción", corto: "Software mensual" },
     { t: "App nativa tradicional", sub: "App Store y Google Play", corto: "App nativa" },
   ],
   rows: [
-    { t: "A medida de tu negocio", a: "Rígido: te tenés que adaptar a sus funciones estándar.", b: "A medida, pero con un coste muy alto.", p: "Hecha a la medida de cómo trabajás de verdad." },
-    { t: "Costes", a: "Cuota mensual y, en muchos casos, comisión por cada pago o reserva.", b: "Desarrollo de miles de euros, normalmente doble: uno para iPhone y otro para Android.", p: "Un solo desarrollo y un mantenimiento fijo. Sin comisiones de PULSE sobre tus ventas." },
+    { t: "A medida de tu negocio", a: "Rígido: te tienes que adaptar a sus funciones estándar.", b: "A medida, pero con un coste muy alto.", p: "Hecha a la medida de cómo trabajas de verdad." },
+    { t: "Costes", a: "Cuota mensual y, en muchos casos, comisión por cada pago o reserva.", b: "Desarrollo de miles de euros, normalmente doble: uno para iPhone y otro para Android.", p: "Pagas el desarrollo y listo: sin gastos fijos de mantenimiento ni comisiones sobre tus ventas." },
     { t: "Cómo entra tu cliente", a: "Tiene que descargar otra app más, a menudo con la marca de la plataforma.", b: "La tiene que buscar en la tienda, descargarla y mantenerla actualizada.", p: "Con un toque desde un enlace, directo a la pantalla de inicio." },
     { t: "Memoria y batería", a: "Una app más instalada, ocupando espacio en el móvil.", b: "Ocupa espacio y puede ir lenta en móviles modestos.", p: "Muy ligera: pesa menos que una foto y apenas gasta batería." },
-    { t: "Propiedad de los datos", a: "Tus datos viven en su plataforma. Si te vas, sacarlos puede ser difícil.", b: "Dependés de las normas de Apple y Google para publicar y actualizar.", p: "Tus datos son tuyos y te los podés llevar cuando quieras." },
-    { t: "Integraciones", a: "Solo las que la plataforma decida ofrecer.", b: "Posibles, pero complejas y caras de programar.", p: "Conectada con lo que ya usás: WhatsApp, Excel, Google Calendar y más." },
-    { t: "Tu marca y diseño", a: "Suele llevar la imagen de la plataforma.", b: "Tu marca, pero sujeta a la aprobación de las tiendas.", p: "Tu marca, tus colores y tu nombre, solo para vos." },
+    { t: "Propiedad de los datos", a: "Tus datos viven en su plataforma. Si te vas, sacarlos puede ser difícil.", b: "Dependes de las normas de Apple y Google para publicar y actualizar.", p: "Tus datos son tuyos y te los puedes llevar cuando quieras." },
+    { t: "Integraciones", a: "Solo las que la plataforma decida ofrecer.", b: "Posibles, pero complejas y caras de programar.", p: "Conectada con lo que ya usas: WhatsApp, Excel, Google Calendar y más." },
+    { t: "Tu marca y diseño", a: "Suele llevar la imagen de la plataforma.", b: "Tu marca, pero sujeta a la aprobación de las tiendas.", p: "Tu marca, tus colores y tu nombre, solo para ti." },
   ],
 };
 
-// TODO revisar antes de publicar: presupuesto cerrado, mantenimiento, coste de WhatsApp, alcance del asistente y propiedad de datos son compromisos.
+// TODO revisar antes de publicar: las respuestas 1, 2 y 3 son una propuesta de redacción.
 const FAQS = [
-  { q: "¿Cuánto cuesta una app a medida?", a: "Depende de lo que tenga que hacer. Después de la primera llamada te pasamos un presupuesto cerrado y por escrito. Lo habitual es empezar con una versión pequeña, con lo imprescindible, y sumar partes cuando ya la estás usando. Así la inversión inicial es menor." },
-  { q: "¿Cuánto tiempo se tarda?", a: "La primera versión, la que ya podés usar con clientes, está en semanas y no en meses. Antes vas a ver y tocar las pantallas, para que no haya sorpresas al final." },
-  { q: "No sé nada de tecnología. ¿Es un problema?", a: "Para nada. Vos sabés cómo funciona tu negocio y eso es lo único que necesitamos. Del resto nos ocupamos nosotros, y te lo explicamos sin palabras técnicas." },
+  { q: "¿Qué es PULSE y cómo funciona?", a: "PULSE es un estudio que diseña y desarrolla apps web a medida para negocios. Nos cuentas cómo trabajas, diseñamos un prototipo, lo ajustamos contigo y te entregamos una app lista para usar, con tu marca y conectada a las herramientas que ya utilizas." },
+  { q: "¿Se puede integrar a mi sitio web?", a: "Sí. La app puede tener tu propio dominio (por ejemplo, reservas.tunegocio.com) y enlazarse desde tu web con un botón o desde el menú. Si tu web lo permite, también puede ir dentro de una de sus páginas. Y si no tienes web, la app funciona sola, con su propio enlace." },
+  { q: "¿Qué necesito para empezar?", a: "Solo saber qué te gustaría organizar. Si tienes listados en Excel, tu logo o los colores de tu marca, nos ayudan; si no, los preparamos contigo. Escríbenos y coordinamos una primera reunión." },
+  { q: "¿Cuánto cuesta una app a medida?", a: "Cada proyecto es único. Presupuestamos a medida en función de tus necesidades y de las dimensiones y la complejidad del proyecto. Lo habitual es empezar con una versión simple que contenga lo imprescindible, con la opción de añadir lo que sea necesario una vez que está en funcionamiento." },
+  { q: "No sé nada de tecnología. ¿Es un problema?", a: "Para nada. Tú sabes cómo funciona tu negocio y eso es lo único que necesitamos. Del resto nos ocupamos nosotros y te lo explicamos en detalle, sin tecnicismos." },
   { q: "¿Hay que descargarla de App Store o Google Play?", a: "No. Se abre con un enlace y se instala desde el navegador en el móvil o el ordenador, con su icono, como cualquier app. Funciona en iPhone y Android y envía notificaciones." },
-  { q: "¿Se conecta con WhatsApp, Instagram o mi Excel?", a: "Sí, con lo que tenga sentido para tu negocio. Los mensajes automáticos de WhatsApp usan la cuenta de WhatsApp Business, que tiene un coste por mensaje que cobra Meta; te lo explicamos antes de empezar. Lo que tengas en Excel lo pasamos a la app." },
-  { q: "¿El asistente de WhatsApp contesta solo? ¿Y si no sabe?", a: "Contesta solo a lo que configuramos juntos: reservas, horarios, bonos, pedidos o lo que necesite tu negocio, siempre con los datos reales de tu app. Cuando alguien pregunta algo fuera de eso, o pide hablar con una persona, te pasa la conversación a vos o a tu equipo." },
-  { q: "¿Va a ser fácil de usar para mi equipo y mis clientes?", a: "Es el objetivo principal. La diseñamos alrededor de las tareas que ya hacen todos los días y la probamos con ustedes antes de lanzarla. Si alguien necesita un manual, la cambiamos." },
-  { q: "¿Qué pasa después de entregarla?", a: "Seguimos ahí. La app necesita alojamiento y mantenimiento, con un coste mensual que te detallamos en el presupuesto desde el principio. Los cambios se hablan según los necesites." },
+  { q: "¿Es fácil de utilizar para mi equipo y mis clientes?", a: "Es el objetivo principal. La diseñamos alrededor de las tareas que ya hacen todos los días y la probamos con ustedes antes de lanzarla. Si alguien necesita un manual, la cambiamos." },
+  { q: "Una vez entregada, ¿cuentan con soporte técnico?", a: "Claro, quedamos a disposición para lo que necesites." },
 ];
+
+// Formulario de contacto: FormSubmit reenvía cada mensaje a CONTACTO.email.
+// El primer envío llega como email de activación a esa cuenta: hay que confirmarlo una vez.
+const FORM_ENDPOINT = `https://formsubmit.co/ajax/${CONTACTO.email}`;
 
 /* ---------------------------------------------------------------------
    UTILIDADES DE MOTION
@@ -208,11 +228,11 @@ function Eyebrow({ children, dark }) {
     </span>
   );
 }
-function SectionTitle({ eyebrow, title, lead, id, center }) {
+function SectionTitle({ eyebrow, title, lead, id, center, as = "h2" }) {
   return (
     <div className={`flex flex-col gap-5 ${center ? "items-center text-center" : ""}`}>
-      <Eyebrow>{eyebrow}</Eyebrow>
-      <RevealTitle id={id} className="max-w-[18ch] text-titulo">{title}</RevealTitle>
+      {eyebrow && <Eyebrow>{eyebrow}</Eyebrow>}
+      <RevealTitle as={as} id={id} className="max-w-[18ch] text-titulo">{title}</RevealTitle>
       {lead && <p className="max-w-entrada text-entrada text-gris-500">{lead}</p>}
     </div>
   );
@@ -377,7 +397,7 @@ function PilatesScreen() {
           );
         })}
       </div>
-      <Hint>Tocá una clase para reservarla</Hint>
+      <Hint>Toca una clase para reservarla</Hint>
       <Toast msg={msg} />
     </div>
   );
@@ -495,7 +515,7 @@ function StockScreen({ wide = false }) {
       ) : (
         <div className="mt-3 px-4">{lista}</div>
       )}
-      {!wide && <Hint>Usá + y − para mover stock</Hint>}
+      {!wide && <Hint>Usa + y − para mover stock</Hint>}
       <Toast msg={msg} />
     </div>
   );
@@ -541,7 +561,7 @@ function AgendaScreen() {
           </div>
         ))}
       </div>
-      <Hint>Tocá «Recordar» en una cita</Hint>
+      <Hint>Toca «Recordar» en una cita</Hint>
       <Toast msg={msg} />
     </div>
   );
@@ -550,50 +570,6 @@ function AgendaScreen() {
 /* ---------------------------------------------------------------------
    PANTALLAS · WhatsApp (lista de chats y conversación)
    --------------------------------------------------------------------- */
-const CHATS = [
-  { n: "Laura Puig", m: "¿Hay hueco el jueves a las 9?", t: "23:47", u: 2, c: "#F3D7C4" },
-  { n: "Marc Rovira", m: "Perdona, ¿me pasás a la tarde?", t: "23:31", u: 1, c: "#CDE3F1" },
-  { n: "Clara F.", m: "No puedo ir mañana 😕", t: "22:58", u: 3, c: "#E3DDF3" },
-  { n: "Jordi Pons", m: "¿Cuántas clases me quedan?", t: "22:14", u: 1, c: "#D7EEDC" },
-  { n: "Ana Roca", m: "¿Confirmamos lo del viernes?", t: "21:40", u: 2, c: "#F5E6B8" },
-  { n: "Grupo alumnas", m: "Sílvia: ¿alguien cambia turno?", t: "21:02", u: 14, c: "#E5E5E2" },
-];
-function WAChatList({ n = 6 }) {
-  return (
-    <div className="flex h-full flex-col bg-white font-sys text-wa-texto">
-      <StatusBar />
-      <div className="flex items-center justify-between px-4 pt-3">
-        <span className="text-[21px] font-bold tracking-[-0.01em]">Chats</span>
-        <span className="flex h-6 w-6 items-center justify-center rounded-full bg-wa-verde text-[15px] font-semibold leading-none text-white">+</span>
-      </div>
-      <div className="mx-4 mt-2 rounded-full bg-wa-barra px-3 py-1.5 text-[11px] text-wa-gris">Buscar</div>
-      <div className="mt-2 flex gap-1.5 px-4 text-[10px] font-medium">
-        <span className="rounded-full bg-[#E7FCE3] px-2.5 py-1 text-[#15603E]">Todos</span>
-        <span className="rounded-full bg-wa-barra px-2.5 py-1 text-wa-gris">No leídos {CHATS.slice(0, n).reduce((a, c) => a + c.u, 0)}</span>
-      </div>
-      <div className="mt-1 flex flex-col">
-        <AnimatePresence initial={false}>
-          {CHATS.slice(0, n).map((c) => (
-            <motion.div key={c.n} layout initial={{ opacity: 0, y: -12 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} transition={{ duration: 0.3, ease }} className="flex items-center gap-2.5 px-4 py-[7px]">
-              <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-[11px] font-semibold text-wa-texto/70" style={{ background: c.c }}>{c.n.split(" ").map((w) => w[0]).join("").slice(0, 2)}</span>
-              <span className="flex min-w-0 flex-1 flex-col border-b border-[#E9EDEF] pb-[7px]">
-                <span className="flex items-center justify-between gap-2">
-                  <span className="truncate text-[12.5px] font-semibold">{c.n}</span>
-                  <span className="shrink-0 text-[9.5px] font-medium text-wa-verde">{c.t}</span>
-                </span>
-                <span className="flex items-center justify-between gap-2">
-                  <span className="truncate text-[11px] text-wa-gris">{c.m}</span>
-                  <span className="flex h-[17px] min-w-[17px] shrink-0 items-center justify-center rounded-full bg-wa-verde px-1 text-[9px] font-bold text-white">{c.u}</span>
-                </span>
-              </span>
-            </motion.div>
-          ))}
-        </AnimatePresence>
-      </div>
-    </div>
-  );
-}
-
 function Burbuja({ from, children, time, read, delay = 0 }) {
   const me = from === "me";
   return (
@@ -637,13 +613,8 @@ function WAChat({ name, sub = "Cuenta de empresa", msgs, delayStep = 0.6 }) {
   );
 }
 
-const MSGS_RECORDATORIO = [
-  { from: "them", time: "18:00", children: "Hola Laura. Te recordamos tu clase de Reformer mañana a las 9:00 con Núria.\n\nRespondé 1 para confirmar o 2 para liberar tu plaza." },
-  { from: "me", time: "18:04", read: true, children: "1" },
-  { from: "them", time: "18:04", children: "Listo, plaza confirmada. Te quedan 6 clases en tu bono." },
-];
 const MSGS_CITA = [
-  { from: "them", time: "19:30", children: "Hola Ana, te escribe Marta Vidal Fisioterapia. Mañana tenés cita a las 10:15.\n\n¿La confirmás?" },
+  { from: "them", time: "19:30", children: "Hola Ana, te escribe Marta Vidal Fisioterapia. Mañana tienes cita a las 10:15.\n\n¿La confirmas?" },
   { from: "me", time: "19:41", read: true, children: "Sí, ahí estaré. Gracias!" },
   { from: "them", time: "19:41", children: "Perfecto. Te esperamos en C/ Verdi 42." },
 ];
@@ -667,45 +638,68 @@ function WireframeScreen() {
   );
 }
 
-// Panel (tablet) del estudio
-function PanelScreen() {
-  const [v, setV] = useState("semana");
-  const data = {
-    semana: { k: [["Reservas", "142", "+18%"], ["Ocupación", "86%", "+6 pts"], ["Bonos vendidos", "9", "+3"]], b: [62, 78, 70, 92, 88, 54, 20], l: ["L", "M", "X", "J", "V", "S", "D"] },
-    mes: { k: [["Reservas", "583", "+12%"], ["Ocupación", "81%", "+4 pts"], ["Bonos vendidos", "34", "+7"]], b: [70, 82, 76, 90], l: ["S1", "S2", "S3", "S4"] },
-  }[v];
-  const max = Math.max(...data.b);
+// Pantallas del proceso de trabajo
+const MSGS_NECESIDAD = [
+  { from: "me", time: "10:02", read: true, children: "Hola! Tengo un estudio de pilates y paso el día contestando mensajes para reservar." },
+  { from: "them", time: "10:05", children: "¡Hola! Cuéntanos cómo lo gestionas hoy y qué te gustaría resolver." },
+  { from: "me", time: "10:09", read: true, children: "Quiero que las alumnas reserven solas y que el bono se descuente solo." },
+];
+
+function ReunionScreen() {
   return (
-    <div className="flex h-full flex-col gap-[3%] bg-[#FAFAF8] p-[4%] font-sys text-tinta">
-      <div className="flex items-end justify-between">
-        <div className="flex flex-col">
-          <span className="text-[11px] font-medium text-gris-400">Estudio Arrel · octubre</span>
-          <span className="text-[clamp(15px,2.2vw,22px)] font-bold tracking-[-0.02em]">Resumen</span>
-        </div>
-        <div className="flex rounded-full bg-white p-0.5 text-[10px] font-semibold shadow-[0_0_0_1px_rgba(17,17,17,0.06)]">
-          {["semana", "mes"].map((x) => <button key={x} type="button" onClick={() => setV(x)} className={`rounded-full px-2.5 py-1 capitalize ${v === x ? "bg-tinta text-white" : "text-gris-500"}`}>{x}</button>)}
+    <div className="flex h-full flex-col bg-[#FAFAF8] font-sys text-tinta">
+      <StatusBar />
+      <AppHeader eyebrow="Calendario · martes 4" title="Reunión con PULSE" />
+      <div className="mx-4 mt-5 flex flex-col gap-3 rounded-[18px] bg-white p-4 shadow-[0_0_0_1px_rgba(17,17,17,0.06)]">
+        <span className="h-1 w-10 rounded-full bg-gradient-to-r from-grad-a to-grad-b" />
+        <span className="text-[16px] font-bold leading-tight">Primera reunión</span>
+        <span className="text-[12px] text-gris-500">Martes 4 · 10:00 – 10:45</span>
+        <span className="text-[12px] text-gris-500">Videollamada</span>
+        <div className="mt-1 flex -space-x-2">
+          {["PU", "LS", "DC"].map((x, i) => <span key={x} className={`flex h-8 w-8 items-center justify-center rounded-full text-[10px] font-bold ring-2 ring-white ${i === 0 ? "bg-tinta text-white" : "bg-acento-suave text-acento-texto"}`}>{x}</span>)}
         </div>
       </div>
-      <div className="grid grid-cols-3 gap-[2.5%]">
-        {data.k.map(([l, n, d]) => (
-          <div key={l} className="flex min-w-0 flex-col rounded-[14px] bg-white p-[7%] shadow-[0_0_0_1px_rgba(17,17,17,0.05)]">
-            <span className="truncate text-[clamp(8.5px,1vw,10.5px)] text-gris-400">{l}</span>
-            <motion.span key={v + n} initial={{ y: 6, opacity: 0 }} animate={{ y: 0, opacity: 1 }} className="text-[clamp(15px,2.4vw,24px)] font-bold tracking-[-0.03em] tnum">{n}</motion.span>
-            <span className="text-[clamp(8px,0.9vw,9.5px)] font-semibold text-acento-texto">{d}</span>
-          </div>
+      <div className="mx-4 mt-3 grid grid-cols-2 gap-2">
+        <span className="rounded-full bg-tinta py-2 text-center text-[11px] font-semibold text-white">Aceptar</span>
+        <span className="rounded-full bg-papel py-2 text-center text-[11px] font-semibold">Proponer otra hora</span>
+      </div>
+    </div>
+  );
+}
+
+function PresupuestoScreen() {
+  const items = ["Reservas online", "Bonos y lista de espera", "Recordatorios por WhatsApp", "Tu marca y tu dominio"];
+  return (
+    <div className="flex h-full flex-col bg-[#FAFAF8] font-sys text-tinta">
+      <StatusBar />
+      <AppHeader eyebrow="Para Estudio Arrel" title="Tu presupuesto" />
+      <div className="mx-4 mt-5 flex flex-col gap-3 rounded-[18px] bg-white p-4 shadow-[0_0_0_1px_rgba(17,17,17,0.06)]">
+        <div className="flex items-center justify-between">
+          <span className="text-[13px] font-bold">Versión 1</span>
+          <span className="rounded-full bg-acento-suave px-2 py-[3px] text-[10px] font-semibold text-acento-texto">A medida</span>
+        </div>
+        {items.map((t, i) => (
+          <motion.span key={t} initial={{ opacity: 0, x: 8 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.1 + i * 0.08 }} className="flex items-center gap-2 text-[12.5px]">
+            <span className="flex h-4 w-4 items-center justify-center rounded-full bg-tinta"><svg viewBox="0 0 12 12" className="w-2"><path d="M2.5 6.3 5 8.6 9.5 3.4" fill="none" stroke="#FF4F00" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" /></svg></span>
+            {t}
+          </motion.span>
         ))}
       </div>
-      <div className="flex min-h-0 flex-1 flex-col rounded-[14px] bg-white p-[3%] shadow-[0_0_0_1px_rgba(17,17,17,0.05)]">
-        <span className="text-[clamp(9px,1vw,11px)] font-semibold">Ocupación por día</span>
-        <div className="flex min-h-0 flex-1 items-end gap-[4%] pt-2">
-          {data.b.map((b, i) => (
-            <div key={v + i} className="flex h-full flex-1 flex-col items-center justify-end gap-1">
-              <motion.div className={`w-full rounded-[6px] ${b === max ? "bg-gradient-to-t from-grad-a to-grad-b" : "bg-tinta"}`} initial={{ height: 0 }} animate={{ height: `${(b / max) * 84}%` }} transition={{ duration: 0.6, ease, delay: i * 0.04 }} />
-              <span className="text-[9px] text-gris-400">{data.l[i]}</span>
-            </div>
-          ))}
-        </div>
-      </div>
+      <span className="mx-4 mt-3 rounded-full bg-tinta py-2.5 text-center text-[11.5px] font-semibold text-white">Ver presupuesto completo</span>
+    </div>
+  );
+}
+
+function FeedbackScreen() {
+  return (
+    <div className="relative h-full">
+      <WireframeScreen />
+      {[{ t: "Botón de reservar más grande", c: "left-3 top-[118px]" }, { t: "Añadir lista de espera", c: "right-3 top-[250px]" }].map((n, i) => (
+        <motion.span key={n.t} initial={{ opacity: 0, scale: 0.8, y: 8 }} animate={{ opacity: 1, scale: 1, y: 0 }} transition={{ delay: 0.3 + i * 0.25, ease }}
+          className={`absolute ${n.c} max-w-[150px] rounded-[12px] rounded-bl-[3px] bg-tinta px-2.5 py-1.5 text-[10.5px] font-semibold leading-snug text-white shadow-lg`}>
+          {n.t}
+        </motion.span>
+      ))}
     </div>
   );
 }
@@ -751,12 +745,12 @@ function spot(e) {
 }
 
 // Título de sección que se asienta al entrar (visible desde el primer fotograma)
-function RevealTitle({ children, className = "", id }) {
+function RevealTitle({ children, className = "", id, as: Tag = "h2" }) {
   const simple = useSimple();
   const words = String(children).split(" ");
-  if (simple) return <h2 id={id} className={className}>{children}</h2>;
+  if (simple) return <Tag id={id} className={className}>{children}</Tag>;
   return (
-    <h2 id={id} className={className}>
+    <Tag id={id} className={className}>
       {words.map((w, i) => (
         <React.Fragment key={i}>
           <span className="-mt-[0.15em] inline-block overflow-hidden pb-[0.1em] pt-[0.15em] align-bottom">
@@ -766,55 +760,46 @@ function RevealTitle({ children, className = "", id }) {
           {i < words.length - 1 && " "}
         </React.Fragment>
       ))}
-    </h2>
+    </Tag>
   );
 }
 
 /* ---------------------------------------------------------------------
-   SECCIÓN: Cinta de funciones (se desplaza sola y acelera con el scroll)
-   --------------------------------------------------------------------- */
-function Cinta() {
-  const simple = useSimple();
-  const { scrollYProgress } = useScroll();
-  const x = useTransform(scrollYProgress, [0, 1], [0, simple ? 0 : -500]);
-  const items = ["Dashboards", "Citas", "Datos", "Análisis", "Presupuestos", "Soporte", "Reservas", "Agendas", "Stock"];
-  return (
-    <div className="relative overflow-hidden border-y border-tinta py-6" aria-hidden="true">
-      <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-24 bg-gradient-to-r from-white to-transparent" />
-      <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-24 bg-gradient-to-l from-white to-transparent" />
-      <motion.div style={{ x }}>
-        <div className="marquee">
-          {[...items, ...items, ...items, ...items].map((t, i) => (
-            <span key={i} className="flex items-center gap-7 pr-7 text-[clamp(1.4rem,2.6vw,2.1rem)] font-bold tracking-[-0.035em] text-tinta">
-              {t}<Iso className="w-7" width={3.5} stroke="#111111" />
-            </span>
-          ))}
-        </div>
-      </motion.div>
-    </div>
-  );
-}
-
-/* ---------------------------------------------------------------------
-   SECCIÓN: Frase que se escribe con el scroll
+   SECCIÓN: Soluciones (frase que se escribe con el scroll + listado)
    --------------------------------------------------------------------- */
 function Word({ children, progress, range }) {
   const reduce = useReducedMotion();
   const color = useTransform(progress, range, reduce ? ["#111111", "#111111"] : ["#CFCFCB", "#111111"]);
   return <motion.span style={{ color }}>{children} </motion.span>;
 }
-function Frase() {
+function Soluciones() {
+  const simple = useSimple();
   const ref = useRef(null);
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start 0.85", "end 0.45"] });
   const text = "Diseñamos la herramienta exacta que tu negocio necesita hoy. Y la hacemos crecer al ritmo que cambia tu día a día.";
   const words = text.split(" ");
   return (
-    <section ref={ref} aria-label="Nuestra forma de trabajar" className="relative overflow-hidden bg-white">
+    <section id="soluciones" aria-labelledby="soluciones-title" className="relative overflow-hidden bg-white">
       <Blob className="-right-40 top-0 h-[420px] w-[420px]" color="rgba(255,79,0,0.12)" />
-      <div className="container-page relative py-24 md:py-36">
-        <p className="max-w-[22ch] text-[clamp(2rem,5vw,4.2rem)] font-bold leading-[1.06] tracking-[-0.04em]">
-          {words.map((w, i) => <Word key={i} progress={scrollYProgress} range={[i / words.length, (i + 1) / words.length]}>{w}</Word>)}
-        </p>
+      <div className="container-page relative flex flex-col gap-16 py-24 md:gap-24 md:py-36">
+        <div ref={ref} className="flex flex-col gap-6">
+          <Eyebrow>Soluciones</Eyebrow>
+          <h2 id="soluciones-title" className="max-w-[22ch] text-[clamp(2rem,5vw,4.2rem)] font-bold leading-[1.06] tracking-[-0.04em]">
+            {words.map((w, i) => <Word key={i} progress={scrollYProgress} range={[i / words.length, (i + 1) / words.length]}>{w}</Word>)}
+          </h2>
+        </div>
+        <ul className="grid gap-x-10 sm:grid-cols-2 lg:grid-cols-3">
+          {SOLUCIONES.map((x, i) => (
+            <motion.li key={x.t} initial={{ y: simple ? 0 : 28 }} whileInView={{ y: 0 }} viewport={{ once: true, margin: "-60px" }} transition={{ duration: 0.7, ease, delay: (i % 3) * 0.08 }}
+              className="group flex flex-col gap-2 border-t-[1.5px] border-tinta pb-10 pt-6">
+              <span className="flex items-center justify-between gap-4">
+                <h3 className="text-[clamp(1.4rem,2.2vw,1.75rem)] font-bold tracking-[-0.03em]">{x.t}</h3>
+                <Iso className="w-8 -translate-x-2 opacity-0 transition duration-300 group-hover:translate-x-0 group-hover:opacity-100" width={3.5} />
+              </span>
+              <p className="max-w-[36ch] text-[15.5px] leading-relaxed text-gris-500">{x.d}</p>
+            </motion.li>
+          ))}
+        </ul>
       </div>
     </section>
   );
@@ -832,14 +817,12 @@ function Nav() {
       <div className="container-page flex h-16 items-center justify-between gap-6">
         <a href="#top" aria-label="PULSE, inicio"><Logo className="h-[18px] w-auto md:h-5" /></a>
         <nav className="hidden items-center gap-8 text-[14px] font-medium text-gris-500 lg:flex">
-          <a href="#casos" className="transition-colors hover:text-tinta">Casos</a>
-          <a href="#como" className="transition-colors hover:text-tinta">Cómo funciona</a>
-          <a href="#integraciones" className="transition-colors hover:text-tinta">Integraciones</a>
-          <a href="#asistente" className="transition-colors hover:text-tinta">Asistente</a>
-          <a href="#ventajas" className="transition-colors hover:text-tinta">Ventajas</a>
+          <a href="#soluciones" className="transition-colors hover:text-tinta">Soluciones</a>
+          <a href="#ejemplos" className="transition-colors hover:text-tinta">Ejemplos</a>
+          <a href="#trabajamos" className="transition-colors hover:text-tinta">Cómo trabajamos</a>
           <a href="#preguntas" className="transition-colors hover:text-tinta">Preguntas</a>
         </nav>
-        <a href={CONTACTO.gmail} {...EXTERNO} className="rounded-full bg-tinta px-4 py-2 text-[13px] font-semibold text-white transition-colors hover:bg-[#2a2a2a]">Hablemos</a>
+        <a href="#contacto" className="rounded-full bg-tinta px-4 py-2 text-[13px] font-semibold text-white transition-colors hover:bg-[#2a2a2a]">Hablemos</a>
       </div>
     </header>
   );
@@ -850,7 +833,7 @@ function Nav() {
    --------------------------------------------------------------------- */
 const HERO_AVISOS = {
   pilates: [
-    { icon: "wa", app: "WhatsApp", title: "Laura Puig", body: "¿Me pasás a la clase de las 19:30?", time: "ahora", pos: "left-[-300px] top-[60px]" },
+    { icon: "wa", app: "WhatsApp", title: "Laura Puig", body: "¿Me pasas a la clase de las 19:30?", time: "ahora", pos: "left-[-300px] top-[60px]" },
     { icon: "pulse", app: "Arrel Reservas", title: "Nueva reserva", body: "Reformer · jueves 9:00 · quedan 2 plazas", time: "hace 2 min", pos: "right-[-310px] top-[200px]" },
   ],
   stock: [
@@ -892,14 +875,8 @@ function Hero() {
   return (
     <section ref={ref} id="top" aria-labelledby="hero-title" className="relative overflow-hidden bg-white">
       <div className="container-page flex flex-col items-center gap-8 pt-14 text-center md:pt-24">
-        <motion.span initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, ease }}
-          className="inline-flex items-center gap-2 rounded-full bg-papel px-3.5 py-1.5 text-[13px] font-medium text-gris-700">
-          <span className="relative flex h-2 w-2"><span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-acento opacity-60 motion-reduce:hidden" /><span className="relative inline-flex h-2 w-2 rounded-full bg-acento" /></span>
-          Apps web a medida para negocios
-        </motion.span>
-
-        <h1 id="hero-title" aria-label="Organizá tu negocio con una app hecha a tu medida" className="text-portada">
-          <span aria-hidden="true" className="block">Organizá{" "}
+        <h1 id="hero-title" aria-label="Organiza tu negocio con una app a tu medida" className="text-portada">
+          <span aria-hidden="true" className="block">Organiza{" "}
             <span className="relative inline-grid h-[1.08em] overflow-hidden align-bottom">
               <AnimatePresence mode="popLayout" initial={false}>
                 <motion.span key={caso.id} className="col-start-1 row-start-1 whitespace-nowrap bg-gradient-to-r from-acento-texto to-acento bg-clip-text pb-[0.06em] text-transparent"
@@ -914,13 +891,22 @@ function Hero() {
           <span aria-hidden="true" className="block">con una app a tu medida.</span>
         </h1>
 
-        <p className="max-w-[52ch] text-entrada text-gris-500 md:text-[19px]">
-          Reservas, stock, citas, clientes o todo junto. Diseñamos la app a tu medida y la conectamos con las herramientas que ya usás.
+        <p className="max-w-[54ch] text-entrada text-gris-500 md:text-[19px]">
+          Desarrollamos una app que se ajusta a las necesidades de tu proyecto o negocio. Gestionamos tus reservas, stock o base de datos y diseñamos una app con tu identidad, conectada a las herramientas que ya utilizas.
         </p>
 
+        <ul className="flex flex-wrap items-center justify-center gap-2">
+          {["Sin gastos fijos de mantenimiento ni comisiones", "Fácil e intuitiva"].map((t) => (
+            <li key={t} className="inline-flex items-center gap-2 rounded-full bg-papel px-3.5 py-1.5 text-left text-[13px] font-medium leading-snug text-gris-700 sm:text-[13.5px]">
+              <span className="flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-tinta"><svg viewBox="0 0 12 12" className="w-2"><path d="M2.5 6.3 5 8.6 9.5 3.4" fill="none" stroke="#FF4F00" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" /></svg></span>
+              {t}
+            </li>
+          ))}
+        </ul>
+
         <div className="flex w-full flex-col items-center justify-center gap-3 sm:w-auto sm:flex-row">
-          <Button href={CONTACTO.gmail} variant="dark" className="w-full sm:w-auto">Contanos qué necesitás</Button>
-          <Button href="#casos" variant="light" className="w-full sm:w-auto">Ver ejemplos</Button>
+          <Button href="#contacto" variant="dark" className="w-full sm:w-auto">Cuéntanos qué necesitas</Button>
+          <Button href="#ejemplos" variant="light" className="w-full sm:w-auto">Ejemplos</Button>
         </div>
       </div>
 
@@ -928,7 +914,7 @@ function Hero() {
       <div className="container-page relative mt-14 flex flex-col items-center pb-24 md:mt-20 md:pb-32">
         <motion.div aria-hidden="true" style={{ scale: glow }} className="pointer-events-none absolute left-1/2 top-[38%] h-[420px] w-[min(900px,100%)] -translate-x-1/2 -translate-y-1/2 rounded-[50%] bg-[radial-gradient(closest-side,#FFE6D8,rgba(255,255,255,0))]" />
 
-        <div role="tablist" aria-label="Elegí un ejemplo" className="relative z-10 mb-8 flex max-w-full gap-1 overflow-x-auto rounded-full bg-papel p-1 no-scrollbar">
+        <div role="tablist" aria-label="Elige un ejemplo" className="relative z-10 mb-8 flex max-w-full gap-1 overflow-x-auto rounded-full bg-papel p-1 no-scrollbar">
           {CASOS.map((c, i) => (
             <button key={c.id} type="button" role="tab" aria-selected={i === idx} onClick={() => pick(i)}
               className={`relative shrink-0 rounded-full px-3.5 py-2 text-[13px] font-semibold transition-colors sm:px-4 ${i === idx ? "text-tinta" : "text-gris-500 hover:text-tinta"}`}>
@@ -988,7 +974,7 @@ function CasoVisual({ id, simple }) {
         <Phone label="App de reservas de un estudio de pilates"><PilatesScreen /></Phone>
         {!simple && (
           <motion.div initial={{ opacity: 0, x: 30 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.6, ease, delay: 0.35 }} className="absolute -right-6 top-16 xl:-right-24">
-            <Notif icon="wa" app="WhatsApp" title="Estudio Arrel" body="Te recordamos tu clase de mañana a las 9:00. Respondé 1 para confirmar." time="18:00" className="w-[270px]" />
+            <Notif icon="wa" app="WhatsApp" title="Estudio Arrel" body="Te recordamos tu clase de mañana a las 9:00. Responde 1 para confirmar." time="18:00" className="w-[270px]" />
           </motion.div>
         )}
       </div>
@@ -1029,11 +1015,11 @@ function Casos() {
     setActive(next); tabsRef.current[next]?.focus();
   };
   return (
-    <section id="casos" aria-labelledby="casos-title" className="bg-white">
+    <section id="ejemplos" aria-labelledby="casos-title" className="scroll-mt-16 bg-white">
       <div className="container-page flex flex-col gap-12 py-24 md:gap-16 md:py-36">
         <div className="flex flex-col justify-between gap-8 lg:flex-row lg:items-end">
-          <SectionTitle id="casos-title" eyebrow="Casos" title="Tu negocio es distinto. Tu app también." />
-          <p className="max-w-[40ch] text-entrada text-gris-500 lg:pb-2">Tres ejemplos de cómo queda. Si lo tuyo es otra cosa, lo construimos igual: partimos siempre de cómo trabajás hoy.</p>
+          <SectionTitle id="casos-title" eyebrow="Ejemplos" title="Tu negocio es distinto. Tu app también." />
+          <p className="max-w-[40ch] text-entrada text-gris-500 lg:pb-2">Tres ejemplos de cómo queda. Si lo tuyo es otra cosa, lo construimos igual: partimos siempre de cómo trabajas hoy.</p>
         </div>
 
         <div role="tablist" aria-label="Casos de uso" onKeyDown={onKey} className="flex max-w-full gap-1 self-start overflow-x-auto rounded-full bg-papel p-1 no-scrollbar">
@@ -1081,135 +1067,62 @@ function Casos() {
 }
 
 /* ---------------------------------------------------------------------
-   SECCIÓN: Cómo funciona
-   Escritorio: escena fija guiada por scroll. Móvil: tarjetas apiladas.
+   SECCIÓN: Cómo trabajamos
+   Escritorio: los pasos avanzan con el scroll y el móvil fijo cambia de pantalla.
+   Móvil: lista simple de pasos.
    --------------------------------------------------------------------- */
-function ComoMobile() {
-  const visuals = [
-    <WAChatList n={5} />,
-    <WireframeScreen />,
-    <PilatesScreen />,
-    <WAChat name="Estudio Arrel" msgs={MSGS_RECORDATORIO} delayStep={0} />,
-  ];
-  return (
-    <section id="como" aria-labelledby="como-title-m" className="bg-papel">
-      <div className="container-page flex flex-col gap-10 py-24">
-        <SectionTitle id="como-title-m" eyebrow="Cómo funciona" title="De tu forma de trabajar a tu app." />
-        <ol className="flex flex-col gap-5">
-          {PASOS.map((s, i) => (
-            <li key={s.t} className="flex flex-col gap-5 overflow-hidden rounded-[28px] bg-white p-6">
-              <span className="font-mono text-[11px] uppercase tracking-[0.1em] text-gris-400">Paso {i + 1} de 4</span>
-              <div className="flex flex-col gap-2">
-                <h3 className="text-[22px] font-bold leading-tight tracking-[-0.025em]">{s.t}</h3>
-                <p className="text-[16px] leading-relaxed text-gris-500">{s.d}</p>
-              </div>
-              <div className="-mb-[150px] flex justify-center">
-                <Phone label={s.t} className="scale-[0.86] origin-top">{visuals[i]}</Phone>
-              </div>
-            </li>
-          ))}
-        </ol>
-      </div>
-    </section>
-  );
+function PantallaPaso({ i }) {
+  if (i === 0) return <ReunionScreen />;
+  if (i === 1) return <WAChat name="PULSE" sub="Cuenta de empresa" msgs={MSGS_NECESIDAD} delayStep={0.35} />;
+  if (i === 2) return <PresupuestoScreen />;
+  if (i === 3) return <WireframeScreen />;
+  if (i === 4) return <FeedbackScreen />;
+  return <PilatesScreen />;
 }
 
-function ComoDesktop() {
-  const ref = useRef(null);
+function Trabajamos() {
   const [step, setStep] = useState(0);
-  const [chats, setChats] = useState(2);
-  const { scrollYProgress: p } = useScroll({ target: ref, offset: ["start start", "end end"] });
-  useMotionValueEvent(p, "change", (v) => {
-    setStep(v < 0.24 ? 0 : v < 0.48 ? 1 : v < 0.74 ? 2 : 3);
-    setChats(Math.max(2, Math.min(6, Math.round(2 + (v / 0.2) * 4))));
-  });
-  const sp = { stiffness: 85, damping: 22, mass: 0.6 };
-
-  const phX = useSpring(useTransform(p, [0, 0.48, 0.62, 0.8, 1], [0, 0, -170, -170, -40]), sp);
-  const phR = useSpring(useTransform(p, [0, 0.2, 0.48, 0.62, 0.8, 1], [0, -4, 0, -5, -5, 0]), sp);
-  const phS = useSpring(useTransform(p, [0, 0.24, 0.62, 1], [0.96, 1, 0.94, 1]), sp);
-  const tbX = useSpring(useTransform(p, [0.46, 0.62, 0.74, 0.86], [420, 110, 110, 360]), sp);
-  const tbO = useTransform(p, [0.46, 0.58, 0.76, 0.86], [0, 1, 1, 0]);
-  const tbR = useSpring(useTransform(p, [0.46, 0.62], [8, 1]), sp);
-  const n1y = useTransform(p, [0, 0.22], [40, -30]);
-  const n2y = useTransform(p, [0, 0.22], [80, 10]);
-  const chaosO = useTransform(p, [0, 0.04, 0.2, 0.25], [0.6, 1, 1, 0]);
-  const finO = useTransform(p, [0.78, 0.84], [0, 1]);
-  const finY = useTransform(p, [0.78, 0.9], [30, 0]);
-  const bar = useTransform(p, [0, 1], [0, 1]);
-
   return (
-    <section id="como" ref={ref} aria-labelledby="como-title" className="relative h-[460vh] bg-papel">
-      <div className="sticky top-16 flex h-[calc(100vh-64px)] items-center overflow-hidden">
-        <div className="container-page grid grid-cols-[0.8fr_1.2fr] items-center gap-12">
-          <div className="flex min-w-0 flex-col gap-12">
-            <SectionTitle id="como-title" eyebrow="Cómo funciona" title="De tu forma de trabajar a tu app." />
-            <div className="flex gap-6">
-              <div className="relative w-[2px] shrink-0 overflow-hidden rounded-full bg-gris-200" aria-hidden="true">
-                <motion.div style={{ scaleY: bar }} className="absolute inset-0 origin-top bg-gradient-to-b from-grad-a to-grad-b" />
-              </div>
-              <ol className="flex flex-col gap-6">
-                {PASOS.map((s, i) => (
-                  <li key={s.t} className="flex flex-col gap-1.5">
-                    <motion.span animate={{ color: i === step ? "#111111" : "#B8B8B4" }} transition={{ duration: 0.4 }} className="text-[22px] font-bold leading-tight tracking-[-0.025em]">{s.t}</motion.span>
-                    <AnimatePresence initial={false}>
-                      {i === step && (
-                        <motion.p initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} exit={{ height: 0, opacity: 0 }} transition={{ duration: 0.4, ease }} className="max-w-[40ch] overflow-hidden text-[16px] leading-relaxed text-gris-500">
-                          {s.d}
-                        </motion.p>
-                      )}
-                    </AnimatePresence>
-                  </li>
-                ))}
-              </ol>
-            </div>
+    <section id="trabajamos" aria-labelledby="trabajamos-title" className="relative scroll-mt-16 bg-papel">
+      <div className="container-page grid gap-12 py-24 md:py-36 lg:grid-cols-[1.05fr_0.95fr] lg:gap-16">
+        <div className="flex min-w-0 flex-col gap-10 lg:gap-0">
+          <div className="lg:pb-16">
+            <SectionTitle id="trabajamos-title" title="¿Cómo trabajamos?" lead="Cada negocio es distinto, pero el camino es siempre el mismo: primero escuchamos, después diseñamos." />
           </div>
-
-          <div className="relative flex h-[560px] origin-center scale-[0.7] items-center justify-center lg:scale-[0.86] xl:scale-100">
-            <Blob className="left-[calc(50%-260px)] top-[calc(50%-260px)] h-[520px] w-[520px]" color="rgba(255,79,0,0.16)" />
-            {/* Tablet con el panel (paso 3) */}
-            <motion.div style={{ x: tbX, opacity: tbO, rotate: tbR }} className="absolute left-1/2 top-1/2 -ml-[230px] -mt-[180px] w-[460px]">
-              <Tablet><PanelScreen /></Tablet>
-            </motion.div>
-
-            {/* Móvil */}
-            <motion.div style={{ x: phX, rotate: phR, scale: phS }} className="relative z-10">
-              <Phone label="Del WhatsApp a la app">
+          <ol className="relative flex flex-col gap-4 lg:gap-0">
+            <span aria-hidden="true" className="absolute bottom-6 left-[19px] top-6 hidden w-[2px] rounded-full bg-gris-200 lg:block" />
+            <motion.span aria-hidden="true" className="absolute left-[19px] top-6 hidden w-[2px] origin-top rounded-full bg-gradient-to-b from-grad-a to-grad-b lg:block"
+              animate={{ height: `calc((100% - 3rem) * ${step / (PASOS.length - 1)})` }} transition={{ duration: 0.5, ease }} />
+            {PASOS.map((p, i) => (
+              <motion.li key={p.t} onViewportEnter={() => setStep(i)} viewport={{ margin: "-45% 0px -45% 0px" }}
+                className={`relative flex gap-5 rounded-[22px] bg-white p-5 transition-opacity duration-500 lg:min-h-[42vh] lg:items-center lg:bg-transparent lg:p-0 ${i === step ? "" : "lg:opacity-35"}`}>
+                <span className={`relative z-10 flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-[15px] font-bold transition-colors duration-500 bg-gradient-to-br from-grad-a to-grad-b text-tinta ${i <= step ? "" : "lg:bg-none lg:bg-white lg:text-gris-500 lg:ring-1 lg:ring-gris-200"}`}>{i + 1}</span>
+                <span className="flex flex-col gap-1.5 pt-1.5 lg:pt-0">
+                  <span className="text-[clamp(1.25rem,2.2vw,1.75rem)] font-bold leading-tight tracking-[-0.03em]">{p.t}</span>
+                  <span className="max-w-[42ch] text-[16px] leading-relaxed text-gris-500">{p.d}</span>
+                </span>
+              </motion.li>
+            ))}
+          </ol>
+        </div>
+        <div className="relative hidden lg:block">
+          <div className="sticky top-24 flex h-[calc(100vh-8rem)] items-center justify-center">
+            <Blob className="left-[calc(50%-240px)] top-[calc(50%-240px)] h-[480px] w-[480px]" color="rgba(255,79,0,0.18)" />
+            <div className="relative">
+              <Phone label={`Paso ${step + 1}: ${PASOS[step].t}`}>
                 <AnimatePresence mode="wait" initial={false}>
-                  <motion.div key={step} className="h-full" initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} transition={{ duration: 0.4, ease }}>
-                    {step === 0 && <WAChatList n={chats} />}
-                    {step === 1 && <WireframeScreen />}
-                    {step === 2 && <PilatesScreen />}
-                    {step === 3 && <WAChat name="Estudio Arrel" msgs={MSGS_RECORDATORIO} />}
+                  <motion.div key={step} className="h-full" initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -12 }} transition={{ duration: 0.4, ease }}>
+                    <PantallaPaso i={step} />
                   </motion.div>
                 </AnimatePresence>
               </Phone>
-            </motion.div>
-
-            {/* Paso 1: los avisos de WhatsApp se acumulan */}
-            <motion.div style={{ opacity: chaosO }} className="pointer-events-none absolute inset-0 z-20" aria-hidden="true">
-              <motion.div style={{ y: n1y }} className="absolute left-[-20px] top-[70px]">
-                <Notif icon="wa" app="WhatsApp" title="Clara F. (3 mensajes)" body="No puedo ir mañana. ¿Me la cambiás?" time="22:58" className="w-[270px]" />
-              </motion.div>
-              <motion.div style={{ y: n2y }} className="absolute right-[-10px] top-[300px]">
-                <Notif icon="wa" app="WhatsApp" title="Grupo alumnas" body="14 mensajes nuevos" time="21:02" className="w-[250px]" />
-              </motion.div>
-            </motion.div>
-
-            {/* Paso 4: confirmación que llega sola */}
-            <motion.div style={{ opacity: finO, y: finY }} className="pointer-events-none absolute right-[-10px] top-[90px] z-20" aria-hidden="true">
-              <Notif icon="pulse" app="Arrel Reservas" title="Laura confirmó por WhatsApp" body="Reformer · mañana 9:00 · 8 de 8 plazas" time="ahora" className="w-[270px]" />
-            </motion.div>
+              <span className="absolute -right-6 -top-4 rounded-full bg-tinta px-3 py-1.5 text-[12px] font-semibold text-white shadow-lg tnum">{step + 1} / {PASOS.length}</span>
+            </div>
           </div>
         </div>
       </div>
     </section>
   );
-}
-
-function Como() {
-  const simple = useSimple();
-  return simple ? <ComoMobile /> : <ComoDesktop />;
 }
 
 /* ---------------------------------------------------------------------
@@ -1241,7 +1154,7 @@ function Integraciones() {
       <Blob className="left-[8%] top-[38%] h-[420px] w-[420px]" color="rgba(255,79,0,0.14)" />
       <Blob className="right-[6%] top-[52%] h-[460px] w-[460px]" color="rgba(255,170,120,0.22)" />
       <div className="container-page flex flex-col gap-14 py-24 md:gap-20 md:py-36">
-        <SectionTitle center id="int-title" eyebrow="Integraciones" title="Se lleva bien con lo que ya usás." lead="Tu app no te obliga a dejar tus herramientas. Las conecta, para que la información pase sola de un sitio a otro." />
+        <SectionTitle as="h3" center id="int-title" eyebrow="Integraciones" title="Se lleva bien con lo que ya usas." lead="Tu app no te obliga a dejar tus herramientas. Las conecta, para que la información pase sola de un sitio a otro." />
 
         <div className="relative">
           {!simple && (
@@ -1268,7 +1181,7 @@ function Integraciones() {
             <div className="order-3 flex flex-col gap-5 lg:gap-24">{der.map((it) => <IntegracionTile key={it.id} it={it} align="der" />)}</div>
           </div>
         </div>
-        <p className="text-center text-[14px] text-gris-400">¿Usás otra herramienta? Preguntanos: si tiene forma de conectarse, la conectamos.</p>
+        <p className="text-center text-[14px] text-gris-400">¿Usas otra herramienta? Pregúntanos: si tiene forma de conectarse, la conectamos.</p>
       </div>
     </section>
   );
@@ -1287,7 +1200,7 @@ const BOT_FLUJO = {
 function pasoBot(clave) {
   if (clave.startsWith("ok:")) {
     const clase = clave.slice(3);
-    return { bot: `Listo, tenés plaza en ${clase}. Te quedan 5 clases en tu bono.\n\nMañana a las 18:00 te mando un recordatorio.`, opciones: [["Volver al inicio", "inicio"]] };
+    return { bot: `Listo, tienes plaza en ${clase}. Te quedan 5 clases en tu bono.\n\nMañana a las 18:00 te mando un recordatorio.`, opciones: [["Volver al inicio", "inicio"]] };
   }
   return BOT_FLUJO[clave];
 }
@@ -1380,7 +1293,7 @@ const BOT_PUNTOS = [
   ["Responde al momento", "A cualquier hora, también de noche y en fin de semana."],
   ["Reserva, cambia y cancela", "Con los mismos datos que tu app: si no hay plaza, no la da."],
   ["Consulta bonos, pedidos o stock", "Tus clientes preguntan y el asistente contesta con la información real."],
-  ["Te pasa la conversación", "Si no sabe algo o piden hablar con alguien, te avisa a vos o a tu equipo."],
+  ["Te pasa la conversación", "Si no sabe algo o piden hablar con alguien, te avisa a ti o a tu equipo."],
 ];
 
 function Asistente() {
@@ -1394,7 +1307,7 @@ function Asistente() {
     <section id="asistente" ref={ref} aria-labelledby="bot-title" className="bg-white">
       <div className="container-page grid items-center gap-12 py-24 md:py-36 lg:grid-cols-[1fr_1fr] lg:gap-20">
         <div className="flex min-w-0 flex-col gap-10">
-          <SectionTitle id="bot-title" eyebrow="Asistente de WhatsApp" title="Tus clientes escriben. Tu app contesta." lead="Un asistente que responde por WhatsApp con la información de tu app: reserva, consulta y te pasa la conversación cuando hace falta una persona." />
+          <SectionTitle as="h3" id="bot-title" eyebrow="Asistente de WhatsApp" title="Tus clientes escriben. Tu app contesta." lead="Un asistente que responde por WhatsApp con la información de tu app: reserva, consulta y te pasa la conversación cuando hace falta una persona." />
           <ul className="grid gap-x-8 gap-y-6 sm:grid-cols-2">
             {BOT_PUNTOS.map(([t, d]) => (
               <li key={t} className="flex flex-col gap-1.5 border-t border-linea pt-4">
@@ -1414,7 +1327,7 @@ function Asistente() {
           <motion.div style={{ y, rotate: rot }} className="relative">
             <Phone label="Asistente de WhatsApp de un estudio de pilates"><WABot /></Phone>
           </motion.div>
-          <span className="absolute bottom-4 right-5 font-mono text-[11px] uppercase tracking-[0.1em] text-gris-400">Probalo: tocá una opción</span>
+          <span className="absolute bottom-4 right-5 font-mono text-[11px] uppercase tracking-[0.1em] text-gris-400">Pruébalo: toca una opción</span>
         </div>
       </div>
     </section>
@@ -1446,7 +1359,7 @@ function WhatsAppFlotante() {
           </motion.div>
         )}
       </AnimatePresence>
-      <a href={CONTACTO.whatsapp} {...(externo ? { target: "_blank", rel: "noopener noreferrer" } : {})} aria-label="Escribinos por WhatsApp"
+      <a href={CONTACTO.whatsapp} {...(externo ? { target: "_blank", rel: "noopener noreferrer" } : {})} aria-label="Escríbenos por WhatsApp"
         className="relative flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-wa-verde text-white shadow-[0_14px_30px_-10px_rgba(37,211,102,0.75)] transition-transform duration-200 hover:scale-105 active:scale-95">
         {!simple && <motion.span aria-hidden="true" className="absolute inset-0 rounded-full bg-wa-verde" animate={{ scale: [1, 1.4], opacity: [0.4, 0] }} transition={{ duration: 2.4, repeat: Infinity, ease: "easeOut" }} />}
         <Glyph kind="wa" className="relative h-7 w-7" />
@@ -1532,7 +1445,7 @@ function ComparativaEscritorio() {
           <colgroup><col className="w-[20%]" /><col className="w-[26%]" /><col className="w-[26%]" /><col className="w-[28%]" /></colgroup>
           <thead>
             <tr>
-              <th scope="col" className="p-6 align-bottom text-[13px] font-semibold text-gris-400">Qué necesitás</th>
+              <th scope="col" className="p-6 align-bottom text-[13px] font-semibold text-gris-400">Qué necesitas</th>
               {COMPARATIVA.alt.map((o) => (
                 <th key={o.t} scope="col" className="p-6 align-bottom">
                   <span className="flex flex-col gap-1">
@@ -1580,7 +1493,7 @@ function Ventajas() {
       <Blob className="-left-32 top-[18%] h-[520px] w-[520px]" color="rgba(255,79,0,0.12)" />
       <Blob className="-right-24 top-[34%] h-[460px] w-[460px]" color="rgba(255,170,120,0.2)" />
       <div className="container-page flex flex-col gap-14 py-24 md:gap-20 md:py-36">
-        <SectionTitle id="ventajas-title" eyebrow="Ventajas" title="Por qué una app propia." lead="Frente a seguir con papeles y mensajes, o pagar una herramienta pensada para todos a la vez." />
+        <SectionTitle as="h3" id="ventajas-title" eyebrow="Ventajas" title="Por qué una app propia." lead="Frente a seguir con papeles y mensajes, o pagar una herramienta pensada para todos a la vez." />
 
         <div className="grid gap-4 sm:grid-cols-2">
           {BENEFICIOS.map((b, i) => (
@@ -1636,12 +1549,12 @@ function FaqItem({ f, open, onToggle, i }) {
 function Preguntas() {
   const [open, setOpen] = useState(0);
   return (
-    <section id="preguntas" aria-labelledby="faq-title" className="bg-white">
+    <section id="preguntas" aria-labelledby="faq-title" className="scroll-mt-16 bg-white">
       <div className="container-page grid gap-12 py-24 md:py-36 lg:grid-cols-[0.8fr_1.2fr] lg:gap-20">
         <div className="flex flex-col gap-8 lg:sticky lg:top-28 lg:self-start">
-          <SectionTitle id="faq-title" eyebrow="Preguntas frecuentes" title="Lo que todos preguntan antes de empezar." />
-          <p className="max-w-[36ch] text-[15px] text-gris-500">¿Otra duda? Escribinos un email y te contestamos en menos de 24 horas hábiles.</p>
-          <div><Button href={CONTACTO.gmail} variant="light">Preguntanos</Button></div>
+          <SectionTitle id="faq-title" title="Preguntas frecuentes" />
+          <p className="max-w-[36ch] text-[15px] text-gris-500">¿Tienes otras consultas? Escríbenos y nos pondremos en contacto en menos de 24 horas hábiles.</p>
+          <div><Button href={CONTACTO.gmail} variant="light">Escríbenos</Button></div>
         </div>
         <div className="border-t border-linea">
           {FAQS.map((f, i) => <FaqItem key={f.q} f={f} i={i} open={open === i} onToggle={() => setOpen(open === i ? -1 : i)} />)}
@@ -1652,51 +1565,162 @@ function Preguntas() {
 }
 
 /* ---------------------------------------------------------------------
-   SECCIÓN: CTA final (fondo tinta, resplandor naranja, pulso que se dibuja)
+   SECCIÓN: Contacto (formulario + email) y pie
    --------------------------------------------------------------------- */
-function CTA() {
+function Campo({ id, label, error, children }) {
+  return (
+    <div className="flex flex-col gap-1.5">
+      <label htmlFor={id} className="text-[13px] font-semibold text-white/80">{label}</label>
+      {children}
+      {error && <span id={`${id}-error`} className="text-[12.5px] font-medium text-[#FFB27A]">{error}</span>}
+    </div>
+  );
+}
+const CAMPO = "w-full rounded-[14px] bg-white/[0.07] px-4 py-3 text-[15px] text-white ring-1 ring-inset ring-white/15 transition placeholder:text-white/35 focus:bg-white/[0.1] focus:outline-none focus:ring-2 focus:ring-[#FF8A3D]";
+
+function FormContacto() {
+  const [estado, setEstado] = useState("idle"); // idle | enviando | ok | error
+  const [errores, setErrores] = useState({});
+
+  async function enviar(e) {
+    e.preventDefault();
+    const form = e.currentTarget;
+    const d = new FormData(form);
+    if (d.get("_honey")) return; // bot
+    const nombre = String(d.get("nombre") || "").trim();
+    const email = String(d.get("email") || "").trim();
+    const mensaje = String(d.get("mensaje") || "").trim();
+    const next = {};
+    if (!nombre) next.nombre = "Escribe tu nombre.";
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) next.email = "Escribe un email válido, por ejemplo nombre@tunegocio.com.";
+    if (!mensaje) next.mensaje = "Cuéntanos en pocas palabras qué necesitas.";
+    if (!d.get("acepto")) next.acepto = "Necesitamos tu permiso para responderte.";
+    setErrores(next);
+    if (Object.keys(next).length) {
+      form.querySelector(`#contacto-${Object.keys(next)[0]}`)?.focus();
+      return;
+    }
+    setEstado("enviando");
+    try {
+      const res = await fetch(FORM_ENDPOINT, {
+        method: "POST",
+        headers: { "Content-Type": "application/json", Accept: "application/json" },
+        body: JSON.stringify({
+          Nombre: nombre,
+          Email: email,
+          Negocio: String(d.get("negocio") || "").trim() || "—",
+          Mensaje: mensaje,
+          _subject: `Nuevo contacto desde la web: ${nombre}`,
+          _replyto: email,
+          _template: "table",
+          _captcha: "false",
+        }),
+      });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok || String(data.success) === "false") throw new Error();
+      setEstado("ok");
+      form.reset();
+    } catch {
+      setEstado("error");
+    }
+  }
+
+  if (estado === "ok") {
+    return (
+      <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4, ease }} role="status"
+        className="flex flex-col items-start gap-4 rounded-[28px] bg-white/[0.06] p-8 ring-1 ring-inset ring-white/10">
+        <span className="flex h-12 w-12 items-center justify-center rounded-full bg-gradient-to-br from-grad-a to-grad-b"><svg viewBox="0 0 12 12" className="w-5"><path d="M2.5 6.3 5 8.6 9.5 3.4" fill="none" stroke="#111111" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" /></svg></span>
+        <span className="text-[22px] font-bold tracking-[-0.02em]">Mensaje enviado</span>
+        <span className="text-[15.5px] leading-relaxed text-white/70">Gracias. Te respondemos en menos de 24 horas hábiles.</span>
+        <button type="button" onClick={() => setEstado("idle")} className="text-[14px] font-semibold text-white underline decoration-white/30 underline-offset-4 hover:decoration-white">Enviar otro mensaje</button>
+      </motion.div>
+    );
+  }
+
+  return (
+    <form onSubmit={enviar} noValidate className="flex flex-col gap-4 rounded-[28px] bg-white/[0.04] p-6 ring-1 ring-inset ring-white/10 backdrop-blur md:p-8">
+      <input type="text" name="_honey" tabIndex={-1} autoComplete="off" className="hidden" aria-hidden="true" />
+      <div className="grid gap-4 sm:grid-cols-2">
+        <Campo id="contacto-nombre" label="Nombre" error={errores.nombre}>
+          <input id="contacto-nombre" name="nombre" type="text" autoComplete="name" placeholder="Tu nombre" aria-invalid={!!errores.nombre} aria-describedby={errores.nombre ? "contacto-nombre-error" : undefined} className={CAMPO} />
+        </Campo>
+        <Campo id="contacto-email" label="Email" error={errores.email}>
+          <input id="contacto-email" name="email" type="email" autoComplete="email" placeholder="nombre@tunegocio.com" aria-invalid={!!errores.email} aria-describedby={errores.email ? "contacto-email-error" : undefined} className={CAMPO} />
+        </Campo>
+      </div>
+      <Campo id="contacto-negocio" label="Tu negocio (opcional)">
+        <input id="contacto-negocio" name="negocio" type="text" autoComplete="organization" placeholder="Por ejemplo, estudio de pilates" className={CAMPO} />
+      </Campo>
+      <Campo id="contacto-mensaje" label="¿Qué te gustaría organizar?" error={errores.mensaje}>
+        <textarea id="contacto-mensaje" name="mensaje" rows={4} placeholder="Reservas, stock, citas… Cuéntanos cómo lo haces hoy." aria-invalid={!!errores.mensaje} aria-describedby={errores.mensaje ? "contacto-mensaje-error" : undefined} className={`${CAMPO} resize-y`} />
+      </Campo>
+      <div className="flex flex-col gap-1.5">
+        <label htmlFor="contacto-acepto" className="flex items-start gap-3 text-[13.5px] leading-snug text-white/70">
+          <input id="contacto-acepto" name="acepto" type="checkbox" aria-invalid={!!errores.acepto} className="mt-0.5 h-4 w-4 shrink-0 accent-[#FF4F00]" />
+          <span>Acepto que PULSE use estos datos solo para responder a mi consulta. <a href="/privacidad" className="font-semibold text-white underline decoration-white/30 underline-offset-2 hover:decoration-white">Política de privacidad</a></span>
+        </label>
+        {errores.acepto && <span className="text-[12.5px] font-medium text-[#FFB27A]">{errores.acepto}</span>}
+      </div>
+      {estado === "error" && (
+        <p role="alert" className="rounded-[14px] bg-[#FF4F00]/15 px-4 py-3 text-[14px] leading-snug text-white">
+          No se pudo enviar el mensaje. Prueba de nuevo o escríbenos a <a href={CONTACTO.gmail} {...EXTERNO} className="font-semibold underline underline-offset-2">{CONTACTO.email}</a>.
+        </p>
+      )}
+      <button type="submit" disabled={estado === "enviando"}
+        className="mt-1 inline-flex min-h-[52px] items-center justify-center gap-2.5 rounded-full bg-gradient-to-r from-grad-a to-grad-b px-6 text-[15px] font-semibold text-tinta shadow-[0_12px_32px_-12px_rgba(255,79,0,0.75)] transition hover:brightness-105 disabled:cursor-wait disabled:opacity-70">
+        {estado === "enviando" ? "Enviando…" : "Enviar mensaje"}
+      </button>
+    </form>
+  );
+}
+
+function Contacto() {
   const simple = useSimple();
   const ref = useRef(null);
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start end", "center center"] });
   const draw = useTransform(scrollYProgress, [0, 1], [simple ? 1 : 0, 1]);
-  const scale = useSpring(useTransform(scrollYProgress, [0, 1], [simple ? 1 : 0.92, 1]), { stiffness: 90, damping: 24 });
-  const radius = useTransform(scrollYProgress, [0, 1], [simple ? 40 : 64, 40]);
-  const titleY = useTransform(scrollYProgress, [0, 1], [simple ? 0 : 50, 0]);
+  const scale = useSpring(useTransform(scrollYProgress, [0, 1], [simple ? 1 : 0.94, 1]), { stiffness: 90, damping: 24 });
+  const radius = useTransform(scrollYProgress, [0, 1], [simple ? 32 : 64, 40]);
   const d = pulsePath(1600, 120, 80, 3, 260);
   const [copied, setCopied] = useState(false);
   const copy = async () => {
     try { await navigator.clipboard.writeText(CONTACTO.email); setCopied(true); setTimeout(() => setCopied(false), 1600); }
     catch (e) {
-      const el = document.getElementById("cta-email");
+      const el = document.getElementById("contacto-email-texto");
       const r = document.createRange(); r.selectNodeContents(el);
       const s = window.getSelection(); s.removeAllRanges(); s.addRange(r);
     }
   };
   return (
-    <section id="contacto" ref={ref} aria-labelledby="cta-title" className="bg-white">
+    <section id="contacto" ref={ref} aria-labelledby="contacto-title" className="scroll-mt-16 bg-white">
       <div className="container-page pb-10">
-        <motion.div style={{ scale, borderRadius: radius }} className="on-dark relative isolate overflow-hidden bg-tinta px-6 py-24 text-center text-white md:px-16 md:py-36">
+        <motion.div style={{ scale, borderRadius: radius }} className="on-dark relative isolate overflow-hidden bg-tinta px-5 py-16 text-white md:px-14 md:py-24">
           <div className="dot-grid absolute inset-0 -z-10" aria-hidden="true" />
-          <Blob className="-left-24 -top-32 -z-10 h-[460px] w-[460px]" color="rgba(255,79,0,0.55)" />
-          <Blob className="-bottom-40 -right-20 -z-10 h-[520px] w-[520px]" color="rgba(255,138,61,0.4)" />
-          <div aria-hidden="true" className="absolute inset-x-0 bottom-0 -z-10 h-1/2 bg-gradient-to-t from-black/40 to-transparent" />
-          <svg className="pointer-events-none absolute inset-x-0 top-1/2 -z-10 h-[260px] w-full -translate-y-1/2" viewBox="0 0 1600 240" preserveAspectRatio="none" aria-hidden="true">
-            <motion.path d={d} fill="none" stroke="#FF4F00" strokeOpacity="0.35" strokeWidth="2.5" strokeLinejoin="round" strokeLinecap="round" vectorEffect="non-scaling-stroke" style={{ pathLength: draw }} />
+          <Blob className="-left-24 -top-32 -z-10 h-[460px] w-[460px]" color="rgba(255,79,0,0.5)" />
+          <Blob className="-bottom-40 -right-20 -z-10 h-[520px] w-[520px]" color="rgba(255,138,61,0.35)" />
+          <svg className="pointer-events-none absolute inset-x-0 top-[22%] -z-10 h-[220px] w-full" viewBox="0 0 1600 240" preserveAspectRatio="none" aria-hidden="true">
+            <motion.path d={d} fill="none" stroke="#FF4F00" strokeOpacity="0.3" strokeWidth="2.5" strokeLinejoin="round" strokeLinecap="round" vectorEffect="non-scaling-stroke" style={{ pathLength: draw }} />
             {!simple && (
               <motion.path d={d} pathLength={1} fill="none" stroke="#FF8A3D" strokeWidth="4" strokeLinejoin="round" strokeLinecap="round" vectorEffect="non-scaling-stroke" strokeDasharray="0.1 2"
                 initial={{ strokeDashoffset: 0.1 }} animate={{ strokeDashoffset: -1 }} transition={{ duration: 4.5, ease: "linear", repeat: Infinity, delay: 1 }} />
             )}
           </svg>
-          <div className="mx-auto flex max-w-[820px] flex-col items-center gap-9">
-            <Eyebrow dark>Hablemos</Eyebrow>
-            <motion.h2 style={{ y: titleY }} id="cta-title" className="text-[clamp(2.6rem,7vw,6rem)] font-bold leading-[0.98] tracking-[-0.05em]">
-              ¿Qué te gustaría <span className="bg-gradient-to-r from-[#FF4F00] to-[#FFB27A] bg-clip-text text-transparent">organizar?</span>
-            </motion.h2>
-            <p className="max-w-[48ch] text-entrada text-white/70">Escribinos y contanos qué te quita tiempo. Te decimos si una app lo resuelve, cuánto costaría y cuándo podrías usarla.</p>
-            <div className="flex w-full flex-col justify-center gap-3 sm:w-auto sm:flex-row">
-              <Button href={CONTACTO.gmail} variant="accent" className="w-full sm:w-auto">Escribinos un email</Button>
-              <Button href={CONTACTO.whatsapp} variant="onDark" className="w-full sm:w-auto">Escribinos por WhatsApp</Button>
+          <div className="grid gap-12 lg:grid-cols-[0.9fr_1.1fr] lg:items-center lg:gap-16">
+            <div className="flex min-w-0 flex-col gap-7">
+              <Eyebrow dark>Contacto</Eyebrow>
+              <h2 id="contacto-title" className="text-[clamp(2.8rem,7vw,5.5rem)] font-bold leading-[0.98] tracking-[-0.05em]">
+                <span className="bg-gradient-to-r from-[#FF4F00] to-[#FFB27A] bg-clip-text text-transparent">Hablemos</span>
+              </h2>
+              <p className="max-w-[40ch] text-entrada text-white/70">Cuéntanos qué te gustaría organizar. Te decimos si una app lo resuelve y te respondemos en menos de 24 horas hábiles.</p>
+              <div className="flex flex-col gap-2 border-t border-white/15 pt-6">
+                <span className="text-[13px] font-medium text-white/50">O escríbenos directamente</span>
+                <div className="flex flex-wrap items-center gap-3">
+                  <a id="contacto-email-texto" href={CONTACTO.gmail} {...EXTERNO} className="break-all text-[clamp(1.1rem,2vw,1.4rem)] font-semibold text-white underline decoration-white/20 underline-offset-4 transition hover:decoration-[#FF8A3D]">{CONTACTO.email}</a>
+                  <button type="button" onClick={copy} className="rounded-full bg-white/10 px-3 py-1 text-[12px] font-semibold text-white ring-1 ring-white/20 transition-colors hover:bg-white/20">{copied ? "Copiado" : "Copiar"}</button>
+                </div>
+              </div>
             </div>
+            <FormContacto />
           </div>
         </motion.div>
       </div>
@@ -1727,15 +1751,14 @@ export default function Landing() {
       <a href="#contenido" className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[90] focus:rounded-full focus:bg-white focus:px-4 focus:py-3 focus:font-semibold">Saltar al contenido</a>
       <main id="contenido">
         <Hero />
-        <Cinta />
-        <Casos />
-        <Frase />
-        <Como />
+        <Soluciones />
         <Integraciones />
         <Asistente />
         <Ventajas />
+        <Casos />
+        <Trabajamos />
         <Preguntas />
-        <CTA />
+        <Contacto />
       </main>
       <WhatsAppFlotante />
     </>
