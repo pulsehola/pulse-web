@@ -101,3 +101,40 @@
   .no-scrollbar { scrollbar-width: none; }
   .no-scrollbar::-webkit-scrollbar { display: none; }
 }
+
+/* --- Entrada de la home (components/landing/Intro.tsx) --- */
+.intro {
+  position: fixed; inset: 0; z-index: 100; display: grid; place-items: center;
+  background: #FFFFFF; pointer-events: none;
+  animation: intro-cortina 0.6s cubic-bezier(0.76, 0, 0.24, 1) 1.5s forwards;
+}
+.intro-logo { width: min(58vw, 300px); height: auto; overflow: visible; animation: intro-logo 0.6s cubic-bezier(0.76, 0, 0.24, 1) 1.5s forwards; }
+.intro-trazo { stroke-dasharray: 1; stroke-dashoffset: 1; animation: intro-dibujo 0.7s cubic-bezier(0.65, 0, 0.35, 1) 0.1s forwards; }
+.intro-punto { transform-box: fill-box; transform-origin: center; transform: scale(0); animation: intro-latido 0.75s cubic-bezier(0.34, 1.56, 0.64, 1) 0.72s forwards; }
+.intro-palabra { clip-path: inset(0 100% 0 0); animation: intro-palabra 0.55s cubic-bezier(0.22, 1, 0.36, 1) 0.95s forwards; }
+.intro-palabra path { transform-box: fill-box; }
+/* el latido deja una onda naranja que se expande desde el punto */
+.intro-onda { transform-box: fill-box; transform-origin: center; opacity: 0; animation: intro-onda 0.9s cubic-bezier(0.22, 1, 0.36, 1) 0.95s forwards; }
+.intro-salir, .intro-salir .intro-logo { animation-duration: 0.35s !important; animation-delay: 0s !important; }
+html[data-intro="visto"] .intro { display: none; }
+@media (prefers-reduced-motion: reduce) { .intro { display: none; } }
+
+@keyframes intro-dibujo { to { stroke-dashoffset: 0; } }
+@keyframes intro-latido {
+  0% { transform: scale(0); }
+  30% { transform: scale(1.35); }
+  45% { transform: scale(0.95); }
+  62% { transform: scale(1.22); }
+  100% { transform: scale(1); }
+}
+@keyframes intro-palabra { to { clip-path: inset(0 0 0 0); } }
+@keyframes intro-onda {
+  0% { opacity: 0.6; transform: scale(1); }
+  100% { opacity: 0; transform: scale(5); }
+}
+@keyframes intro-logo { to { transform: translateY(-28px) scale(0.92); opacity: 0; } }
+@keyframes intro-cortina {
+  0% { transform: translateY(0); visibility: visible; }
+  99% { visibility: visible; }
+  100% { transform: translateY(-100%); visibility: hidden; }
+}

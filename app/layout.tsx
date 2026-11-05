@@ -3,6 +3,7 @@ import localFont from "next/font/local";
 import { Providers } from "@/components/Providers";
 import "./globals.css";
 import { SITE_URL } from "@/lib/site";
+import { Intro } from "@/components/landing/Intro";
 
 // Fuentes autoalojadas (sin llamadas a Google en el navegador: mejor para RGPD y performance).
 // Subset latino + castellano/catalán. Licencia SIL OFL 1.1.
@@ -57,6 +58,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="es" className={`${manrope.variable} ${plexMono.variable}`}>
       <body>
+        {/* Fuera de Providers/template para que la cortina quede fija a la pantalla. Solo se ve en la home. */}
+        <Intro />
         <Providers>{children}</Providers>
       </body>
     </html>
